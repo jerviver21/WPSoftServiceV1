@@ -149,7 +149,7 @@ public class ServiceLocator {
                 cache.put(TABLA, resultado);
             }else if(TABLA == GRUPOS_AUTORIDAD_AREA){
                 String rolAutArea = getParameter("rolAutArea");
-                resultado = commonFacade.getReferenceTable("SELECT g.codigo, g.codigo "
+                resultado = commonFacade.getReferenceTable("SELECT g.codigo as cod1, g.codigo as cod2 "
                         + "FROM groups g, group_rol gr, rol r "
                         + "WHERE g.id = gr.id_group AND gr.id_rol = r.id "
                         + "AND r.codigo = '"+rolAutArea+"'");
