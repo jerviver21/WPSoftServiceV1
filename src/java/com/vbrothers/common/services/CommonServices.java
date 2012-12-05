@@ -12,15 +12,19 @@ import com.vbrothers.usuarios.dominio.Rol;
 import com.vbrothers.usuarios.services.MenusServicesLocal;
 import com.vbrothers.usuarios.services.ResourcesServicesLocal;
 import com.vbrothers.usuarios.services.RolesServicesLocal;
+import com.vbrothers.util.Log;
 import java.math.BigInteger;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -147,63 +151,74 @@ public class CommonServices implements CommonServicesLocal {
         return datos;
     }
 
+    /*
+     * Este método permite crear la estructura de menus en la base de datos en caso de que estos no existan.
+     */
     @Override
     public void updateEstructuraMenus() {
         try {
-            //Properties recursos1 = new Properties();
-
+            Map<String, BigInteger> roles = getReferenceTable("SELECT codigo, id FROM rol");
+            Map<String, BigInteger> menus = getReferenceTable("SELECT nombre, id FROM menu");
             ResourceBundle recursos1 = ResourceBundle.getBundle("com.vbrothers.util.menu");
-
-            int noMenus = Integer.parseInt(recursos1.getString("numero_menus"));
-            for (int i = 1; i <= noMenus; i++) {
-                String valor = recursos1.getString("menus"+i);
-                if(valor == null){
-                    continue;
-                }
-                String[] datos = valor.split("__");
-                if(em.createNativeQuery("SELECT * FROM menu WHERE id = "+datos[0]).getResultList().isEmpty()){
-                    String menu = datos[2].equals("-1")?"null":datos[2];
-                    em.createNativeQuery("INSERT INTO menu (id, nombre, id_menu, idioma) "
-                            + "VALUES ("+datos[0]+", '"+datos[1]+"', "+menu+", '"+datos[3]+"') ").executeUpdate();
-                }else{
-                    System.out.println("Menu existente! - "+datos[1]+" NO SE CREA!");
-                }
+            Enumeration<String> eKeys = recursos1.getKeys();
+            List<String> keys = Collections.list(eKeys);
+            Collections.sort(keys);
+            
+            if(em.createNativeQuery("SELECT * FROM menu WHERE nombre = 'RAIZ'").getResultList().isEmpty()){
+                em.createNativeQuery("INSERT INTO menu (id, nombre, id_menu, idioma) "
+                                    + "VALUES (1, 'RAIZ', null, 'es') ").executeUpdate();
+                menus.put("RAIZ", BigInteger.ONE);
             }
             
-            BigInteger id = (BigInteger)em.createNativeQuery("SELECT max(id) FROM menu ").getSingleResult();
-            //System.out.println("---> "+id.longValue());
-
-            em.createNativeQuery("SELECT pg_catalog.setval('menu_id_seq', "+id.longValue()+", true)").getSingleResult();
-
-            String administrador = recursos1.getString("administrador");
-            String[] datosAdmin = administrador.split("__");
-            if(em.createNativeQuery("SELECT * FROM rol WHERE id = "+datosAdmin[0]).getResultList().isEmpty()){
-               em.createNativeQuery("INSERT INTO rol (id, codigo) VALUES ("+datosAdmin[0]+", '"+datosAdmin[1]+"') ").executeUpdate();
-            }
-
-
-            int noRecursos = Integer.parseInt(recursos1.getString("numero_recursos"));
-            for (int i = 1; i <= noRecursos; i++) {
-                String valor = recursos1.getString("recursos"+i);
-                if(valor == null){
-                    continue;
+            for(String key:keys){
+                if(key.matches("menus.*")){
+                    String[] datos = recursos1.getString(key).split(";");
+                    if(em.createNativeQuery("SELECT * FROM menu WHERE nombre = '"+datos[0]+"' AND idioma = '"+datos[2]+"'").getResultList().isEmpty()){
+                        if(menus.get(datos[1]) != null){
+                            em.createNativeQuery("INSERT INTO menu (nombre, id_menu, idioma) "
+                                + "VALUES ('"+datos[0]+"', "+menus.get(datos[1])+", '"+datos[2]+"') ").executeUpdate();
+                            BigInteger id = (BigInteger)em.createNativeQuery("SELECT id FROM menu WHERE nombre = '"+datos[0]+"' AND idioma = '"+datos[2]+"'").getSingleResult();
+                            menus.put(datos[0], id);
+                        }else{
+                            Log.getLogger().log(Level.WARNING, "NO EXISTE el menu: {0}", datos[1]);
+                        }
+                    }else{
+                        Log.getLogger().log(Level.WARNING, "Menu existente! - {0} NO SE CREA!", datos[0]);
+                    }
                 }
-                String[] datos = valor.split("__");
-                if(em.createNativeQuery("SELECT * FROM resource WHERE id = "+datos[0]).getResultList().isEmpty()){
-                    em.createNativeQuery("INSERT INTO resource (id, nombre, id_menu, url, idioma) "
-                            + "VALUES ("+datos[0]+", '"+datos[1]+"', "+datos[2]+", '"+datos[3]+"', '"+datos[4]+"') ").executeUpdate();
-                    em.createNativeQuery("INSERT INTO rol_resource (id_rol, id_resource) "
-                            + "VALUES ("+datosAdmin[0]+", "+datos[0]+") ").executeUpdate();
-                }else{
-                    System.out.println("Recurso existente! - "+datos[1]+" NO SE CREA!");
+                if(key.matches("recursos.*")){
+                    String[] datos = recursos1.getString(key).split(";");
+                    if(em.createNativeQuery("SELECT * FROM resource WHERE nombre = '"+datos[0]+"' AND idioma = '"+datos[3]+"'").getResultList().isEmpty()){
+                        if(menus.get(datos[1]) != null){
+                            em.createNativeQuery("INSERT INTO resource (nombre, id_menu, url, idioma) "
+                                + "VALUES ('"+datos[0]+"', "+menus.get(datos[1])+", '"+datos[2]+"', '"+datos[3]+"') ").executeUpdate();
+                            BigInteger id = (BigInteger)em.createNativeQuery("SELECT id FROM resource WHERE nombre = '"+datos[0]+"' AND idioma = '"+datos[3]+"'").getSingleResult();
+                            
+                            if(datos[4].equals("ALL")){
+                                for(BigInteger idRol : roles.values()){
+                                    em.createNativeQuery("INSERT INTO rol_resource (id_rol, id_resource) "
+                                            + "VALUES ("+idRol+", "+id+") ").executeUpdate();
+                                }
+                            }else{
+                                String[] rolesAut = datos[4].split(",");
+                                for(String rol:rolesAut){
+                                    if(roles.get(rol) != null){
+                                        em.createNativeQuery("INSERT INTO rol_resource (id_rol, id_resource) "
+                                            + "VALUES ("+roles.get(rol)+", "+id+") ").executeUpdate();
+                                    }else{
+                                       Log.getLogger().log(Level.WARNING, "NO EXISTE el rol: {0}, no se agrega este permiso", rol); 
+                                    }
+                                }
+                            }
+                            
+                        }else{
+                            Log.getLogger().log(Level.WARNING, "NO EXISTE el menu: {0}, para crear el recurso: "+datos[0], datos[1]);
+                        }
+                    }else{
+                        Log.getLogger().log(Level.WARNING, "Recurso existente! - {0} NO SE CREA!", datos[0]);
+                    }
                 }
-
-                
             }
-            id = (BigInteger)em.createNativeQuery("SELECT max(id) FROM resource ").getSingleResult();
-
-            em.createNativeQuery("SELECT pg_catalog.setval('resource_id_seq', "+id.longValue()+", true)").getSingleResult();
-
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -211,11 +226,6 @@ public class CommonServices implements CommonServicesLocal {
         
     }
 
-    @Override
-    public void updateEstructuraReportes() {
-        
-        
-    }
 
  
 }

@@ -22,8 +22,5 @@ public interface CommonServicesLocal {
     public Map getReferenceTable(int tabla);
     public int executeUpdate(String query);
     public List<String> executeQuery(String query);
-
     public void updateEstructuraMenus();
-
-    public void updateEstructuraReportes();
 }
