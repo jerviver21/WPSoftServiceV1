@@ -1,0 +1,1 @@
+ALTER TABLE equipo ADD CONSTRAINT equipo_area_fk FOREIGN KEY (id_area) REFERENCES areas_trabajo(id) ON DELETE NO ACTION ON UPDATE NO ACTION;

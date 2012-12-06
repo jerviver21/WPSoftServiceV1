@@ -1,0 +1,14 @@
+ALTER TABLE tarea DROP CONSTRAINT permiso_trab_tarea_fk;
+ALTER TABLE tarea ADD CONSTRAINT permiso_trab_tarea_fk FOREIGN KEY (id_permiso) REFERENCES permiso_trabajo(id) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE peligros_tarea DROP CONSTRAINT peligros_tarea_fk;
+ALTER TABLE peligros_tarea ADD CONSTRAINT peligros_tarea_fk FOREIGN KEY (id_tarea) REFERENCES tarea(id) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE control DROP CONSTRAINT control_riesgo_fk;
+ALTER TABLE control ADD CONSTRAINT control_riesgo_fk FOREIGN KEY (id_peligro) REFERENCES peligro(id) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE precauciones_trabajo DROP CONSTRAINT permiso_prec_trab_fk;
+ALTER TABLE precauciones_trabajo ADD CONSTRAINT permiso_prec_trab_fk FOREIGN KEY (id_permiso) REFERENCES permiso_trabajo(id) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE certificados_trabajo DROP CONSTRAINT permiso_cert_trab_fk;
+ALTER TABLE certificados_trabajo ADD CONSTRAINT permiso_cert_trab_fk FOREIGN KEY (id_permiso) REFERENCES permiso_trabajo(id) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE sectores_afectados_permiso DROP CONSTRAINT areas_afectadas_permiso_fk;
+ALTER TABLE sectores_afectados_permiso ADD CONSTRAINT areas_afectadas_permiso_fk FOREIGN KEY (id_permiso) REFERENCES permiso_trabajo(id) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE trazabilidad_permiso DROP CONSTRAINT trazabilidad_permiso_fk;
+ALTER TABLE trazabilidad_permiso ADD CONSTRAINT trazabilidad_permiso_fk FOREIGN KEY (id_permiso) REFERENCES permiso_trabajo(id) ON DELETE CASCADE ON UPDATE CASCADE;
