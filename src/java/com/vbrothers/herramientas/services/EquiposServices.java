@@ -3,10 +3,10 @@
  * and open the template in the editor.
  */
 
-package com.vbrothers.permisostrabajo.tablasref.services;
+package com.vbrothers.herramientas.services;
 
 import com.vbrothers.common.services.AbstractFacade;
-import com.vbrothers.permisostrabajo.dominio.Disciplina;
+import com.vbrothers.permisostrabajo.dominio.Equipo;
 import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -17,7 +17,7 @@ import javax.persistence.PersistenceContext;
  * @author root
  */
 @Stateless
-public class DisciplinasServices extends AbstractFacade<Disciplina> implements DisciplinasServicesLocal {
+public class EquiposServices extends AbstractFacade<Equipo> implements EquiposServicesLocal {
     
     @PersistenceContext(unitName = "WPSoftPU")
     private EntityManager em;
@@ -27,13 +27,13 @@ public class DisciplinasServices extends AbstractFacade<Disciplina> implements D
         return em;
     }
 
-    public DisciplinasServices() {
-        super(Disciplina.class);
+    public EquiposServices() {
+        super(Equipo.class);
     }
 
     @Override
-    public List<Disciplina> findAll(){
-        List<Disciplina> Contratistass = em.createNamedQuery("Disciplina.findAll").getResultList();
+    public List<Equipo> findAll(){
+        List<Equipo> Contratistass = em.createNamedQuery("Equipo.findAll").getResultList();
         return Contratistass;
     }
  

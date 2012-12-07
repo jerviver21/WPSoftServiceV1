@@ -10,6 +10,7 @@ import com.vbrothers.usuarios.dominio.Groups;
 import com.vbrothers.usuarios.dominio.Rol;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -59,6 +60,15 @@ public class GruposServices extends AbstractFacade<Groups>  implements GruposSer
             return grupo.get(0);
         }
         return null;
+    }
+
+    @Override
+    public List<Groups> findGruposByRol(String rol) {
+        List<Groups> grupos = em.createQuery("SELECT g "
+                        + "FROM groups g JOIN b.roles r "
+                        + "WHERE r.codigo = :rol")
+                .setParameter("rol", rol).getResultList();
+        return grupos;
     }
 
 

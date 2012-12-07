@@ -54,7 +54,7 @@ public class ContratistaServices extends AbstractFacade<Contratista>implements C
     }
     
     @Override
-    public List<Contratista> findActivos(){
+    public List<Contratista> findContratistasActivos(){
         List<Contratista> Contratistass = em.createQuery("SELECT c FROM Contratista c WHERE c.activo = true").getResultList();
         return Contratistass;
     }

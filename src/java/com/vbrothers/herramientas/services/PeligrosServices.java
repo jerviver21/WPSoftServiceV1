@@ -1,4 +1,4 @@
-package com.vbrothers.permisostrabajo.tablasref.services;
+package com.vbrothers.herramientas.services;
 
 import com.vbrothers.common.exceptions.LlaveDuplicadaException;
 import com.vbrothers.common.services.AbstractFacade;

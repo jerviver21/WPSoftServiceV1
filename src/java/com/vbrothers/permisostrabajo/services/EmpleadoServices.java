@@ -161,14 +161,15 @@ public class EmpleadoServices extends AbstractFacade<Empleado> implements Emplea
     @Override
     public List<Empleado> findEmpleadosActivosXContratita(Long idContratista) {
         Contratista contratista = null;
-        List<Empleado> empleados = null;
-        if(idContratista != null){
-            contratista = new Contratista(idContratista);
-            empleados = em.createNamedQuery("Empleado.findActivesByContratist").setParameter("idContratista", contratista).getResultList();
-        }else{
-            empleados = em.createNamedQuery("Empleado.findActivesPlanta").getResultList();
-        }
-        //System.out.println("--> Cont: "+contratista);
+        contratista = new Contratista(idContratista);
+        List<Empleado> empleados = em.createNamedQuery("Empleado.findActivesByContratist").setParameter("idContratista", contratista).getResultList();
+        return empleados;
+    }
+    
+    @Override
+    public List<Empleado> findEmpleadosActivosPlanta() {
+        Contratista contratista = null;
+        List<Empleado> empleados = em.createNamedQuery("Empleado.findActivesPlanta").getResultList();
         return empleados;
     }
 

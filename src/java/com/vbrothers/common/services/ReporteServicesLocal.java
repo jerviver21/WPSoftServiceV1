@@ -6,6 +6,7 @@ import com.vbrothers.common.dto.ResultReporteDTO;
 import com.vbrothers.common.exceptions.LlaveDuplicadaException;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import javax.ejb.Local;
 
 /**
@@ -21,7 +22,9 @@ public interface ReporteServicesLocal {
 
     Reporte find(Object id);
 
-    public List<Reporte> findAll();
+    List<Reporte> findAll();
 
     ResultReporteDTO generarReporte(Reporte reporte, Map<String, Object> params) throws Exception;
+
+    List<Reporte> getReportesByProcesoAndRol(int proceso, Set<String> roles);
 }

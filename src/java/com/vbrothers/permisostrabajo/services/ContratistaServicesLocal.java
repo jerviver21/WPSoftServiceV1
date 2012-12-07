@@ -29,7 +29,7 @@ public interface ContratistaServicesLocal {
 
     List<Contratista> findAll();
     
-    List<Contratista> findActivos();
+    List<Contratista> findContratistasActivos();
  
     public void guardar(Contratista entity) throws LlaveDuplicadaException, ParametroException;
 

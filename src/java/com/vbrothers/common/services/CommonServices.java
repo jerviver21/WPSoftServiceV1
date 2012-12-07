@@ -1,14 +1,6 @@
 package com.vbrothers.common.services;
 
 
-import com.vbrothers.locator.ServiceLocator;
-import com.vbrothers.permisostrabajo.dominio.Sector;
-import com.vbrothers.permisostrabajo.dominio.Disciplina;
-import com.vbrothers.permisostrabajo.dominio.Equipo;
-import com.vbrothers.permisostrabajo.dominio.Peligro;
-import com.vbrothers.usuarios.dominio.Groups;
-import com.vbrothers.usuarios.dominio.Menu;
-import com.vbrothers.usuarios.dominio.Rol;
 import com.vbrothers.usuarios.services.MenusServicesLocal;
 import com.vbrothers.usuarios.services.ResourcesServicesLocal;
 import com.vbrothers.usuarios.services.RolesServicesLocal;
@@ -22,7 +14,6 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import javax.ejb.EJB;
@@ -69,7 +60,7 @@ public class CommonServices implements CommonServicesLocal {
     }
     
     @Override
-    public Map getReferenceTable(String consulta){
+    public Map getReferenceTableForCombo(String consulta){
         Map datos = new HashMap();
         try {
             List<Object[]> registros = em.createNativeQuery(consulta).getResultList();
@@ -84,68 +75,26 @@ public class CommonServices implements CommonServicesLocal {
         }
         return datos;
     }
-
+    
     @Override
-    public Map getReferenceTable(int tabla){
+    public Map getReferenceTableForSubcombo(String consulta){
         Map datos = new HashMap();
         try {
-            if(tabla == ServiceLocator.MENU_X_ID){
-                List<Menu> menus = em.createNamedQuery("Menu.findAll").getResultList();
-                for(Menu menu:menus){
-                    datos.put(menu.getId(), menu);
-                }
-            }else if(tabla == ServiceLocator.GRUPO_X_ID){
-                List<Groups> grupos = em.createNamedQuery("Groups.findAll").getResultList();
-                for(Groups grupo:grupos){
-                    datos.put(grupo.getId(), grupo);
-                }
-            }else if(tabla == ServiceLocator.ROL_X_ID){
-                List<Rol> roles = em.createNamedQuery("Rol.findAll").getResultList();
-                for(Rol rol:roles){
-                    datos.put(rol.getId(), rol);
-                }
-            }else if(tabla == ServiceLocator.EQUIPOS_X_ID){
-                List<Equipo> items = em.createNamedQuery("Equipo.findAll").getResultList();
-                for(Equipo item:items){
-                    datos.put(item.getId(), item);
-                }
-            }else if(tabla == ServiceLocator.SECTORES_X_ID){
-                List<Sector> items = em.createNamedQuery("Sector.findAll").getResultList();
-                for(Sector item:items){
-                    datos.put(item.getId(), item);
-                }
-            }else if(tabla == ServiceLocator.DISCIPLINA_X_ID){
-                List<Disciplina> items = em.createNamedQuery("Disciplina.findAll").getResultList();
-                for(Disciplina item:items){
-                    datos.put(item.getId(), item);
-                }
-            }else if(tabla == ServiceLocator.PELIGROS_X_ID){
-
-                List<Peligro> items = em.createNamedQuery("Peligro.findAll").getResultList();
-                //System.out.println("Peligros:  "+items);
-                for(Peligro item:items){
-                    datos.put(item.getId(), item);
-                }
-            }else if(tabla == ServiceLocator.EQUIPOS_X_SECTOR_ID){
-                List<Object[]> resultado = em.createNativeQuery("SELECT eq.id as ID_EQ, eq.nombre as NOMBRE, sec.id as ID_SEC "
-                        + "FROM equipo eq, sector sec "
-                        + "WHERE eq.id_sector = sec.id ").getResultList();
-                for(Object[] registro : resultado){
-                   Map subDatos = (Map)datos.get((Integer)registro[2]);
-                   if(subDatos == null){
-                       subDatos = new LinkedHashMap();
-                       subDatos.put((Integer)registro[0], (String)registro[1]);
-                       datos.put((Integer)registro[2], subDatos);
-                   }else{
-                       subDatos.put((Integer)registro[0], (String)registro[1]);
-                   }
+            List<Object[]> registros = em.createNativeQuery(consulta).getResultList();
+            for(Object[] registro : registros){
+                Map subDatos = (Map)datos.get(registro[1]);
+                if(subDatos == null){
+                    subDatos = new LinkedHashMap();
+                    subDatos.put(registro[1], registro[2]);
+                    datos.put(registro[0], subDatos);
+                }else{
+                    subDatos.put(registro[1],registro[2]);
                 }
             }
-            
         } catch (Exception e) {
-            System.err.println("Error al cargar datos en memoria: \n"
+            System.err.println("Error al cargar datos en memoria: \n"+consulta+" \n "
                     + "La consulta debe tener solo 2 valores, 1 para la llave del Map y otro para el valor del Map \n"+e);
-            e.printStackTrace();
+            e.printStackTrace(System.err);
             datos = null;
         }
         return datos;
@@ -157,8 +106,8 @@ public class CommonServices implements CommonServicesLocal {
     @Override
     public void updateEstructuraMenus() {
         try {
-            Map<String, BigInteger> roles = getReferenceTable("SELECT codigo, id FROM rol");
-            Map<String, BigInteger> menus = getReferenceTable("SELECT nombre, id FROM menu");
+            Map<String, BigInteger> roles = getReferenceTableForCombo("SELECT codigo, id FROM rol");
+            Map<String, BigInteger> menus = getReferenceTableForCombo("SELECT nombre, id FROM menu");
             ResourceBundle recursos1 = ResourceBundle.getBundle("com.vbrothers.util.menu");
             Enumeration<String> eKeys = recursos1.getKeys();
             List<String> keys = Collections.list(eKeys);
@@ -220,10 +169,8 @@ public class CommonServices implements CommonServicesLocal {
                 }
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            Log.getLogger().log(Level.ALL, "Error al crear los menus por convención", e);
         }
-   
-        
     }
 
 

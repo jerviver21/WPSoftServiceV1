@@ -3,7 +3,7 @@
  * and open the template in the editor.
  */
 
-package com.vbrothers.permisostrabajo.tablasref.services;
+package com.vbrothers.herramientas.services;
 
 import com.vbrothers.common.exceptions.LlaveDuplicadaException;
 import com.vbrothers.permisostrabajo.dominio.Equipo;

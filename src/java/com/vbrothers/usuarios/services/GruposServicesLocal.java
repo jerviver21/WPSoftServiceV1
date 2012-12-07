@@ -10,6 +10,7 @@ import com.vbrothers.common.exceptions.LlaveDuplicadaException;
 import com.vbrothers.usuarios.dominio.Groups;
 import com.vbrothers.usuarios.dominio.Rol;
 import java.util.List;
+import java.util.Set;
 import javax.ejb.Local;
 
 /**
@@ -26,9 +27,11 @@ public interface GruposServicesLocal {
 
     Groups find(Object id);
 
-    public List<Groups> findAll();
+    List<Groups> findAll();
 
-    public List<Rol> findRolesByGroup(Groups group);
+    List<Rol> findRolesByGroup(Groups group);
+    
+    List<Groups> findGruposByRol(String rol);
 
     Groups findByCodigo(String codigo);
 }

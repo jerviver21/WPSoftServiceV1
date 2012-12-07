@@ -1,23 +1,24 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.vbrothers.permisostrabajo.services;
-
+ 
 import com.vbrothers.common.exceptions.LlaveDuplicadaException;
-import com.vbrothers.common.services.AbstractFacade;
 import com.vbrothers.locator.ServiceLocator;
-import com.vbrothers.permisostrabajo.dominio.*;
+import com.vbrothers.permisostrabajo.dominio.Contratista;
+import com.vbrothers.permisostrabajo.dominio.Disciplina;
+import com.vbrothers.permisostrabajo.dominio.Empleado;
+import com.vbrothers.permisostrabajo.dominio.PeligrosTarea;
+import com.vbrothers.permisostrabajo.dominio.PermisoTrabajo;
+import com.vbrothers.permisostrabajo.dominio.RiesgosPeligroTarea;
+import com.vbrothers.permisostrabajo.dominio.Sector;
+import com.vbrothers.permisostrabajo.dominio.Tarea;
+import com.vbrothers.permisostrabajo.dominio.TrazabilidadPermiso;
 import com.vbrothers.permisostrabajo.to.PermisoTrabajoTO;
 import com.vbrothers.usuarios.dominio.Groups;
 import com.vbrothers.usuarios.dominio.Users;
 import com.vbrothers.util.EstadosPermiso;
 import com.vbrothers.util.EstadosTraz;
 import com.vbrothers.util.FechaUtils;
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -27,11 +28,10 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
 /**
- *
- * @author jerviver21
+ * @author Jerson Viveros
  */
 @Stateless
-public class PermisoTrabajoServices extends AbstractFacade<PermisoTrabajo>implements PermisoTrabajoServicesLocal {
+public class GestionPermisoService implements GestionPermisoServiceLocal {
 
     @PersistenceContext(unitName = "WPSoftPU")
     private EntityManager em;
@@ -42,14 +42,6 @@ public class PermisoTrabajoServices extends AbstractFacade<PermisoTrabajo>implem
     @EJB
     ContratistaServicesLocal contratistaServices;
 
-    @Override
-    protected EntityManager getEntityManager() {
-        return em;
-    }
-
-    public PermisoTrabajoServices() {
-        super(PermisoTrabajo.class);
-    }
 
     @Override
     public PermisoTrabajoTO findPermisoTrabajo(Object id){
@@ -145,7 +137,7 @@ public class PermisoTrabajoServices extends AbstractFacade<PermisoTrabajo>implem
         }
         return pto;
     }
-
+    
     @Override
     public List<PermisoTrabajo> findPermisosPendientes(Users usr) {
         String cond = "t.usrGrpAsignado = '"+usr.getUsr()+"'";
@@ -170,12 +162,6 @@ public class PermisoTrabajoServices extends AbstractFacade<PermisoTrabajo>implem
 
         return permisos;
     }
-    
-    @Override
-    public List<PermisoTrabajo> findAll(){
-        List<PermisoTrabajo> tareas = em.createNamedQuery("PermisoTrabajo.findAll").getResultList();
-        return tareas;
-    }
 
     @Override
     public PermisoTrabajo guardarPermiso(PermisoTrabajoTO pto)throws LlaveDuplicadaException{
@@ -190,41 +176,6 @@ public class PermisoTrabajoServices extends AbstractFacade<PermisoTrabajo>implem
         pto.getPermiso().setTareas(tareas);
         pto.setPermiso(em.merge(pto.getPermiso()));
         return pto.getPermiso();
-    }
-    
-    @Override
-    public void crearPermiso(PermisoTrabajoTO pto)throws ParseException, LlaveDuplicadaException{
-        PermisoTrabajo permiso = pto.getPermiso();
-        if(pto.getHoraIni() != null){
-            permiso.setHoraIni(FechaUtils.getTime(pto.getHoraIni()));
-            permiso.setHoraFin(FechaUtils.getTime(pto.getHoraFin()));
-        }
-        permiso.setFechaHoraCreacion(new Date());
-
-        List<Tarea> tareas = permiso.getTareas();
-
-        if(pto.getContratista() != null){
-            Contratista cont = contratistaServices.find(pto.getContratista().getId());
-            String usr = cont.getUsuario();
-            System.out.println("Usuario Contratista: "+usr);
-            permiso.setUsuariosEjecutante(usr);
-            permiso.setEjecutorContratista(true);
-        }
-
-        if(!pto.getEmpleados().isEmpty()){
-            for(Empleado emp:pto.getEmpleados()){
-                String usr = emp.getUsuario();
-                System.out.println("Usuario empleado: "+usr);
-                permiso.setUsuariosEjecutante(permiso.getUsuariosEjecutante() == null
-                        ? usr : permiso.getUsuariosEjecutante()+";"+usr);
-            }
-            permiso.setEjecutorContratista(false);
-        }
-        permiso.setEstadoPermiso(EstadosPermiso.CREADO);
-        //permiso.setProyecto(em.find(Proyecto.class, trabajo.getIdProyecto()));
-        pto.setPermiso(em.merge(pto.getPermiso()));
-        System.out.println("Id nuevo permiso de trabajo: -> "+pto.getPermiso().getId());
-        adminEstadosServices.crearPermiso(pto);
     }
 
     @Override
@@ -309,49 +260,5 @@ public class PermisoTrabajoServices extends AbstractFacade<PermisoTrabajo>implem
         adminEstadosServices.finalizarPermiso(pto);
     }
 
-    
-    
-    
-    /*public boolean isPermisoAvailable(PermisoTrabajo permiso, Users usr){
-        String cond = "t.usuarioOGrupo = '"+usr.getUsr()+"'";
-        for(Groups grp : usr.getGrupos()){
-            cond = cond + " OR t.usuarioOGrupo = '"+grp.getCodigo()+"'";
-        }
-        
-        List<TrazabilidadPermiso> permisosAsignados = em.createQuery("SELECT t "
-                + "FROM TrazabilidadPermiso t "
-                + "WHERE t.estadoTraz =:estado AND t.permisoTrabajo =:permiso AND ("+cond+")")
-                .setParameter("estado", EstadosTraz.ASIGNADO).setParameter("permiso", permiso)
-                .getResultList();
-        if(permisosAsignados.isEmpty()){
-            return false;
-        }else{
-            return true;
-        }
-    }
-    
-    public void bloquearPermiso(PermisoTrabajo permiso, Users usr){
-        Set<String> datosUsr = new HashSet<String>();
-        datosUsr.add(usr.getUsr());
-        for(Groups grp : usr.getGrupos()){
-            datosUsr.add(grp.getCodigo());
-        }
-        List<TrazabilidadPermiso> permisosAsignados = em.createQuery("SELECT t "
-                + "FROM TrazabilidadPermiso t "
-                + "WHERE t.estadoTraz =:estado AND t.permisoTrabajo =:permiso")
-                .setParameter("estado", EstadosTraz.ASIGNADO).setParameter("permiso", permiso)
-                .getResultList();
-        for(TrazabilidadPermiso tt : permisosAsignados){
-            if(!datosUsr.contains(tt.getUsrGrpAsignado())){
-                tt.setEstadoTraz(EstadosTraz.BLOQUEADO);
-            }
-        }
-    }
 
-    public void desbloquearPermiso(PermisoTrabajo permiso)throws LlaveDuplicadaException{
-        guardarPermiso(permiso);
-        adminEstadosServices.desbloquearPermiso(permiso);
-    }*/
-
-    
 }

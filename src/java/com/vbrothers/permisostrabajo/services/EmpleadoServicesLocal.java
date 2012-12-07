@@ -39,4 +39,6 @@ public interface EmpleadoServicesLocal {
 
     public List<Empleado> findEmpleadosActivosXContratita(Long idContratista);
     
+    public List<Empleado> findEmpleadosActivosPlanta();
+    
 }

@@ -183,6 +183,23 @@ public class ReporteServices extends AbstractFacade<Reporte> implements ReporteS
         return nombre;
     }
 
+    @Override
+    public List<Reporte> getReportesByProcesoAndRol(int proceso, Set<String> roles) {
+        String criterioRol = "";
+        if(roles != null){
+            for(String rol : roles){
+                if(criterioRol.equals("")){
+                    criterioRol += " r.roles LIKE '%"+rol+"%' ";
+                }else{
+                    criterioRol += " OR r.roles LIKE '%"+rol+"%' ";
+                }
+
+            }
+        }
+        return em.createQuery("SELECT r FROM Reporte r "
+                    + "WHERE r.proceso.id = "+proceso+" AND  ("+criterioRol+")").getResultList();
+    }
+
 
  
 }
