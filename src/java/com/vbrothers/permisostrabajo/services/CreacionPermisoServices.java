@@ -1,23 +1,16 @@
 
 package com.vbrothers.permisostrabajo.services;
 
+import com.vbrothers.common.exceptions.EstadoException;
 import com.vbrothers.common.exceptions.LlaveDuplicadaException;
-import com.vbrothers.common.services.AbstractFacade;
-import com.vbrothers.locator.ServiceLocator;
 import com.vbrothers.permisostrabajo.dominio.*;
 import com.vbrothers.permisostrabajo.to.PermisoTrabajoTO;
-import com.vbrothers.usuarios.dominio.Groups;
-import com.vbrothers.usuarios.dominio.Users;
 import com.vbrothers.util.EstadosPermiso;
-import com.vbrothers.util.EstadosTraz;
 import com.vbrothers.util.FechaUtils;
 import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -105,7 +98,7 @@ public class CreacionPermisoServices implements CreacionPermisoServicesLocal {
     @Override
     public List<PermisoTrabajo> findPermisosEnProceso(String user) {
         return em.createQuery("SELECT p "
-                + "FROM PersmioTrabajo "
+                + "FROM PermisoTrabajo p "
                 + "WHERE p.usuarioCreacion = '"+user+"' "
                 + "AND p.estadoPermiso.id != "+EstadosPermiso.CANCELADO.getId()+" "
                 + "AND p.estadoPermiso.id != "+EstadosPermiso.SUSPENDIDO.getId()).getResultList();
@@ -114,7 +107,7 @@ public class CreacionPermisoServices implements CreacionPermisoServicesLocal {
     @Override
     public List<PermisoTrabajo> findPermisosCancelados(String user, Date fechaIni, Date fechaFin) {
         return em.createQuery("SELECT p "
-                + "FROM PersmioTrabajo "
+                + "FROM PermisoTrabajo p "
                 + "WHERE p.usuarioCreacion =:user "
                 + "AND p.estadoPermiso =:estado "
                 + "AND p.fechaHoraCreacion BETWEEN :fechaIni AND :fechaFin ")
@@ -129,7 +122,7 @@ public class CreacionPermisoServices implements CreacionPermisoServicesLocal {
     @Override
     public List<PermisoTrabajo> findPermisosSuspendidos(String user, Date fechaIni, Date fechaFin) {
         return em.createQuery("SELECT p "
-                + "FROM PersmioTrabajo "
+                + "FROM PermisoTrabajo p "
                 + "WHERE p.usuarioCreacion =:user "
                 + "AND p.estadoPermiso =:estado "
                 + "AND p.fechaHoraCreacion BETWEEN :fechaIni AND :fechaFin ")
@@ -138,6 +131,16 @@ public class CreacionPermisoServices implements CreacionPermisoServicesLocal {
                 .setParameter("fechaIni",fechaIni)
                 .setParameter("fechaFin", fechaFin)
                 .getResultList();
+    }
+    
+    @Override
+    public void deletePermiso(PermisoTrabajo pt)throws EstadoException{
+        if(pt.getEstadoPermiso().equals(EstadosPermiso.CREADO)){
+            em.remove(em.merge(pt));
+        }else{
+            throw new EstadoException("El permiso se encuentra en un estado en el cual no se puede borrar, sólo puede ser suspendido");
+        }
+        
     }
 
     

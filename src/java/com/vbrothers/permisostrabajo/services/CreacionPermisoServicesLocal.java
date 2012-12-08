@@ -4,6 +4,7 @@
  */
 package com.vbrothers.permisostrabajo.services;
 
+import com.vbrothers.common.exceptions.EstadoException;
 import com.vbrothers.common.exceptions.LlaveDuplicadaException;
 import com.vbrothers.permisostrabajo.dominio.PermisoTrabajo;
 import com.vbrothers.permisostrabajo.to.PermisoTrabajoTO;
@@ -28,6 +29,7 @@ public interface CreacionPermisoServicesLocal {
     List<PermisoTrabajo> findPermisosSuspendidos(String user, Date fechaIni, Date fechaFin);
 
     void crearPermiso(PermisoTrabajoTO pto)throws ParseException, LlaveDuplicadaException;
-
+    
+    void deletePermiso(PermisoTrabajo pt)throws EstadoException;
 
 }

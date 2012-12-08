@@ -82,7 +82,7 @@ public class CommonServices implements CommonServicesLocal {
         try {
             List<Object[]> registros = em.createNativeQuery(consulta).getResultList();
             for(Object[] registro : registros){
-                Map subDatos = (Map)datos.get(registro[1]);
+                Map subDatos = (Map)datos.get(registro[0]);
                 if(subDatos == null){
                     subDatos = new LinkedHashMap();
                     subDatos.put(registro[1], registro[2]);
