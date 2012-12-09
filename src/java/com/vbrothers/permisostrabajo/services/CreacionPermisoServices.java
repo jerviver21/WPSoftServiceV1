@@ -105,33 +105,19 @@ public class CreacionPermisoServices implements CreacionPermisoServicesLocal {
     }
 
     @Override
-    public List<PermisoTrabajo> findPermisosCancelados(String user, Date fechaIni, Date fechaFin) {
+    public List<PermisoTrabajo> findPermisos(String user, int estado, Date fechaIni, Date fechaFin) {
         return em.createQuery("SELECT p "
                 + "FROM PermisoTrabajo p "
                 + "WHERE p.usuarioCreacion =:user "
-                + "AND p.estadoPermiso =:estado "
+                + "AND p.estadoPermiso.id =:estado "
                 + "AND p.fechaHoraCreacion BETWEEN :fechaIni AND :fechaFin ")
                 .setParameter("user", user)
-                .setParameter("estado", EstadosPermiso.CANCELADO)
+                .setParameter("estado", estado)
                 .setParameter("fechaIni",fechaIni)
                 .setParameter("fechaFin", fechaFin)
                 .getResultList();
     }
     
-    
-    @Override
-    public List<PermisoTrabajo> findPermisosSuspendidos(String user, Date fechaIni, Date fechaFin) {
-        return em.createQuery("SELECT p "
-                + "FROM PermisoTrabajo p "
-                + "WHERE p.usuarioCreacion =:user "
-                + "AND p.estadoPermiso =:estado "
-                + "AND p.fechaHoraCreacion BETWEEN :fechaIni AND :fechaFin ")
-                .setParameter("user", user)
-                .setParameter("estado", EstadosPermiso.SUSPENDIDO)
-                .setParameter("fechaIni",fechaIni)
-                .setParameter("fechaFin", fechaFin)
-                .getResultList();
-    }
     
     @Override
     public void deletePermiso(PermisoTrabajo pt)throws EstadoException{

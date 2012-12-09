@@ -24,9 +24,7 @@ public interface CreacionPermisoServicesLocal {
     
     List<PermisoTrabajo> findPermisosEnProceso(String user);
     
-    List<PermisoTrabajo> findPermisosCancelados(String user, Date fechaIni, Date fechaFin);
-    
-    List<PermisoTrabajo> findPermisosSuspendidos(String user, Date fechaIni, Date fechaFin);
+    List<PermisoTrabajo> findPermisos(String user, int estado, Date fechaIni, Date fechaFin);
 
     void crearPermiso(PermisoTrabajoTO pto)throws ParseException, LlaveDuplicadaException;
     

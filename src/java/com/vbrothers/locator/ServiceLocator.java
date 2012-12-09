@@ -21,8 +21,9 @@ public class ServiceLocator {
     public static int COMB_ID_PELIGRO = 7;
     public static int COMB_ID_TIPOID = 8;
     public static int COMB_ID_IDIOMA = 9;
+    public static int COMB_ID_ESTADOSPERMISOS = 10;
     //Identificadores de cache para subcombos
-    public static int SUBC_SECTOR_EQUIPO = 10;
+    public static int SUBC_SECTOR_EQUIPO = 100;
 
     //Guarda mapas con par llave-valor que se utilizan en la aplicación
     private Map cache;
@@ -85,6 +86,9 @@ public class ServiceLocator {
                 cache.put(TABLA, resultado);
             }else if(TABLA == COMB_ID_IDIOMA){
                 resultado = commonFacade.getReferenceTableForCombo("SELECT id, nombre FROM idiomas ");
+                cache.put(TABLA, resultado);
+            }else if(TABLA == COMB_ID_ESTADOSPERMISOS){
+                resultado = commonFacade.getReferenceTableForCombo("SELECT * FROM estado_permiso ");
                 cache.put(TABLA, resultado);
             }else if(TABLA == PARAMETROS){
                 resultado = commonFacade.getReferenceTableForCombo("SELECT nombre, valor FROM parametro");
