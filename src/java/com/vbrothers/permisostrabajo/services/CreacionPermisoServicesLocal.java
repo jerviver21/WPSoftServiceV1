@@ -28,6 +28,8 @@ public interface CreacionPermisoServicesLocal {
 
     void crearPermiso(PermisoTrabajoTO pto)throws ParseException, LlaveDuplicadaException;
     
+    void actualizarPermiso(PermisoTrabajoTO pto)throws ParseException;
+    
     void deletePermiso(PermisoTrabajo pt)throws EstadoException;
 
 }

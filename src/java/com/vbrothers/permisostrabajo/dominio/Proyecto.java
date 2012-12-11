@@ -5,6 +5,7 @@
 package com.vbrothers.permisostrabajo.dominio;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import javax.persistence.*;
@@ -16,9 +17,7 @@ import javax.persistence.*;
 @Entity
 @Table(name = "proyecto")
 @NamedQueries({
-    @NamedQuery(name = "Proyecto.findAll", query = "SELECT p FROM Proyecto p"),
-    @NamedQuery(name = "Proyecto.findProyectosContratista", query = "SELECT p FROM Proyecto p JOIN p.contratistas c WHERE c.id = :idContratista")
-})
+    @NamedQuery(name = "Proyecto.findAll", query = "SELECT p FROM Proyecto p")})
 public class Proyecto implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
@@ -48,18 +47,23 @@ public class Proyecto implements Serializable {
     @Column(name = "num_gestion_cambio")
     private long numGestionCambio;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "proyecto", fetch = FetchType.LAZY)
-    private List<ContratistasProyecto> contratistas;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "proyecto", fetch = FetchType.LAZY)
-    private List<EmpleadosProyecto> empleados;
+    private List<PermisoTrabajo> permisos;
 
     @JoinColumn(name = "id_estado", referencedColumnName = "id")
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     private EstadosProyecto estado;
+    
+    @Column(name = "usuario_creacion")
+    private String usuarioCreacion;
+    @Column(name = "fecha_hora_creacion")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date fechaHoraCreacion;
 
     
 
     public Proyecto() {
         estado = new EstadosProyecto(1);
+        permisos = new ArrayList<PermisoTrabajo>();
     }
 
     public Proyecto(Long id) {
@@ -132,33 +136,7 @@ public class Proyecto implements Serializable {
         return nombre;
     }
 
-    /**
-     * @return the contratistas
-     */
-    public List<ContratistasProyecto> getContratistas() {
-        return contratistas;
-    }
-
-    /**
-     * @param contratistas the contratistas to set
-     */
-    public void setContratistas(List<ContratistasProyecto> contratistas) {
-        this.contratistas = contratistas;
-    }
-
-    /**
-     * @return the empleados
-     */
-    public List<EmpleadosProyecto> getEmpleados() {
-        return empleados;
-    }
-
-    /**
-     * @param empleados the empleados to set
-     */
-    public void setEmpleados(List<EmpleadosProyecto> empleados) {
-        this.empleados = empleados;
-    }
+    
 
     /**
      * @return the fechaIni
@@ -200,6 +178,48 @@ public class Proyecto implements Serializable {
      */
     public void setEstado(EstadosProyecto estado) {
         this.estado = estado;
+    }
+
+    /**
+     * @return the usuarioCreacion
+     */
+    public String getUsuarioCreacion() {
+        return usuarioCreacion;
+    }
+
+    /**
+     * @param usuarioCreacion the usuarioCreacion to set
+     */
+    public void setUsuarioCreacion(String usuarioCreacion) {
+        this.usuarioCreacion = usuarioCreacion;
+    }
+
+    /**
+     * @return the fechaHoraCreacion
+     */
+    public Date getFechaHoraCreacion() {
+        return fechaHoraCreacion;
+    }
+
+    /**
+     * @param fechaHoraCreacion the fechaHoraCreacion to set
+     */
+    public void setFechaHoraCreacion(Date fechaHoraCreacion) {
+        this.fechaHoraCreacion = fechaHoraCreacion;
+    }
+
+    /**
+     * @return the permisos
+     */
+    public List<PermisoTrabajo> getPermisos() {
+        return permisos;
+    }
+
+    /**
+     * @param permisos the permisos to set
+     */
+    public void setPermisos(List<PermisoTrabajo> permisos) {
+        this.permisos = permisos;
     }
     
 }

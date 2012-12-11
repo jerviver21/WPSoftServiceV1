@@ -6,6 +6,7 @@ package com.vbrothers.permisostrabajo.services;
 
 import com.vbrothers.common.exceptions.LlaveDuplicadaException;
 import com.vbrothers.permisostrabajo.dominio.PermisoTrabajo;
+import com.vbrothers.permisostrabajo.dominio.TrazabilidadPermiso;
 import com.vbrothers.permisostrabajo.to.PermisoTrabajoTO;
 import com.vbrothers.usuarios.dominio.Users;
 import java.text.ParseException;
@@ -39,5 +40,7 @@ public interface GestionPermisoServiceLocal {
     void finalizarPermiso(PermisoTrabajoTO pto)throws LlaveDuplicadaException;
     
     List<PermisoTrabajo> findPermisosPendientes(Users usr);
+    
+    List<TrazabilidadPermiso> findTrazabilidadPermiso(PermisoTrabajo permiso);
     
 }

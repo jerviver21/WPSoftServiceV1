@@ -112,7 +112,6 @@ public class PermisoTrabajo implements Serializable {
     public PermisoTrabajo() {
         sector = new Sector();
         equipo = new Equipo();
-        proyecto = new Proyecto();
     }
 
     public PermisoTrabajo(Long id) {

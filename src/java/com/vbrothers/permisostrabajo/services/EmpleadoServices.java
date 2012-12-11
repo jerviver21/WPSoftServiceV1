@@ -173,6 +173,11 @@ public class EmpleadoServices extends AbstractFacade<Empleado> implements Emplea
         return empleados;
     }
 
+    @Override
+    public Empleado findByUser(String usr) {
+        return (Empleado)em.createQuery("SELECT e FROM Empleado e WHERE e.usuario =:usr").setParameter("usr", usr).getSingleResult();
+    }
+
 
    
     

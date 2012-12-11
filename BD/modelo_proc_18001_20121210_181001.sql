@@ -1,0 +1,10 @@
+ALTER TABLE contratistas_proyecto DROP CONSTRAINT contra_proy_contra;
+ALTER TABLE contratistas_proyecto DROP COLUMN id_contratista;
+ALTER TABLE contratistas_proyecto DROP CONSTRAINT contra_proy_proy_fk;
+ALTER TABLE contratistas_proyecto DROP COLUMN id_proyecto;
+DROP TABLE contratistas_proyecto;
+ALTER TABLE empleados_proyecto DROP CONSTRAINT proy_emp_proy_fk;
+ALTER TABLE empleados_proyecto DROP COLUMN id_proyecto;
+ALTER TABLE empleados_proyecto DROP CONSTRAINT emp_proy_emp_fk;
+ALTER TABLE empleados_proyecto DROP COLUMN id_empleado;
+DROP TABLE empleados_proyecto;

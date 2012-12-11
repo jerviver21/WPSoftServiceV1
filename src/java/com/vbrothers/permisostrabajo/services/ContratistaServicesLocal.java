@@ -31,9 +31,9 @@ public interface ContratistaServicesLocal {
     
     List<Contratista> findContratistasActivos();
  
-    public void guardar(Contratista entity) throws LlaveDuplicadaException, ParametroException;
+    void guardar(Contratista entity) throws LlaveDuplicadaException, ParametroException;
 
-    public Contratista findByUser(String usr);
+    Contratista findByUser(String usr);
 
     
 }

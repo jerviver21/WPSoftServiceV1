@@ -7,6 +7,7 @@ package com.vbrothers.permisostrabajo.services;
 import com.vbrothers.common.exceptions.LlaveDuplicadaException;
 import com.vbrothers.permisostrabajo.dominio.Contratista;
 import com.vbrothers.permisostrabajo.dominio.Proyecto;
+import java.util.Date;
 import java.util.List;
 import javax.ejb.Local;
 
@@ -29,5 +30,7 @@ public interface ProyectoServicesLocal {
     public List<Proyecto> findProyectosContratista(Contratista contratista);
     
     public List<Proyecto> findProyectosActivos();
+
+    public List<Proyecto> findProyectos(String usr, Date fechaDesde, Date fechaHasta);
     
 }

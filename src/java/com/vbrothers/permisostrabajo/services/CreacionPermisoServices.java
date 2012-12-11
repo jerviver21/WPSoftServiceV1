@@ -30,32 +30,28 @@ public class CreacionPermisoServices implements CreacionPermisoServicesLocal {
 
     @EJB
     ContratistaServicesLocal contratistaServices;
+    
+    @EJB
+    EmpleadoServicesLocal empleadoServices;
 
 
     @Override
     public PermisoTrabajoTO findPermisoTrabajo(Object id){
         PermisoTrabajoTO pto = new PermisoTrabajoTO();
         PermisoTrabajo permiso = em.find(PermisoTrabajo.class, id);
-        //-------------------------------------------------------------------------------------------------
-
-        System.out.println("Cantidad sectores afectados :"+permiso.getSectoresAfectados().size()+" - Cantidad peligros: "+permiso.getTareas().size());
         pto.setPermiso(permiso);
         pto.setHoraIni(FechaUtils.getHora(permiso.getHoraIni()));
         pto.setHoraFin(FechaUtils.getHora(permiso.getHoraFin()));
         if(permiso.isEjecutorContratista()){
-            Contratista cont = new Contratista();
-            //Aqui se llama al service que con el nombre de usuario me trae el contratista
+            Contratista cont = contratistaServices.findByUser(permiso.getUsuariosEjecutante());
             pto.setContratista(cont);
         }else{
-            List<Empleado> empleados = new ArrayList<Empleado>();
             if(permiso.getUsuariosEjecutante() != null){
                 String[] usrs = permiso.getUsuariosEjecutante().split(";");
                 for(String usr : usrs){
-                    //Aqui llamamos al servicio que conecta mis usuarios con mis empleados
+                    pto.getEmpleados().add(empleadoServices.findByUser(usr));
                 }
             }
-            
-            pto.setEmpleados(empleados);
         }
         return pto;
     }
@@ -68,8 +64,6 @@ public class CreacionPermisoServices implements CreacionPermisoServicesLocal {
             permiso.setHoraFin(FechaUtils.getTime(pto.getHoraFin()));
         }
         permiso.setFechaHoraCreacion(new Date());
-
-        List<Tarea> tareas = permiso.getTareas();
 
         if(pto.getContratista() != null){
             Contratista cont = contratistaServices.find(pto.getContratista().getId());
@@ -93,6 +87,16 @@ public class CreacionPermisoServices implements CreacionPermisoServicesLocal {
         pto.setPermiso(em.merge(pto.getPermiso()));
         System.out.println("Id nuevo permiso de trabajo: -> "+pto.getPermiso().getId());
         adminEstadosServices.crearPermiso(pto);
+    }
+    
+    @Override
+    public void actualizarPermiso(PermisoTrabajoTO pto)throws ParseException{
+        PermisoTrabajo permiso = pto.getPermiso();
+        if(pto.getHoraIni() != null){
+            permiso.setHoraIni(FechaUtils.getTime(pto.getHoraIni()));
+            permiso.setHoraFin(FechaUtils.getTime(pto.getHoraFin()));
+        }
+        pto.setPermiso(em.merge(pto.getPermiso()));
     }
 
     @Override

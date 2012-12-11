@@ -24,6 +24,8 @@ public interface EmpleadoServicesLocal {
     Empleado find(Object id);
     
     Empleado findById(Long numId);
+    
+    Empleado findByUser(String usr);
 
     List<Empleado> findAll();
 

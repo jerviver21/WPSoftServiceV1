@@ -259,6 +259,13 @@ public class GestionPermisoService implements GestionPermisoServiceLocal {
         em.merge(pto.getPermiso());
         adminEstadosServices.finalizarPermiso(pto);
     }
+    
+    @Override
+    public List<TrazabilidadPermiso> findTrazabilidadPermiso(PermisoTrabajo permiso){
+        List<TrazabilidadPermiso> trazPermiso = em.createQuery("SELECT t FROM TrazabilidadPermiso t WHERE t.permisoTrabajo =:permiso ORDER by t.fechaHora")
+                .setParameter("permiso", permiso).getResultList();
+        return trazPermiso;
+    }
 
 
 }

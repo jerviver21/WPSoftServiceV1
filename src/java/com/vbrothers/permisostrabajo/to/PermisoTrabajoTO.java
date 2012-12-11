@@ -36,6 +36,7 @@ public class PermisoTrabajoTO {
     public PermisoTrabajoTO(){
         tareasVista = new ArrayList<Tarea>();
         empleados = new ArrayList<Empleado>();
+        permiso = new PermisoTrabajo();
         contratista = null;
     }
 

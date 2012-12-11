@@ -226,6 +226,16 @@
                 <Indexattribute attributerefid="0cbaaec2-2376-4f2a-8a84-7add5f79f17b" id="85422b8a-f5cf-4c8c-a3a0-6818aab4af10"/>
             </Index>
         </Table>
+        <Table id="f8a84848-eace-4e01-950d-fce00d94f10c" name="contratistas_proyecto" schema="">
+            <Property name="LOCATION" value="2167:1170"/>
+            <Attribute datatype="bigserial" defaultvalue="" extra="" fraction="0" id="144d2e40-22c8-4623-b6ee-b48005c41c46" name="id" nullable="false" scale="10" size=""/>
+            <Attribute datatype="bigint" defaultvalue="" extra="" fraction="0" id="c2bd0f57-9fb7-46df-a986-4f1b2a972aa2" name="id_proyecto" nullable="false" scale="10" size=""/>
+            <Attribute datatype="bigint" defaultvalue="" extra="" fraction="0" id="43fd1cc2-8873-4983-991b-e3ea2afa5ca6" name="id_contratista" nullable="true" scale="10" size=""/>
+            <Attribute datatype="text" defaultvalue="" extra="" fraction="null" id="e3e9438c-5951-4262-8893-ad08e9ec07c1" name="actividad" nullable="true" scale="10" size=""/>
+            <Index id="f5b81147-2245-42fb-9e82-d8bf0cec652d" indextype="PRIMARYKEY" name="contratistas_proyecto_pk">
+                <Indexattribute attributerefid="144d2e40-22c8-4623-b6ee-b48005c41c46" id="22445d37-d1b9-4304-a84b-d7d4f969f002"/>
+            </Index>
+        </Table>
         <Table id="e01c731d-ae99-441d-8b5a-7e9ebf42ef72" name="campos_validacion" schema="">
             <Property name="LOCATION" value="2673:1216"/>
             <Attribute datatype="serial" defaultvalue="" extra="" fraction="0" id="5c3f3e3d-9a1c-4503-86ff-67da899e5da3" name="id" nullable="true" scale="10" size=""/>
@@ -462,6 +472,16 @@
                 <Indexattribute attributerefid="0ac04d74-8724-4762-9be7-34f22fbb5ae0" id="6990d9c6-5de5-4ff1-b79f-743f40cc6031"/>
             </Index>
         </Table>
+        <Table id="3157fdd8-4e31-4906-9513-53f30575ad5c" name="empleados_proyecto" schema="">
+            <Property name="LOCATION" value="1628:952"/>
+            <Attribute datatype="bigserial" defaultvalue="" extra="" fraction="null" id="d1e7c1cf-efe1-4ec7-977d-8d742194b364" name="id" nullable="false" scale="10" size=""/>
+            <Attribute datatype="bigint" defaultvalue="" extra="" fraction="null" id="db3b8f04-c1ca-4e1d-a1b2-4c9f1636abf8" name="id_proyecto" nullable="false" scale="10" size=""/>
+            <Attribute datatype="bigint" defaultvalue="" extra="" fraction="null" id="65ceeb21-8d24-4dfd-b7ff-922800d305b7" name="id_empleado" nullable="false" scale="10" size=""/>
+            <Attribute datatype="text" defaultvalue="" extra="" fraction="null" id="6c381e10-83b8-41a6-8ace-2715567f6ce5" name="actividad" nullable="true" scale="10" size=""/>
+            <Index id="7d04b3c6-fbf2-4165-a7d2-f3172864f685" indextype="PRIMARYKEY" name="empleados_proyecto_pk">
+                <Indexattribute attributerefid="d1e7c1cf-efe1-4ec7-977d-8d742194b364" id="b1d4d56d-b3ff-48e7-a73f-0412d547ad5a"/>
+            </Index>
+        </Table>
         <Table id="f8c733b7-b1b5-4bd1-b36a-11d18fc73a3f" name="trazabilidad_activacion_emps" schema="">
             <Property name="LOCATION" value="1678:528"/>
             <Attribute datatype="bigserial" defaultvalue="" extra="" fraction="null" id="6818d08f-35da-4048-af07-f8c2bdea61e9" name="id" nullable="false" scale="10" size=""/>
@@ -549,6 +569,12 @@
         <Relation exportingtablerefid="02781496-90c8-4ffb-967f-bb21956f69b0" id="0dd0b476-ca37-448d-ace9-30753b0be1a5" importingtablerefid="e40b774b-360a-4bd4-b8a1-fcb46e1bce17" name="empleado_contratista_fk" ondelete="NOTHING" onupdate="NOTHING">
             <Mapping exportingexpressionrefid="12a697ff-aa24-4454-86aa-01402a36ab04" importingattributerefid="5c5dc870-86ac-4db2-a75e-66ffd7783b2f"/>
         </Relation>
+        <Relation exportingtablerefid="d28ee84c-e1b6-4d6a-ad3d-e13e6b681ce5" id="ebff0eea-cf1a-45ea-a70b-e8277814b888" importingtablerefid="f8a84848-eace-4e01-950d-fce00d94f10c" name="contra_proy_proy_fk" ondelete="CASCADE" onupdate="CASCADE">
+            <Mapping exportingexpressionrefid="85422b8a-f5cf-4c8c-a3a0-6818aab4af10" importingattributerefid="c2bd0f57-9fb7-46df-a986-4f1b2a972aa2"/>
+        </Relation>
+        <Relation exportingtablerefid="02781496-90c8-4ffb-967f-bb21956f69b0" id="fd2fac1a-387f-4eea-bc53-12bab6db7eac" importingtablerefid="f8a84848-eace-4e01-950d-fce00d94f10c" name="contra_proy_contra" ondelete="CASCADE" onupdate="CASCADE">
+            <Mapping exportingexpressionrefid="12a697ff-aa24-4454-86aa-01402a36ab04" importingattributerefid="43fd1cc2-8873-4983-991b-e3ea2afa5ca6"/>
+        </Relation>
         <Relation exportingtablerefid="3e84ee83-9381-4188-8e27-7a8b6dc4864e" id="3f8c7611-5697-46b6-8ada-7a72e91d459c" importingtablerefid="af41741a-6fd2-4f9e-915b-8fb0225b6033" name="estado_traz_trab_fk" ondelete="NOTHING" onupdate="NOTHING">
             <Mapping exportingexpressionrefid="17e2c76e-af63-4f02-bca8-01a437e23208" importingattributerefid="0e8290b3-745d-43ea-835f-5de81e7ace74"/>
         </Relation>
@@ -619,6 +645,12 @@
         </Relation>
         <Relation exportingtablerefid="3f7b2376-2362-495f-b10d-328d1025a4e2" id="52b9ba18-3571-43f7-a2e9-7c92e79bce01" importingtablerefid="6b01b30a-d9ac-4577-9617-e2267019ecb5" name="certificado_tipo_fk" ondelete="NOTHING" onupdate="NOTHING">
             <Mapping exportingexpressionrefid="6990d9c6-5de5-4ff1-b79f-743f40cc6031" importingattributerefid="d7d78b1a-c06f-467a-8566-ea0c2146f363"/>
+        </Relation>
+        <Relation exportingtablerefid="e40b774b-360a-4bd4-b8a1-fcb46e1bce17" id="023cf61a-cbc0-498e-b51f-44bc97a89571" importingtablerefid="3157fdd8-4e31-4906-9513-53f30575ad5c" name="emp_proy_emp_fk" ondelete="NOTHING" onupdate="NOTHING">
+            <Mapping exportingexpressionrefid="e3462035-b680-4fc5-b3b1-af8f0f5b2feb" importingattributerefid="65ceeb21-8d24-4dfd-b7ff-922800d305b7"/>
+        </Relation>
+        <Relation exportingtablerefid="d28ee84c-e1b6-4d6a-ad3d-e13e6b681ce5" id="e54da6f7-a2a7-4a1a-a5eb-9cc9eefd0b8d" importingtablerefid="3157fdd8-4e31-4906-9513-53f30575ad5c" name="proy_emp_proy_fk" ondelete="NOTHING" onupdate="NOTHING">
+            <Mapping exportingexpressionrefid="85422b8a-f5cf-4c8c-a3a0-6818aab4af10" importingattributerefid="db3b8f04-c1ca-4e1d-a1b2-4c9f1636abf8"/>
         </Relation>
         <Relation exportingtablerefid="e40b774b-360a-4bd4-b8a1-fcb46e1bce17" id="2ae85b53-1e99-4231-b1c7-ebc58633fa4b" importingtablerefid="f8c733b7-b1b5-4bd1-b36a-11d18fc73a3f" name="emp_traz_act_fk" ondelete="NOTHING" onupdate="NOTHING">
             <Mapping exportingexpressionrefid="e3462035-b680-4fc5-b3b1-af8f0f5b2feb" importingattributerefid="0f44ab51-6d30-4cba-8ddf-53ecb58bdee6"/>
