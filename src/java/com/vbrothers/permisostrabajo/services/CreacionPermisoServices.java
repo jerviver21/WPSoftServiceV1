@@ -128,7 +128,7 @@ public class CreacionPermisoServices implements CreacionPermisoServicesLocal {
         if(pt.getEstadoPermiso().equals(EstadosPermiso.CREADO)){
             em.remove(em.merge(pt));
         }else{
-            throw new EstadoException("El permiso se encuentra en un estado en el cual no se puede borrar, sólo puede ser suspendido");
+            throw new EstadoException("El permiso se encuentra en un estado en el cual no se puede borrar, cambie estado a SUSPENDIDO");
         }
         
     }

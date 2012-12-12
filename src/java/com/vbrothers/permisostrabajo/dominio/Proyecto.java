@@ -5,6 +5,7 @@
 package com.vbrothers.permisostrabajo.dominio;
 
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -58,6 +59,12 @@ public class Proyecto implements Serializable {
     @Column(name = "fecha_hora_creacion")
     @Temporal(TemporalType.TIMESTAMP)
     private Date fechaHoraCreacion;
+    
+    @Transient
+    private String fIniFormato;
+    
+    @Transient
+    private String fFinFormato;
 
     
 
@@ -220,6 +227,39 @@ public class Proyecto implements Serializable {
      */
     public void setPermisos(List<PermisoTrabajo> permisos) {
         this.permisos = permisos;
+    }
+
+    /**
+     * @return the fIniFormato
+     */
+    public String getfIniFormato() {
+        SimpleDateFormat f = new SimpleDateFormat("yyyy-MM-dd");
+        fIniFormato = f.format(fechaIni);
+        return fIniFormato;
+    }
+
+    /**
+     * @param fIniFormato the fIniFormato to set
+     */
+    public void setfIniFormato(String fIniFormato) {
+        
+        this.fIniFormato = fIniFormato;
+    }
+
+    /**
+     * @return the fFinFormato
+     */
+    public String getfFinFormato() {
+        SimpleDateFormat f = new SimpleDateFormat("yyyy-MM-dd");
+        fFinFormato = f.format(fechaFin);
+        return fFinFormato;
+    }
+
+    /**
+     * @param fFinFormato the fFinFormato to set
+     */
+    public void setfFinFormato(String fFinFormato) {
+        this.fFinFormato = fFinFormato;
     }
     
 }

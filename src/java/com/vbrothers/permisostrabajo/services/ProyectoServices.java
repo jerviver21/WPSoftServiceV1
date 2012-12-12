@@ -4,15 +4,17 @@
  */
 package com.vbrothers.permisostrabajo.services;
 
+import com.vbrothers.common.exceptions.EstadoException;
 import com.vbrothers.common.exceptions.LlaveDuplicadaException;
 import com.vbrothers.common.services.AbstractFacade;
 import com.vbrothers.permisostrabajo.dominio.Contratista;
-import com.vbrothers.permisostrabajo.dominio.ContratistasProyecto;
-import com.vbrothers.permisostrabajo.dominio.EmpleadosProyecto;
 import com.vbrothers.permisostrabajo.dominio.EstadosProyecto;
+import com.vbrothers.permisostrabajo.dominio.PermisoTrabajo;
 import com.vbrothers.permisostrabajo.dominio.Proyecto;
+import com.vbrothers.util.EstadosPermiso;
 import java.util.Date;
 import java.util.List;
+import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -26,6 +28,9 @@ import org.hibernate.exception.ConstraintViolationException;
 public class ProyectoServices extends AbstractFacade<Proyecto> implements ProyectoServicesLocal {
     @PersistenceContext(unitName = "WPSoftPU")
     private EntityManager em;
+    
+    @EJB
+    CreacionPermisoServicesLocal permisoService;
 
     @Override
     protected EntityManager getEntityManager() {
@@ -38,8 +43,11 @@ public class ProyectoServices extends AbstractFacade<Proyecto> implements Proyec
 
     @Override
     public void edit(Proyecto proyecto)throws LlaveDuplicadaException{
-        proyecto.setFechaHoraCreacion(new Date());
-        proyecto.setEstado(new EstadosProyecto(1));
+        if(proyecto.getFechaHoraCreacion() == null){
+            proyecto.setFechaHoraCreacion(new Date());
+            proyecto.setEstado(new EstadosProyecto(1));
+            proyecto.getEstado().setNombre("ACTIVO");
+        }
         try {
             Proyecto p = em.merge(proyecto);
             proyecto.setId(p.getId());
@@ -77,6 +85,31 @@ public class ProyectoServices extends AbstractFacade<Proyecto> implements Proyec
                 .setParameter("fechaFin", fechaHasta)
                 .getResultList();
         return proyectos;
+    }
+
+    @Override
+    public void borrarProyecto(Proyecto proyecto) throws EstadoException {
+        proyecto = em.merge(proyecto);
+        for (PermisoTrabajo p : proyecto.getPermisos()) {
+            try {
+                permisoService.deletePermiso(p);
+            } catch (EstadoException e) {
+                throw new EstadoException("El proyecto no se puede borrar, hay actividades que fueron iniciadas. Si desea puede inactivar el proyecto");
+            }
+        }
+        em.remove(proyecto);
+    }
+
+    @Override
+    public Proyecto findProyecto(Long id) {
+        Proyecto p = (Proyecto) em.find(Proyecto.class, id);
+        System.out.println("No Permisos del proyecto p: "+p.getPermisos().size());
+        return p;
+    }
+
+    @Override
+    public EstadosProyecto findEstadoById(int estado) {
+        return (EstadosProyecto) em.find(EstadosProyecto.class, estado);
     }
     
 }
