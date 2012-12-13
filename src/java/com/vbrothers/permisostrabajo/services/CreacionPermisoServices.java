@@ -3,6 +3,7 @@ package com.vbrothers.permisostrabajo.services;
 
 import com.vbrothers.common.exceptions.EstadoException;
 import com.vbrothers.common.exceptions.LlaveDuplicadaException;
+import com.vbrothers.common.exceptions.ValidacionException;
 import com.vbrothers.permisostrabajo.dominio.*;
 import com.vbrothers.permisostrabajo.to.PermisoTrabajoTO;
 import com.vbrothers.util.EstadosPermiso;
@@ -40,47 +41,46 @@ public class CreacionPermisoServices implements CreacionPermisoServicesLocal {
         PermisoTrabajoTO pto = new PermisoTrabajoTO();
         PermisoTrabajo permiso = em.find(PermisoTrabajo.class, id);
         pto.setPermiso(permiso);
-        pto.setHoraIni(FechaUtils.getHora(permiso.getHoraIni()));
-        pto.setHoraFin(FechaUtils.getHora(permiso.getHoraFin()));
         if(permiso.isEjecutorContratista()){
             Contratista cont = contratistaServices.findByUser(permiso.getUsuariosEjecutante());
             pto.setContratista(cont);
         }else{
-            if(permiso.getUsuariosEjecutante() != null){
-                String[] usrs = permiso.getUsuariosEjecutante().split(";");
-                for(String usr : usrs){
-                    pto.getEmpleados().add(empleadoServices.findByUser(usr));
-                }
+            String[] usrs = permiso.getUsuariosEjecutante().split(";");
+            for(String usr : usrs){
+                pto.getEmpleados().add(empleadoServices.findByUser(usr));
             }
         }
         return pto;
     }
     
     @Override
-    public void crearPermiso(PermisoTrabajoTO pto)throws ParseException, LlaveDuplicadaException{
+    public void crearPermiso(PermisoTrabajoTO pto)throws ParseException, LlaveDuplicadaException, ValidacionException{
         PermisoTrabajo permiso = pto.getPermiso();
-        if(pto.getHoraIni() != null){
-            permiso.setHoraIni(FechaUtils.getTime(pto.getHoraIni()));
-            permiso.setHoraFin(FechaUtils.getTime(pto.getHoraFin()));
-        }
         permiso.setFechaHoraCreacion(new Date());
+        
+        if(permiso.getEquipo().getId() == null || permiso.getEquipo().getId() == 0 ){
+            permiso.setEquipo(null);
+        }
 
         if(pto.getContratista() != null){
+            permiso.setEjecutorContratista(true);
             Contratista cont = contratistaServices.find(pto.getContratista().getId());
             String usr = cont.getUsuario();
             System.out.println("Usuario Contratista: "+usr);
             permiso.setUsuariosEjecutante(usr);
-            permiso.setEjecutorContratista(true);
         }
 
-        if(!pto.getEmpleados().isEmpty()){
+        if(pto.getContratista() == null){
+            permiso.setEjecutorContratista(false);
+            if(pto.getEmpleados().isEmpty()){
+                throw new ValidacionException("Debe agregar empleados ejecutantes");
+            }
             for(Empleado emp:pto.getEmpleados()){
                 String usr = emp.getUsuario();
                 System.out.println("Usuario empleado: "+usr);
                 permiso.setUsuariosEjecutante(permiso.getUsuariosEjecutante() == null
                         ? usr : permiso.getUsuariosEjecutante()+";"+usr);
             }
-            permiso.setEjecutorContratista(false);
         }
         permiso.setEstadoPermiso(EstadosPermiso.CREADO);
         //permiso.setProyecto(em.find(Proyecto.class, trabajo.getIdProyecto()));
@@ -92,10 +92,6 @@ public class CreacionPermisoServices implements CreacionPermisoServicesLocal {
     @Override
     public void actualizarPermiso(PermisoTrabajoTO pto)throws ParseException{
         PermisoTrabajo permiso = pto.getPermiso();
-        if(pto.getHoraIni() != null){
-            permiso.setHoraIni(FechaUtils.getTime(pto.getHoraIni()));
-            permiso.setHoraFin(FechaUtils.getTime(pto.getHoraFin()));
-        }
         pto.setPermiso(em.merge(pto.getPermiso()));
     }
 
@@ -125,12 +121,11 @@ public class CreacionPermisoServices implements CreacionPermisoServicesLocal {
     
     @Override
     public void deletePermiso(PermisoTrabajo pt)throws EstadoException{
-        if(pt.getEstadoPermiso().equals(EstadosPermiso.CREADO)){
-            em.remove(em.merge(pt));
-        }else{
+        pt.setProyecto(null);
+        if(!pt.getEstadoPermiso().equals(EstadosPermiso.CREADO)){
             throw new EstadoException("El permiso se encuentra en un estado en el cual no se puede borrar, cambie estado a SUSPENDIDO");
         }
-        
+        em.remove(em.merge(pt));
     }
 
     

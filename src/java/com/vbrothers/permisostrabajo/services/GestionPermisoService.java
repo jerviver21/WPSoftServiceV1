@@ -94,8 +94,6 @@ public class GestionPermisoService implements GestionPermisoServiceLocal {
 
         System.out.println("Cantidad sectores afectados :"+permiso.getSectoresAfectados().size()+" - Cantidad peligros: "+permiso.getTareas().size());
         pto.setPermiso(permiso);
-        pto.setHoraIni(FechaUtils.getHora(permiso.getHoraIni()));
-        pto.setHoraFin(FechaUtils.getHora(permiso.getHoraFin()));
         if(permiso.isEjecutorContratista()){
             Contratista cont = new Contratista();
             //Aqui se llama al service que con el nombre de usuario me trae el contratista

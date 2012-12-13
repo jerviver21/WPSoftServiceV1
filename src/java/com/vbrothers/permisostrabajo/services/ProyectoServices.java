@@ -1,17 +1,14 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package com.vbrothers.permisostrabajo.services;
 
 import com.vbrothers.common.exceptions.EstadoException;
 import com.vbrothers.common.exceptions.LlaveDuplicadaException;
 import com.vbrothers.common.services.AbstractFacade;
 import com.vbrothers.permisostrabajo.dominio.Contratista;
-import com.vbrothers.permisostrabajo.dominio.EstadosProyecto;
+import com.vbrothers.permisostrabajo.dominio.EstadoProyecto;
 import com.vbrothers.permisostrabajo.dominio.PermisoTrabajo;
 import com.vbrothers.permisostrabajo.dominio.Proyecto;
-import com.vbrothers.util.EstadosPermiso;
+import com.vbrothers.util.EstadosProyecto;
 import java.util.Date;
 import java.util.List;
 import javax.ejb.EJB;
@@ -45,7 +42,7 @@ public class ProyectoServices extends AbstractFacade<Proyecto> implements Proyec
     public void edit(Proyecto proyecto)throws LlaveDuplicadaException{
         if(proyecto.getFechaHoraCreacion() == null){
             proyecto.setFechaHoraCreacion(new Date());
-            proyecto.setEstado(new EstadosProyecto(1));
+            proyecto.setEstado(new EstadoProyecto(1));
             proyecto.getEstado().setNombre("ACTIVO");
         }
         try {
@@ -78,9 +75,10 @@ public class ProyectoServices extends AbstractFacade<Proyecto> implements Proyec
 
     @Override
     public List<Proyecto> findProyectos(String usr, Date fechaDesde, Date fechaHasta) {
+        System.out.println(usr+" - "+fechaDesde+" - "+fechaHasta);
         List<Proyecto> proyectos = em.createQuery("SELECT p FROM Proyecto p "
                 + "WHERE p.usuarioCreacion = :usr AND p.fechaHoraCreacion BETWEEN :fechaIni AND :fechaFin ")
-                .setParameter("user", usr)
+                .setParameter("usr", usr)
                 .setParameter("fechaIni",fechaDesde)
                 .setParameter("fechaFin", fechaHasta)
                 .getResultList();
@@ -108,8 +106,18 @@ public class ProyectoServices extends AbstractFacade<Proyecto> implements Proyec
     }
 
     @Override
-    public EstadosProyecto findEstadoById(int estado) {
-        return (EstadosProyecto) em.find(EstadosProyecto.class, estado);
+    public EstadoProyecto findEstadoById(int estado) {
+        return (EstadoProyecto) em.find(EstadoProyecto.class, estado);
+    }
+
+    @Override
+    public List<Proyecto> findProyectosActivos(String usr) {
+        List<Proyecto> proyectos = em.createQuery("SELECT p FROM Proyecto p "
+                + "WHERE p.usuarioCreacion = :usr AND p.estado = :estado")
+                .setParameter("usr", usr)
+                .setParameter("estado", EstadosProyecto.ACTIVO)
+                .getResultList();
+        return proyectos;
     }
     
 }

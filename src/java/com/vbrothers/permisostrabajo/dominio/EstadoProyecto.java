@@ -21,8 +21,8 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "estados_proyecto")
 @NamedQueries({
-    @NamedQuery(name = "EstadosProyecto.findAll", query = "SELECT e FROM EstadosProyecto e")})
-public class EstadosProyecto implements Serializable {
+    @NamedQuery(name = "EstadoProyecto.findAll", query = "SELECT e FROM EstadoProyecto e")})
+public class EstadoProyecto implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
     @Basic(optional = false)
@@ -32,14 +32,14 @@ public class EstadosProyecto implements Serializable {
     @Column(name = "nombre")
     private String nombre;
 
-    public EstadosProyecto() {
+    public EstadoProyecto() {
     }
 
-    public EstadosProyecto(Integer id) {
+    public EstadoProyecto(Integer id) {
         this.id = id;
     }
 
-    public EstadosProyecto(Integer id, String nombre) {
+    public EstadoProyecto(Integer id, String nombre) {
         this.id = id;
         this.nombre = nombre;
     }
@@ -70,10 +70,10 @@ public class EstadosProyecto implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof EstadosProyecto)) {
+        if (!(object instanceof EstadoProyecto)) {
             return false;
         }
-        EstadosProyecto other = (EstadosProyecto) object;
+        EstadoProyecto other = (EstadoProyecto) object;
         if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
             return false;
         }

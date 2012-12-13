@@ -22,8 +22,6 @@ public class PermisoTrabajoTO {
     private PermisoTrabajo permiso;
     private Contratista contratista;
     private List<Empleado> empleados;
-    private String horaIni;
-    private String horaFin;
     private String nota;
     private Users usr;
     private int etapa = SOLICITAR_APROBACION;
@@ -37,6 +35,14 @@ public class PermisoTrabajoTO {
         tareasVista = new ArrayList<Tarea>();
         empleados = new ArrayList<Empleado>();
         permiso = new PermisoTrabajo();
+        contratista = null;
+    }
+    
+    public PermisoTrabajoTO(Users usrCreador){
+        tareasVista = new ArrayList<Tarea>();
+        empleados = new ArrayList<Empleado>();
+        permiso = new PermisoTrabajo(usrCreador.getUsr());
+        usr = usrCreador;
         contratista = null;
     }
 
@@ -80,34 +86,6 @@ public class PermisoTrabajoTO {
      */
     public void setEmpleados(List<Empleado> empleados) {
         this.empleados = empleados;
-    }
-
-    /**
-     * @return the horaIni
-     */
-    public String getHoraIni() {
-        return horaIni;
-    }
-
-    /**
-     * @param horaIni the horaIni to set
-     */
-    public void setHoraIni(String horaIni) {
-        this.horaIni = horaIni;
-    }
-
-    /**
-     * @return the horaFin
-     */
-    public String getHoraFin() {
-        return horaFin;
-    }
-
-    /**
-     * @param horaFin the horaFin to set
-     */
-    public void setHoraFin(String horaFin) {
-        this.horaFin = horaFin;
     }
 
     /**

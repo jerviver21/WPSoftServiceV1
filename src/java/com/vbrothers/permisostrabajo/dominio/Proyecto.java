@@ -47,12 +47,12 @@ public class Proyecto implements Serializable {
     @Basic(optional = false)
     @Column(name = "num_gestion_cambio")
     private long numGestionCambio;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "proyecto", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "proyecto", fetch = FetchType.LAZY)
     private List<PermisoTrabajo> permisos;
 
     @JoinColumn(name = "id_estado", referencedColumnName = "id")
     @ManyToOne(fetch = FetchType.EAGER)
-    private EstadosProyecto estado;
+    private EstadoProyecto estado;
     
     @Column(name = "usuario_creacion")
     private String usuarioCreacion;
@@ -69,7 +69,7 @@ public class Proyecto implements Serializable {
     
 
     public Proyecto() {
-        estado = new EstadosProyecto(1);
+        estado = new EstadoProyecto(1);
         permisos = new ArrayList<PermisoTrabajo>();
     }
 
@@ -176,14 +176,14 @@ public class Proyecto implements Serializable {
     /**
      * @return the estado
      */
-    public EstadosProyecto getEstado() {
+    public EstadoProyecto getEstado() {
         return estado;
     }
 
     /**
      * @param estado the estado to set
      */
-    public void setEstado(EstadosProyecto estado) {
+    public void setEstado(EstadoProyecto estado) {
         this.estado = estado;
     }
 

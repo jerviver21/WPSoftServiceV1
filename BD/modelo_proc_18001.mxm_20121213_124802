@@ -313,9 +313,11 @@
             <Attribute datatype="int4" defaultvalue="" extra="" fraction="null" id="7ae54d34-0294-4903-acaf-90b6323f5018" name="id_sector" nullable="true" scale="10" size=""/>
             <Attribute datatype="bigint" defaultvalue="" extra="" fraction="null" id="6ac6933b-c927-4932-82fa-4348c55c6cb9" name="id_proyecto" nullable="true" scale="10" size=""/>
             <Attribute datatype="bigint" defaultvalue="" extra="" fraction="null" id="549bab25-ed9a-4ebf-983b-5cf7f7a4e2ba" name="num_orden" nullable="true" scale="10" size=""/>
+            <Attribute datatype="time" defaultvalue="" extra="" fraction="null" id="9df1ea17-de36-427f-98e8-3f7a0a0156dc" name="hora_ini" nullable="true" scale="10" size=""/>
+            <Attribute datatype="date" defaultvalue="" extra="" fraction="null" id="63542e9e-aefa-4dbc-9d7e-ae37c6d901b9" name="fecha_fin" nullable="true" scale="10" size=""/>
+            <Attribute datatype="time" defaultvalue="" extra="" fraction="null" id="042f9e2f-edaa-4ba5-ad17-be5b1c5839b9" name="hora_fin" nullable="true" scale="10" size=""/>
+            <Attribute datatype="date" defaultvalue="" extra="" fraction="null" id="a0aea724-1fac-4713-9ecf-bdf4ea95d8c5" name="fecha_ini" nullable="true" scale="10" size=""/>
             <Attribute datatype="boolean" defaultvalue="" extra="" fraction="null" id="7a228893-d231-4704-9c4b-4a14806559bf" name="ejecutor_contratista" nullable="true" scale="10" size=""/>
-            <Attribute datatype="timestamp" defaultvalue="" extra="" fraction="null" id="5b7b959b-72f1-463b-8e93-7c77fc3a6492" name="fecha_hora_fin" nullable="true" scale="10" size=""/>
-            <Attribute datatype="timestamp" defaultvalue="" extra="" fraction="null" id="c9015da8-f96e-4400-97fc-dd8a1bdb02ce" name="fecha_hora_ini" nullable="true" scale="10" size=""/>
             <Index id="edf17a11-96a2-4b96-9911-a7405ca45738" indextype="PRIMARYKEY" name="permiso_pk">
                 <Indexattribute attributerefid="c608d94a-98cd-4cb4-89d8-c97f8e087874" id="b257ed36-e869-4267-bd39-0d239864280b"/>
             </Index>

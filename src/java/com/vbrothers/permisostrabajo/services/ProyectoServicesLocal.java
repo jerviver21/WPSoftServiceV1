@@ -7,7 +7,7 @@ package com.vbrothers.permisostrabajo.services;
 import com.vbrothers.common.exceptions.EstadoException;
 import com.vbrothers.common.exceptions.LlaveDuplicadaException;
 import com.vbrothers.permisostrabajo.dominio.Contratista;
-import com.vbrothers.permisostrabajo.dominio.EstadosProyecto;
+import com.vbrothers.permisostrabajo.dominio.EstadoProyecto;
 import com.vbrothers.permisostrabajo.dominio.Proyecto;
 import java.util.Date;
 import java.util.List;
@@ -36,10 +36,12 @@ public interface ProyectoServicesLocal {
     List<Proyecto> findProyectosContratista(Contratista contratista);
     
     List<Proyecto> findProyectosActivos();
+    
+    List<Proyecto> findProyectosActivos(String usr);
 
     List<Proyecto> findProyectos(String usr, Date fechaDesde, Date fechaHasta);
 
-    public EstadosProyecto findEstadoById(int estado);
+    public EstadoProyecto findEstadoById(int estado);
 
     
     

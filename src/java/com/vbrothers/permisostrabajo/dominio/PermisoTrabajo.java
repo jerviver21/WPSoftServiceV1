@@ -51,18 +51,12 @@ public class PermisoTrabajo implements Serializable {
     private String usuariosEjecutante;
     @Column(name = "tarea")
     private String tarea;
-    @Column(name = "fecha_fin")
-    @Temporal(TemporalType.DATE)
-    private Date fechaFin;
-    @Column(name = "fecha_ini")
-    @Temporal(TemporalType.DATE)
-    private Date fechaIni;
-    @Column(name = "hora_fin")
-    @Temporal(TemporalType.TIME)
-    private Date horaFin;
-    @Column(name = "hora_ini")
-    @Temporal(TemporalType.TIME)
-    private Date horaIni;
+    @Column(name = "fecha_hora_fin")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date fechaHoraFin;
+    @Column(name = "fecha_hora_ini")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date fechaHoraIni;
 
     @Column(name = "ejecutor_contratista")
     private Boolean ejecutorContratista;
@@ -110,12 +104,18 @@ public class PermisoTrabajo implements Serializable {
 
 
     public PermisoTrabajo() {
-        sector = new Sector();
-        equipo = new Equipo();
+        sector = new Sector(null);
+        equipo = new Equipo(null);
     }
 
     public PermisoTrabajo(Long id) {
         this.id = id;
+    }
+    
+    public PermisoTrabajo(String usrCreador) {
+        this.usuarioCreacion = usrCreador;
+        sector = new Sector(null);
+        equipo = new Equipo(null);
     }
 
 
@@ -149,22 +149,6 @@ public class PermisoTrabajo implements Serializable {
 
     public void setTarea(String tarea) {
         this.tarea = tarea;
-    }
-
-    public Date getFechaFin() {
-        return fechaFin;
-    }
-
-    public void setFechaFin(Date fechaFin) {
-        this.fechaFin = fechaFin;
-    }
-
-    public Date getFechaIni() {
-        return fechaIni;
-    }
-
-    public void setFechaIni(Date fechaIni) {
-        this.fechaIni = fechaIni;
     }
 
     public String getUsuarioCreacion() {
@@ -304,34 +288,6 @@ public class PermisoTrabajo implements Serializable {
     }
 
     /**
-     * @return the horaFin
-     */
-    public Date getHoraFin() {
-        return horaFin;
-    }
-
-    /**
-     * @param horaFin the horaFin to set
-     */
-    public void setHoraFin(Date horaFin) {
-        this.horaFin = horaFin;
-    }
-
-    /**
-     * @return the horaIni
-     */
-    public Date getHoraIni() {
-        return horaIni;
-    }
-
-    /**
-     * @param horaIni the horaIni to set
-     */
-    public void setHoraIni(Date horaIni) {
-        this.horaIni = horaIni;
-    }
-
-    /**
      * @return the ejecutorContratista
      */
     public Boolean isEjecutorContratista() {
@@ -371,6 +327,34 @@ public class PermisoTrabajo implements Serializable {
      */
     public void setTrazabilidadPermisos(List<TrazabilidadPermiso> trazabilidadPermisos) {
         this.trazabilidadPermisos = trazabilidadPermisos;
+    }
+
+    /**
+     * @return the fechaHoraFin
+     */
+    public Date getFechaHoraFin() {
+        return fechaHoraFin;
+    }
+
+    /**
+     * @param fechaHoraFin the fechaHoraFin to set
+     */
+    public void setFechaHoraFin(Date fechaHoraFin) {
+        this.fechaHoraFin = fechaHoraFin;
+    }
+
+    /**
+     * @return the fechaHoraIni
+     */
+    public Date getFechaHoraIni() {
+        return fechaHoraIni;
+    }
+
+    /**
+     * @param fechaHoraIni the fechaHoraIni to set
+     */
+    public void setFechaHoraIni(Date fechaHoraIni) {
+        this.fechaHoraIni = fechaHoraIni;
     }
 
 
