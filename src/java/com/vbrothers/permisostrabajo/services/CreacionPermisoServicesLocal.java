@@ -7,6 +7,7 @@ package com.vbrothers.permisostrabajo.services;
 import com.vbrothers.common.exceptions.EstadoException;
 import com.vbrothers.common.exceptions.LlaveDuplicadaException;
 import com.vbrothers.common.exceptions.ValidacionException;
+import com.vbrothers.permisostrabajo.dominio.EstadoPermiso;
 import com.vbrothers.permisostrabajo.dominio.PermisoTrabajo;
 import com.vbrothers.permisostrabajo.to.PermisoTrabajoTO;
 import java.text.ParseException;
@@ -27,10 +28,12 @@ public interface CreacionPermisoServicesLocal {
     
     List<PermisoTrabajo> findPermisos(String user, int estado, Date fechaIni, Date fechaFin);
 
-    void crearPermiso(PermisoTrabajoTO pto)throws ParseException, LlaveDuplicadaException, ValidacionException;
+    void crearPermiso(PermisoTrabajoTO pto)throws LlaveDuplicadaException, ValidacionException;
     
-    void actualizarPermiso(PermisoTrabajoTO pto)throws ParseException;
+    void actualizarPermiso(PermisoTrabajoTO pto);
     
     void deletePermiso(PermisoTrabajo pt)throws EstadoException;
+
+    public EstadoPermiso findEstadoById(int estado);
 
 }

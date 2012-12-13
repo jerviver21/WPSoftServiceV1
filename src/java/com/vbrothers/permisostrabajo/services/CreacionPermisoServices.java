@@ -7,9 +7,6 @@ import com.vbrothers.common.exceptions.ValidacionException;
 import com.vbrothers.permisostrabajo.dominio.*;
 import com.vbrothers.permisostrabajo.to.PermisoTrabajoTO;
 import com.vbrothers.util.EstadosPermiso;
-import com.vbrothers.util.FechaUtils;
-import java.text.ParseException;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import javax.ejb.EJB;
@@ -54,7 +51,7 @@ public class CreacionPermisoServices implements CreacionPermisoServicesLocal {
     }
     
     @Override
-    public void crearPermiso(PermisoTrabajoTO pto)throws ParseException, LlaveDuplicadaException, ValidacionException{
+    public void crearPermiso(PermisoTrabajoTO pto)throws LlaveDuplicadaException, ValidacionException{
         PermisoTrabajo permiso = pto.getPermiso();
         permiso.setFechaHoraCreacion(new Date());
         
@@ -90,7 +87,7 @@ public class CreacionPermisoServices implements CreacionPermisoServicesLocal {
     }
     
     @Override
-    public void actualizarPermiso(PermisoTrabajoTO pto)throws ParseException{
+    public void actualizarPermiso(PermisoTrabajoTO pto){
         PermisoTrabajo permiso = pto.getPermiso();
         pto.setPermiso(em.merge(pto.getPermiso()));
     }
@@ -126,6 +123,11 @@ public class CreacionPermisoServices implements CreacionPermisoServicesLocal {
             throw new EstadoException("El permiso se encuentra en un estado en el cual no se puede borrar, cambie estado a SUSPENDIDO");
         }
         em.remove(em.merge(pt));
+    }
+
+    @Override
+    public EstadoPermiso findEstadoById(int estado) {
+        return (EstadoPermiso) em.find(EstadoPermiso.class, estado);
     }
 
     

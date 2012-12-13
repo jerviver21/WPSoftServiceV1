@@ -24,5 +24,6 @@ public class EstadosPermiso {
     public static EstadoPermiso CANCELADO  = new EstadoPermiso(4,"CANCELADO ");
     public static EstadoPermiso APROBADO  = new EstadoPermiso(5,"APROBADO ");
     public static EstadoPermiso APROBADA_CANCELACION  = new EstadoPermiso(6,"APROBADA_CANCELACION ");
+    
  
 }
