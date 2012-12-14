@@ -4,8 +4,10 @@ package com.vbrothers.permisostrabajo.services;
 import com.vbrothers.common.exceptions.EstadoException;
 import com.vbrothers.common.exceptions.LlaveDuplicadaException;
 import com.vbrothers.common.exceptions.ValidacionException;
+import com.vbrothers.locator.ServiceLocator;
 import com.vbrothers.permisostrabajo.dominio.*;
 import com.vbrothers.permisostrabajo.to.PermisoTrabajoTO;
+import com.vbrothers.usuarios.dominio.Users;
 import com.vbrothers.util.EstadosPermiso;
 import java.util.Date;
 import java.util.List;
@@ -93,26 +95,47 @@ public class CreacionPermisoServices implements CreacionPermisoServicesLocal {
     }
 
     @Override
-    public List<PermisoTrabajo> findPermisosEnProceso(String user) {
-        return em.createQuery("SELECT p "
-                + "FROM PermisoTrabajo p "
-                + "WHERE p.usuarioCreacion = '"+user+"' "
+    public List<PermisoTrabajo> findPermisosEnProceso(Users usr) {
+        String rolAdmin = ServiceLocator.getInstance().getParameter("rolAdmin") ;
+        String rolGerente = ServiceLocator.getInstance().getParameter("rolGerente") ;
+        String query = "SELECT p FROM PermisoTrabajo p WHERE p.usuarioCreacion = '"+usr.getUsr()+"' "
                 + "AND p.estadoPermiso.id != "+EstadosPermiso.CANCELADO.getId()+" "
-                + "AND p.estadoPermiso.id != "+EstadosPermiso.SUSPENDIDO.getId()).getResultList();
+                + "AND p.estadoPermiso.id != "+EstadosPermiso.SUSPENDIDO.getId();
+        if(usr.getRoles().contains(rolAdmin) || usr.getRoles().contains(rolGerente))  {
+            query = "SELECT p FROM PermisoTrabajo p WHERE "
+                + " p.estadoPermiso.id != "+EstadosPermiso.CANCELADO.getId()+" "
+                + "AND p.estadoPermiso.id != "+EstadosPermiso.SUSPENDIDO.getId();
+            
+        }
+        return em.createQuery(query).getResultList();
     }
 
     @Override
-    public List<PermisoTrabajo> findPermisos(String user, int estado, Date fechaIni, Date fechaFin) {
-        return em.createQuery("SELECT p "
+    public List<PermisoTrabajo> findPermisos(Users user, int estado, Date fechaIni, Date fechaFin) {
+        String rolAdmin = ServiceLocator.getInstance().getParameter("rolAdmin") ;
+        String rolGerente = ServiceLocator.getInstance().getParameter("rolGerente") ;
+        List<PermisoTrabajo> permisos = em.createQuery("SELECT p "
                 + "FROM PermisoTrabajo p "
                 + "WHERE p.usuarioCreacion =:user "
                 + "AND p.estadoPermiso.id =:estado "
                 + "AND p.fechaHoraCreacion BETWEEN :fechaIni AND :fechaFin ")
-                .setParameter("user", user)
+                .setParameter("user", user.getUsr())
                 .setParameter("estado", estado)
                 .setParameter("fechaIni",fechaIni)
                 .setParameter("fechaFin", fechaFin)
                 .getResultList();
+        if(user.getRoles().contains(rolAdmin) || user.getRoles().contains(rolGerente))  {
+            permisos = em.createQuery("SELECT p "
+                + "FROM PermisoTrabajo p "
+                + "WHERE  p.estadoPermiso.id =:estado "
+                + "AND p.fechaHoraCreacion BETWEEN :fechaIni AND :fechaFin ")
+                .setParameter("estado", estado)
+                .setParameter("fechaIni",fechaIni)
+                .setParameter("fechaFin", fechaFin)
+                .getResultList();
+            
+        }
+        return permisos;
     }
     
     

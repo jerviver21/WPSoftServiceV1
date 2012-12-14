@@ -10,7 +10,7 @@ import com.vbrothers.common.exceptions.ValidacionException;
 import com.vbrothers.permisostrabajo.dominio.EstadoPermiso;
 import com.vbrothers.permisostrabajo.dominio.PermisoTrabajo;
 import com.vbrothers.permisostrabajo.to.PermisoTrabajoTO;
-import java.text.ParseException;
+import com.vbrothers.usuarios.dominio.Users;
 import java.util.Date;
 import java.util.List;
 import javax.ejb.Local;
@@ -24,9 +24,9 @@ public interface CreacionPermisoServicesLocal {
 
     PermisoTrabajoTO findPermisoTrabajo(Object id);
     
-    List<PermisoTrabajo> findPermisosEnProceso(String user);
+    List<PermisoTrabajo> findPermisosEnProceso(Users user);
     
-    List<PermisoTrabajo> findPermisos(String user, int estado, Date fechaIni, Date fechaFin);
+    List<PermisoTrabajo> findPermisos(Users user, int estado, Date fechaIni, Date fechaFin);
 
     void crearPermiso(PermisoTrabajoTO pto)throws LlaveDuplicadaException, ValidacionException;
     

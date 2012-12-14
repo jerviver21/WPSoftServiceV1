@@ -4,10 +4,13 @@ package com.vbrothers.permisostrabajo.services;
 import com.vbrothers.common.exceptions.EstadoException;
 import com.vbrothers.common.exceptions.LlaveDuplicadaException;
 import com.vbrothers.common.services.AbstractFacade;
+import com.vbrothers.locator.ServiceLocator;
 import com.vbrothers.permisostrabajo.dominio.Contratista;
 import com.vbrothers.permisostrabajo.dominio.EstadoProyecto;
 import com.vbrothers.permisostrabajo.dominio.PermisoTrabajo;
 import com.vbrothers.permisostrabajo.dominio.Proyecto;
+import com.vbrothers.usuarios.dominio.Users;
+import com.vbrothers.util.EstadosPermiso;
 import com.vbrothers.util.EstadosProyecto;
 import java.util.Date;
 import java.util.List;
@@ -74,14 +77,23 @@ public class ProyectoServices extends AbstractFacade<Proyecto> implements Proyec
     }
 
     @Override
-    public List<Proyecto> findProyectos(String usr, Date fechaDesde, Date fechaHasta) {
-        System.out.println(usr+" - "+fechaDesde+" - "+fechaHasta);
+    public List<Proyecto> findProyectos(Users usr, Date fechaDesde, Date fechaHasta) {
+        String rolAdmin = ServiceLocator.getInstance().getParameter("rolAdmin") ;
+        String rolGerente = ServiceLocator.getInstance().getParameter("rolGerente") ;
         List<Proyecto> proyectos = em.createQuery("SELECT p FROM Proyecto p "
                 + "WHERE p.usuarioCreacion = :usr AND p.fechaHoraCreacion BETWEEN :fechaIni AND :fechaFin ")
-                .setParameter("usr", usr)
+                .setParameter("usr", usr.getUsr())
                 .setParameter("fechaIni",fechaDesde)
                 .setParameter("fechaFin", fechaHasta)
                 .getResultList();
+        if(usr.getRoles().contains(rolAdmin) || usr.getRoles().contains(rolGerente))  {
+            proyectos = em.createQuery("SELECT p FROM Proyecto p "
+                + "WHERE p.fechaHoraCreacion BETWEEN :fechaIni AND :fechaFin ")
+                .setParameter("fechaIni",fechaDesde)
+                .setParameter("fechaFin", fechaHasta)
+                .getResultList();
+            
+        }
         return proyectos;
     }
 
@@ -111,13 +123,17 @@ public class ProyectoServices extends AbstractFacade<Proyecto> implements Proyec
     }
 
     @Override
-    public List<Proyecto> findProyectosActivos(String usr) {
-        List<Proyecto> proyectos = em.createQuery("SELECT p FROM Proyecto p "
-                + "WHERE p.usuarioCreacion = :usr AND p.estado = :estado")
-                .setParameter("usr", usr)
-                .setParameter("estado", EstadosProyecto.ACTIVO)
-                .getResultList();
-        return proyectos;
+    public List<Proyecto> findProyectosActivos(Users usr) {
+        String rolAdmin = ServiceLocator.getInstance().getParameter("rolAdmin") ;
+        String rolGerente = ServiceLocator.getInstance().getParameter("rolGerente") ;
+        String query = "SELECT p FROM Proyecto p "
+                + "WHERE p.usuarioCreacion = '"+usr.getUsr()+"' AND p.estado.id = "+EstadosProyecto.ACTIVO.getId();
+        if(usr.getRoles().contains(rolAdmin) || usr.getRoles().contains(rolGerente))  {
+            query = "SELECT p FROM Proyecto p "
+                + "WHERE p.estado.id = "+EstadosProyecto.ACTIVO.getId();
+            
+        }
+        return  em.createQuery(query).getResultList();
     }
     
 }
