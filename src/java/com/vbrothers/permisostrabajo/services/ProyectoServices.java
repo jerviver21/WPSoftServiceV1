@@ -10,7 +10,6 @@ import com.vbrothers.permisostrabajo.dominio.EstadoProyecto;
 import com.vbrothers.permisostrabajo.dominio.PermisoTrabajo;
 import com.vbrothers.permisostrabajo.dominio.Proyecto;
 import com.vbrothers.usuarios.dominio.Users;
-import com.vbrothers.util.EstadosPermiso;
 import com.vbrothers.util.EstadosProyecto;
 import java.util.Date;
 import java.util.List;
@@ -30,7 +29,7 @@ public class ProyectoServices extends AbstractFacade<Proyecto> implements Proyec
     private EntityManager em;
     
     @EJB
-    CreacionPermisoServicesLocal permisoService;
+    PermisoServicesLocal permisoService;
 
     @Override
     protected EntityManager getEntityManager() {

@@ -74,6 +74,9 @@ public class PermisoTrabajo implements Serializable {
     @JoinColumn(name = "id_estado_permiso", referencedColumnName = "id")
     @ManyToOne(fetch = FetchType.EAGER)
     private EstadoPermiso estadoPermiso;
+    @JoinColumn(name = "id_estado_anterior", referencedColumnName = "id")
+    @ManyToOne(fetch = FetchType.EAGER)
+    private EstadoPermiso estadoAnterior;
     @JoinColumn(name = "id_equipo", referencedColumnName = "id")
     @ManyToOne(fetch = FetchType.EAGER)
     private Equipo equipo;
@@ -355,6 +358,20 @@ public class PermisoTrabajo implements Serializable {
      */
     public void setFechaHoraIni(Date fechaHoraIni) {
         this.fechaHoraIni = fechaHoraIni;
+    }
+
+    /**
+     * @return the estadoAnterior
+     */
+    public EstadoPermiso getEstadoAnterior() {
+        return estadoAnterior;
+    }
+
+    /**
+     * @param estadoAnterior the estadoAnterior to set
+     */
+    public void setEstadoAnterior(EstadoPermiso estadoAnterior) {
+        this.estadoAnterior = estadoAnterior;
     }
 
 

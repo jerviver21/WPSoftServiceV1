@@ -316,7 +316,6 @@
             <Attribute datatype="boolean" defaultvalue="" extra="" fraction="null" id="7a228893-d231-4704-9c4b-4a14806559bf" name="ejecutor_contratista" nullable="true" scale="10" size=""/>
             <Attribute datatype="timestamp" defaultvalue="" extra="" fraction="null" id="5b7b959b-72f1-463b-8e93-7c77fc3a6492" name="fecha_hora_fin" nullable="true" scale="10" size=""/>
             <Attribute datatype="timestamp" defaultvalue="" extra="" fraction="null" id="c9015da8-f96e-4400-97fc-dd8a1bdb02ce" name="fecha_hora_ini" nullable="true" scale="10" size=""/>
-            <Attribute datatype="int4" defaultvalue="" extra="" fraction="null" id="4736fb4c-9310-443c-907b-a16d2a64c190" name="id_estado_anterior" nullable="true" scale="10" size=""/>
             <Index id="edf17a11-96a2-4b96-9911-a7405ca45738" indextype="PRIMARYKEY" name="permiso_pk">
                 <Indexattribute attributerefid="c608d94a-98cd-4cb4-89d8-c97f8e087874" id="b257ed36-e869-4267-bd39-0d239864280b"/>
             </Index>
@@ -660,9 +659,6 @@
         </Relation>
         <Relation exportingtablerefid="dbd82831-57cd-4ef2-83de-f50869d58b6a" id="695e0c9a-fe06-4cbe-8b32-5104db7e03c3" importingtablerefid="af41741a-6fd2-4f9e-915b-8fb0225b6033" name="opr_traza_fk" ondelete="NOTHING" onupdate="NOTHING">
             <Mapping exportingexpressionrefid="8ed5f6df-14b6-477c-9605-1a402c39fc0e" importingattributerefid="65626da5-126b-44a4-8fe3-637c3c8a5ab1"/>
-        </Relation>
-        <Relation exportingtablerefid="46597fd1-7cef-40a5-ab8b-94b2c593f805" id="6bd31b00-3f51-445d-b347-01a6f9078f86" importingtablerefid="2b4ec5ec-1fb8-4900-9f55-a3ef82532abb" name="estado_anterior_fk" ondelete="NOTHING" onupdate="NOTHING">
-            <Mapping exportingexpressionrefid="24dcca93-15e1-4dd3-b169-7b4e9fdf54b2" importingattributerefid="4736fb4c-9310-443c-907b-a16d2a64c190"/>
         </Relation>
     </Relations>
     <Views/>
