@@ -47,6 +47,8 @@ public class PeligrosTarea implements Serializable {
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "peligrosTarea", fetch = FetchType.LAZY)
     private List<RiesgosPeligroTarea> riesgos;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "peligrosTarea", fetch = FetchType.LAZY)
+    private List<ControlesPeligroTarea> controles;
 
 
     public PeligrosTarea() {
@@ -125,6 +127,20 @@ public class PeligrosTarea implements Serializable {
      */
     public void setRiesgos(List<RiesgosPeligroTarea> riesgos) {
         this.riesgos = riesgos;
+    }
+
+    /**
+     * @return the controles
+     */
+    public List<ControlesPeligroTarea> getControles() {
+        return controles;
+    }
+
+    /**
+     * @param controles the controles to set
+     */
+    public void setControles(List<ControlesPeligroTarea> controles) {
+        this.controles = controles;
     }
 
 }

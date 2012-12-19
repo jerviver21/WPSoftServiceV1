@@ -215,7 +215,6 @@ public class PermisoServices implements PermisoServicesLocal {
         while(pto.getTareasVista().size() < 6){
             Tarea t = new Tarea();
             t.setConsecutivo(pto.getTareasVista().size()+1);
-            t.setPeligros(new ArrayList<PeligrosTarea>());
             t.setPermiso(permiso);
             pto.getTareasVista().add(t);
         }
@@ -266,7 +265,7 @@ public class PermisoServices implements PermisoServicesLocal {
     }
     
     @Override
-    public PermisoTrabajo guardarRiesgos(PermisoTrabajoTO pto)throws LlaveDuplicadaException{
+    public PermisoTrabajo guardarPasos(PermisoTrabajoTO pto)throws LlaveDuplicadaException{
         List<Tarea> tareas = new ArrayList<Tarea>();
         Set<Integer> cons = new HashSet<Integer>();//Nos aseguramos de no guardar 2 veces el mismo paso
         for(Tarea t : pto.getTareasVista()){

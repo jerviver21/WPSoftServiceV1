@@ -37,7 +37,7 @@ public interface PermisoServicesLocal {
     //Servicios para gestion en general del permiso de trabajo
     PermisoTrabajoTO findPermisoForGestion(Object id);
 
-    PermisoTrabajo guardarRiesgos(PermisoTrabajoTO pto)throws LlaveDuplicadaException;
+    PermisoTrabajo guardarPasos(PermisoTrabajoTO pto)throws LlaveDuplicadaException;
     
     List<PermisoTrabajo> findPermisosPendientes(Users usr);
     
