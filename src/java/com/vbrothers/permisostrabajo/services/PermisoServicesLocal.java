@@ -3,7 +3,11 @@ package com.vbrothers.permisostrabajo.services;
 import com.vbrothers.common.exceptions.EstadoException;
 import com.vbrothers.common.exceptions.LlaveDuplicadaException;
 import com.vbrothers.common.exceptions.ValidacionException;
+import com.vbrothers.permisostrabajo.dominio.ControlesPeligroTarea;
+import com.vbrothers.permisostrabajo.dominio.PeligrosTarea;
 import com.vbrothers.permisostrabajo.dominio.PermisoTrabajo;
+import com.vbrothers.permisostrabajo.dominio.RiesgosPeligroTarea;
+import com.vbrothers.permisostrabajo.dominio.Tarea;
 import com.vbrothers.permisostrabajo.dominio.TrazabilidadPermiso;
 import com.vbrothers.permisostrabajo.to.PermisoTrabajoTO;
 import com.vbrothers.usuarios.dominio.Users;
@@ -37,11 +41,19 @@ public interface PermisoServicesLocal {
     //Servicios para gestion en general del permiso de trabajo
     PermisoTrabajoTO findPermisoForGestion(Object id);
 
-    PermisoTrabajo guardarPasos(PermisoTrabajoTO pto)throws LlaveDuplicadaException;
+    PermisoTrabajo guardarGestionPeligro(PermisoTrabajoTO pto)throws LlaveDuplicadaException;
     
     List<PermisoTrabajo> findPermisosPendientes(Users usr);
     
     List<TrazabilidadPermiso> findTrazabilidadPermiso(PermisoTrabajo permiso);
+    
+    public void borrarTarea(Tarea tarea);
+    
+    public void borrarPeligro(PeligrosTarea pt);
+    
+    public void borrarRiesgo(RiesgosPeligroTarea rpt);
+
+    public void borrarControl(ControlesPeligroTarea ctr);
 
     //Servicios para el diligenciamiento del permiso de trabajo
     void solicitarAprobacion(PermisoTrabajoTO pto)throws LlaveDuplicadaException;
@@ -57,5 +69,7 @@ public interface PermisoServicesLocal {
     void cancelarPermiso(PermisoTrabajoTO pto)throws LlaveDuplicadaException;
 
     void finalizarPermiso(PermisoTrabajoTO pto)throws LlaveDuplicadaException;
+
+    
     
 }

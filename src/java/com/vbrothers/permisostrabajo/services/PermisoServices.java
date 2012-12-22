@@ -5,6 +5,7 @@ import com.vbrothers.common.exceptions.LlaveDuplicadaException;
 import com.vbrothers.common.exceptions.ValidacionException;
 import com.vbrothers.locator.ServiceLocator;
 import com.vbrothers.permisostrabajo.dominio.Contratista;
+import com.vbrothers.permisostrabajo.dominio.ControlesPeligroTarea;
 import com.vbrothers.permisostrabajo.dominio.Disciplina;
 import com.vbrothers.permisostrabajo.dominio.Empleado;
 import com.vbrothers.permisostrabajo.dominio.EstadoPermiso;
@@ -204,6 +205,11 @@ public class PermisoServices implements PermisoServicesLocal {
                     for(RiesgosPeligroTarea rpt : rspt){
                         rpt.getNombre();
                     }
+                    
+                    List<ControlesPeligroTarea> ctrpt = pt.getControles();
+                    for(ControlesPeligroTarea cpr : ctrpt){
+                        cpr.getControl();
+                    }
                 }
             }
             pto.getTareasVista().add(t);
@@ -265,7 +271,7 @@ public class PermisoServices implements PermisoServicesLocal {
     }
     
     @Override
-    public PermisoTrabajo guardarPasos(PermisoTrabajoTO pto)throws LlaveDuplicadaException{
+    public PermisoTrabajo guardarGestionPeligro(PermisoTrabajoTO pto)throws LlaveDuplicadaException{
         List<Tarea> tareas = new ArrayList<Tarea>();
         Set<Integer> cons = new HashSet<Integer>();//Nos aseguramos de no guardar 2 veces el mismo paso
         for(Tarea t : pto.getTareasVista()){
@@ -276,6 +282,25 @@ public class PermisoServices implements PermisoServicesLocal {
         }
         pto.getPermiso().setTareas(tareas);
         pto.setPermiso(em.merge(pto.getPermiso()));
+        
+        tareas = pto.getPermiso().getTareas();
+        for(Tarea t : tareas){
+            List<PeligrosTarea> pst = t.getPeligros();
+            for(PeligrosTarea pt : pst){
+
+                List<RiesgosPeligroTarea> rspt = pt.getRiesgos();
+                for(RiesgosPeligroTarea rpt : rspt){
+                    rpt.getNombre();
+                }
+
+                List<ControlesPeligroTarea> ctrpt = pt.getControles();
+                for(ControlesPeligroTarea cpr : ctrpt){
+                    cpr.getControl();
+                }
+            }
+        }
+        
+        pto.setTareasVista(tareas);
         return pto.getPermiso();
     }
     
@@ -309,6 +334,26 @@ public class PermisoServices implements PermisoServicesLocal {
         List<TrazabilidadPermiso> trazPermiso = em.createQuery("SELECT t FROM TrazabilidadPermiso t WHERE t.permisoTrabajo =:permiso ORDER by t.fechaHora")
                 .setParameter("permiso", permiso).getResultList();
         return trazPermiso;
+    }
+    
+    @Override
+    public void borrarTarea(Tarea tarea){
+        em.remove(em.merge(tarea));
+    }
+    
+    @Override
+    public void borrarPeligro(PeligrosTarea pt){
+        em.remove(em.merge(pt));
+    }
+    
+    @Override
+    public void borrarRiesgo(RiesgosPeligroTarea rpt){
+        em.remove(em.merge(rpt));
+    }
+    
+    @Override
+    public void borrarControl(ControlesPeligroTarea ctr){
+        em.remove(em.merge(ctr));
     }
 
     

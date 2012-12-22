@@ -103,7 +103,7 @@ public class Tarea implements Serializable, Comparable<Tarea> {
 
     @Override
     public String toString() {
-        return "com.vbrothers.permisostrabajo.dominio.Tarea[id=" + id + "]";
+        return consecutivo+" - "+datos;
     }
 
     /**
