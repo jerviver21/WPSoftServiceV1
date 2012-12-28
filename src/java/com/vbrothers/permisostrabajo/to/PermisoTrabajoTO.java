@@ -12,7 +12,7 @@ import java.util.List;
  * @author Jerson Viveros
  */
 public class PermisoTrabajoTO {
-    private final int SOLICITAR_APROBACION = 1;
+    private final int DILIGENCIAR = 1;
     private final int APROBAR = 2;
     private final int TERMINAR = 3;
     private final int CANCELAR = 4;
@@ -22,9 +22,12 @@ public class PermisoTrabajoTO {
     private PermisoTrabajo permiso;
     private Contratista contratista;
     private List<Empleado> empleados;
+   
     private String nota;
     private Users usr;
-    private int etapa = SOLICITAR_APROBACION;
+    private int etapa = DILIGENCIAR;
+    
+    private List<String> aprobadoresAdicionales;
 
     //Para poder realizar el despliegue de 6 tareas por default, así estas no se diligencien.
     private List<Tarea> tareasVista;
@@ -34,6 +37,7 @@ public class PermisoTrabajoTO {
     public PermisoTrabajoTO(){
         tareasVista = new ArrayList<Tarea>();
         empleados = new ArrayList<Empleado>();
+        aprobadoresAdicionales = new ArrayList<String>();
         permiso = new PermisoTrabajo();
         contratista = null;
     }
@@ -133,8 +137,8 @@ public class PermisoTrabajoTO {
     /**
      * @return the SOLICITAR_APROBACION
      */
-    public int getSOLICITAR_APROBACION() {
-        return SOLICITAR_APROBACION;
+    public int getDILIGENCIAR() {
+        return DILIGENCIAR;
     }
 
     /**
@@ -177,6 +181,20 @@ public class PermisoTrabajoTO {
      */
     public void setEtapa(int etapa) {
         this.etapa = etapa;
+    }
+
+    /**
+     * @return the aprobadoresAdicionales
+     */
+    public List<String> getAprobadoresAdicionales() {
+        return aprobadoresAdicionales;
+    }
+
+    /**
+     * @param aprobadoresAdicionales the aprobadoresAdicionales to set
+     */
+    public void setAprobadoresAdicionales(List<String> aprobadoresAdicionales) {
+        this.aprobadoresAdicionales = aprobadoresAdicionales;
     }
 
 

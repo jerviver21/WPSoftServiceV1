@@ -2,6 +2,7 @@ package com.vbrothers.permisostrabajo.services;
 
 import com.vbrothers.common.exceptions.EstadoException;
 import com.vbrothers.common.exceptions.LlaveDuplicadaException;
+import com.vbrothers.common.exceptions.ParametroException;
 import com.vbrothers.common.exceptions.ValidacionException;
 import com.vbrothers.permisostrabajo.dominio.ControlesPeligroTarea;
 import com.vbrothers.permisostrabajo.dominio.PeligrosTarea;
@@ -56,7 +57,7 @@ public interface PermisoServicesLocal {
     public void borrarControl(ControlesPeligroTarea ctr);
 
     //Servicios para el diligenciamiento del permiso de trabajo
-    void solicitarAprobacion(PermisoTrabajoTO pto)throws LlaveDuplicadaException;
+    void solicitarAprobacion(PermisoTrabajoTO pto)throws LlaveDuplicadaException, ParametroException;
 
     //Servicios para la aprobacion del permiso de trabajo
     void aprobarPermiso(PermisoTrabajoTO pto)throws LlaveDuplicadaException;
@@ -64,7 +65,7 @@ public interface PermisoServicesLocal {
     void noAprobarPermiso(PermisoTrabajoTO pto)throws LlaveDuplicadaException;
 
     //Servicios para etapas finales de gestion del permiso
-    void terminarPermiso(PermisoTrabajoTO pto)throws LlaveDuplicadaException;
+    void terminarPermiso(PermisoTrabajoTO pto)throws LlaveDuplicadaException, ParametroException;
 
     void cancelarPermiso(PermisoTrabajoTO pto)throws LlaveDuplicadaException;
 

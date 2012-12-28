@@ -2,6 +2,7 @@ package com.vbrothers.permisostrabajo.services;
  
 import com.vbrothers.common.exceptions.EstadoException;
 import com.vbrothers.common.exceptions.LlaveDuplicadaException;
+import com.vbrothers.common.exceptions.ParametroException;
 import com.vbrothers.common.exceptions.ValidacionException;
 import com.vbrothers.locator.ServiceLocator;
 import com.vbrothers.permisostrabajo.dominio.Contratista;
@@ -246,21 +247,15 @@ public class PermisoServices implements PermisoServicesLocal {
 
         if(permiso.getEstadoPermiso() != null){
             if(permiso.getEstadoPermiso().getId() == EstadosPermiso.CREADO.getId()
-                    || permiso.getEstadoPermiso().getId() == EstadosPermiso.NO_APROBADO_CALIDAD.getId()
-                    || permiso.getEstadoPermiso().getId() == EstadosPermiso.NO_APROBADO_SEGURIDAD.getId()
-                    || permiso.getEstadoPermiso().getId() == EstadosPermiso.NO_APROBADO_JEFE.getId()){
-                pto.setEtapa(pto.getSOLICITAR_APROBACION());
+                    || permiso.getEstadoPermiso().getId() == EstadosPermiso.NO_APROBADO.getId()){
+                pto.setEtapa(pto.getDILIGENCIAR());
             }else if(permiso.getEstadoPermiso().getId() == EstadosPermiso.DILIGENCIADO.getId()
-                    || permiso.getEstadoPermiso().getId() == EstadosPermiso.APROBADO_CALIDAD.getId()
-                    || permiso.getEstadoPermiso().getId() == EstadosPermiso.APROBADO_SEGURIDAD.getId()
-                    || permiso.getEstadoPermiso().getId() == EstadosPermiso.APROBADO_JEFE.getId()){
+                    || permiso.getEstadoPermiso().getId() == EstadosPermiso.PREAPROBADO.getId()){
                 pto.setEtapa(pto.getAPROBAR());
             }else if(permiso.getEstadoPermiso().getId() == EstadosPermiso.APROBADO.getId()){
                 pto.setEtapa(pto.getTERMINAR());
             }else if(permiso.getEstadoPermiso().getId() == EstadosPermiso.TERMINADO.getId()
-                    || permiso.getEstadoPermiso().getId() == EstadosPermiso.CANCELADO_CALIDAD.getId()
-                    || permiso.getEstadoPermiso().getId() == EstadosPermiso.CANCELADO_SEGURIDAD.getId()
-                    || permiso.getEstadoPermiso().getId() == EstadosPermiso.CANCELADO_JEFE.getId()){
+                    || permiso.getEstadoPermiso().getId() == EstadosPermiso.PRECANCELADO.getId()){
                 pto.setEtapa(pto.getCANCELAR());
             }else if(permiso.getEstadoPermiso().getId() == EstadosPermiso.APROBADA_CANCELACION.getId()){
                 pto.setEtapa(pto.getFINALIZAR());
@@ -331,8 +326,11 @@ public class PermisoServices implements PermisoServicesLocal {
     
     @Override
     public List<TrazabilidadPermiso> findTrazabilidadPermiso(PermisoTrabajo permiso){
-        List<TrazabilidadPermiso> trazPermiso = em.createQuery("SELECT t FROM TrazabilidadPermiso t WHERE t.permisoTrabajo =:permiso ORDER by t.fechaHora")
-                .setParameter("permiso", permiso).getResultList();
+        List<TrazabilidadPermiso> trazPermiso = em.createQuery("SELECT t "
+                + "FROM TrazabilidadPermiso t "
+                + "WHERE t.permisoTrabajo =:permiso AND t.estadoTraz != :traz ORDER by t.fechaHora")
+                .setParameter("permiso", permiso)
+                .setParameter("traz", EstadosTraz.NO_EJECUTADO).getResultList();
         return trazPermiso;
     }
     
@@ -359,9 +357,9 @@ public class PermisoServices implements PermisoServicesLocal {
     
     //Servicios para el diligenciamiento del permiso de trabajo
     @Override
-    public void solicitarAprobacion(PermisoTrabajoTO pto)throws LlaveDuplicadaException{
+    public void solicitarAprobacion(PermisoTrabajoTO pto)throws LlaveDuplicadaException, ParametroException{
         pto.getPermiso().setEstadoPermiso(EstadosPermiso.DILIGENCIADO);
-        em.merge(pto.getPermiso());
+        guardarGestionPeligro(pto);
         adminEstadosServices.solicitarAprobacion(pto);
     }
     
@@ -369,48 +367,28 @@ public class PermisoServices implements PermisoServicesLocal {
     //Servicios para la aprobacion del permiso de trabajo
     @Override
     public void aprobarPermiso(PermisoTrabajoTO pto)throws LlaveDuplicadaException{
-        String CALIDAD = ServiceLocator.getInstance().getParameter("grupoCalidad");
-        String SEGURIDAD = ServiceLocator.getInstance().getParameter("grupoSeguridad");
-        String AUTORIDAD_AREA = ServiceLocator.getInstance().getParameter("rolAutArea");
-
-        Users usuario = pto.getUsr();
-        if(usuario.getGruposUsr().contains(CALIDAD)){
-            pto.getPermiso().setEstadoPermiso(EstadosPermiso.APROBADO_CALIDAD);
-            em.merge(pto.getPermiso());
-        }else if(usuario.getGruposUsr().contains(SEGURIDAD)){
-            pto.getPermiso().setEstadoPermiso(EstadosPermiso.APROBADO_SEGURIDAD);
-            em.merge(pto.getPermiso());
-        }else if(usuario.getRoles().contains(AUTORIDAD_AREA)){
-            pto.getPermiso().setEstadoPermiso(EstadosPermiso.APROBADO_JEFE);
-            em.merge(pto.getPermiso());
+        for(String usr:pto.getAprobadoresAdicionales()){
+            adminEstadosServices.agregarAprobador(pto, usr);
         }
+        pto.getPermiso().setEstadoPermiso(EstadosPermiso.PREAPROBADO);
+        em.merge(pto.getPermiso());
         adminEstadosServices.aprobarPermiso(pto);
     }
 
     @Override
     public void noAprobarPermiso(PermisoTrabajoTO pto)throws LlaveDuplicadaException{
-        String CALIDAD = ServiceLocator.getInstance().getParameter("grupoCalidad");
-        String SEGURIDAD = ServiceLocator.getInstance().getParameter("grupoSeguridad");
-        String AUTORIDAD_AREA = ServiceLocator.getInstance().getParameter("rolAutArea");
-
-        Users usuario = pto.getUsr();
-        if(usuario.getGruposUsr().contains(CALIDAD)){
-            pto.getPermiso().setEstadoPermiso(EstadosPermiso.NO_APROBADO_CALIDAD);
-            em.merge(pto.getPermiso());
-        }else if(usuario.getGruposUsr().contains(SEGURIDAD)){
-            pto.getPermiso().setEstadoPermiso(EstadosPermiso.NO_APROBADO_SEGURIDAD);
-            em.merge(pto.getPermiso());
-        }else if(usuario.getRoles().contains(AUTORIDAD_AREA)){
-            pto.getPermiso().setEstadoPermiso(EstadosPermiso.NO_APROBADO_JEFE);
-            em.merge(pto.getPermiso());
+        for(String usr:pto.getAprobadoresAdicionales()){
+            adminEstadosServices.agregarAprobador(pto, usr);
         }
+        pto.getPermiso().setEstadoPermiso(EstadosPermiso.NO_APROBADO);
+        em.merge(pto.getPermiso());
         adminEstadosServices.noAprobarPermiso(pto);
     }
 
     
     //Servicios para etapas finales de gestion del permiso
     @Override
-    public void terminarPermiso(PermisoTrabajoTO pto)throws LlaveDuplicadaException{
+    public void terminarPermiso(PermisoTrabajoTO pto)throws LlaveDuplicadaException, ParametroException{
         pto.getPermiso().setEstadoPermiso(EstadosPermiso.TERMINADO);
         em.merge(pto.getPermiso());
         adminEstadosServices.terminarPermiso(pto);
@@ -418,21 +396,8 @@ public class PermisoServices implements PermisoServicesLocal {
 
     @Override
     public void cancelarPermiso(PermisoTrabajoTO pto)throws LlaveDuplicadaException{
-        String CALIDAD = ServiceLocator.getInstance().getParameter("grupoCalidad");
-        String SEGURIDAD = ServiceLocator.getInstance().getParameter("grupoSeguridad");
-        String AUTORIDAD_AREA = ServiceLocator.getInstance().getParameter("rolAutArea");
-
-        Users usuario = pto.getUsr();
-        if(usuario.getGruposUsr().contains(CALIDAD)){
-            pto.getPermiso().setEstadoPermiso(EstadosPermiso.CANCELADO_CALIDAD);
-            em.merge(pto.getPermiso());
-        }else if(usuario.getGruposUsr().contains(SEGURIDAD)){
-            pto.getPermiso().setEstadoPermiso(EstadosPermiso.CANCELADO_SEGURIDAD);
-            em.merge(pto.getPermiso());
-        }else if(usuario.getRoles().contains(AUTORIDAD_AREA)){
-            pto.getPermiso().setEstadoPermiso(EstadosPermiso.CANCELADO_JEFE);
-            em.merge(pto.getPermiso());
-        }
+        pto.getPermiso().setEstadoPermiso(EstadosPermiso.PRECANCELADO);
+        em.merge(pto.getPermiso());
         adminEstadosServices.cancelarPermiso(pto);
     }
 

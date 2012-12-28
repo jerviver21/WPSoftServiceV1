@@ -317,7 +317,6 @@
             <Attribute datatype="timestamp" defaultvalue="" extra="" fraction="null" id="5b7b959b-72f1-463b-8e93-7c77fc3a6492" name="fecha_hora_fin" nullable="true" scale="10" size=""/>
             <Attribute datatype="timestamp" defaultvalue="" extra="" fraction="null" id="c9015da8-f96e-4400-97fc-dd8a1bdb02ce" name="fecha_hora_ini" nullable="true" scale="10" size=""/>
             <Attribute datatype="int4" defaultvalue="" extra="" fraction="null" id="4736fb4c-9310-443c-907b-a16d2a64c190" name="id_estado_anterior" nullable="true" scale="10" size=""/>
-            <Attribute datatype="text" defaultvalue="" extra="" fraction="null" id="f0055ea4-cf7b-4f59-a772-425353518d41" name="consideraciones" nullable="true" scale="10" size=""/>
             <Index id="edf17a11-96a2-4b96-9911-a7405ca45738" indextype="PRIMARYKEY" name="permiso_pk">
                 <Indexattribute attributerefid="c608d94a-98cd-4cb4-89d8-c97f8e087874" id="b257ed36-e869-4267-bd39-0d239864280b"/>
             </Index>

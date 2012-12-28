@@ -101,6 +101,9 @@ public class PermisoTrabajo implements Serializable {
             joinColumns=@JoinColumn(name="id_permiso", referencedColumnName="id"),
             inverseJoinColumns=@JoinColumn(name="id_sector",referencedColumnName="id"))
     private List<Sector> sectoresAfectados;
+    
+    @Column(name = "consideraciones")
+    private String consideraciones;
 
     
     
@@ -372,6 +375,20 @@ public class PermisoTrabajo implements Serializable {
      */
     public void setEstadoAnterior(EstadoPermiso estadoAnterior) {
         this.estadoAnterior = estadoAnterior;
+    }
+
+    /**
+     * @return the consideraciones
+     */
+    public String getConsideraciones() {
+        return consideraciones;
+    }
+
+    /**
+     * @param consideraciones the consideraciones to set
+     */
+    public void setConsideraciones(String consideraciones) {
+        this.consideraciones = consideraciones;
     }
 
 

@@ -100,5 +100,14 @@ public class UsuariosServices extends AbstractFacade<Users> implements UsuariosS
         }
         return usuario;
     }
+
+    @Override
+    public List<Users> findUsersByRol(String rol) {
+        List<Users> users = em.createQuery("SELECT u "
+                        + "FROM Users u JOIN u.grupos g JOIN g.roles r "
+                        + "WHERE r.codigo = :rol")
+                .setParameter("rol", rol).getResultList();
+        return users;
+    }
     
 }
