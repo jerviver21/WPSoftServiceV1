@@ -19,8 +19,11 @@ import com.vbrothers.permisostrabajo.dominio.TrazabilidadPermiso;
 import com.vbrothers.permisostrabajo.to.PermisoTrabajoTO;
 import com.vbrothers.usuarios.dominio.Groups;
 import com.vbrothers.usuarios.dominio.Users;
+import com.vbrothers.usuarios.services.GruposServicesLocal;
+import com.vbrothers.usuarios.services.UsuariosServicesLocal;
 import com.vbrothers.util.EstadosPermiso;
 import com.vbrothers.util.EstadosTraz;
+import com.vbrothers.util.OperacionesPermiso;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -49,6 +52,12 @@ public class PermisoServices implements PermisoServicesLocal {
     
     @EJB
     EmpleadoServicesLocal empleadoServices;
+    
+    @EJB
+    GruposServicesLocal gruposServices;
+    
+    @EJB
+    UsuariosServicesLocal usersServices;
     
     //Servicios generales del permiso de trabajo
     @Override
@@ -407,6 +416,32 @@ public class PermisoServices implements PermisoServicesLocal {
         pto.getPermiso().setEstadoPermiso(EstadosPermiso.CANCELADO);
         em.merge(pto.getPermiso());
         adminEstadosServices.finalizarPermiso(pto);
+    }
+
+    @Override
+    public List<Users> findUsersAprobadores(PermisoTrabajo pto) {
+        List<Users> users = em.createQuery("SELECT u "
+                + "FROM Users u JOIN u.grupos g JOIN g.roles r "
+                + "WHERE r.codigo = 'aprobadores' AND u.usr NOT IN (SELECT t.usrGrpAsignado "
+                + "FROM TrazabilidadPermiso t "
+                + "WHERE t.permisoTrabajo =:permiso "
+                + "AND t.operacion =:operacion)")
+                .setParameter("permiso", pto)
+                .setParameter("operacion", OperacionesPermiso.APROBAR).getResultList();        
+        return users;
+    }
+
+    @Override
+    public List<Groups> findGruposAprobadores(PermisoTrabajo pto) {
+        List<Groups> groups = em.createQuery("SELECT g "
+                + "FROM Groups g JOIN g.roles r "
+                + "WHERE r.codigo = 'aprobadores' AND g.codigo NOT IN (SELECT t.usrGrpAsignado "
+                + "FROM TrazabilidadPermiso t "
+                + "WHERE t.permisoTrabajo =:permiso "
+                + "AND t.operacion =:operacion)")
+                .setParameter("permiso", pto)
+                .setParameter("operacion", OperacionesPermiso.APROBAR).getResultList();   
+        return groups;
     }
     
     

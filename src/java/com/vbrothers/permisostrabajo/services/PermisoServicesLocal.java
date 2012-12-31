@@ -55,9 +55,14 @@ public interface PermisoServicesLocal {
     public void borrarRiesgo(RiesgosPeligroTarea rpt);
 
     public void borrarControl(ControlesPeligroTarea ctr);
+    
 
     //Servicios para el diligenciamiento del permiso de trabajo
     void solicitarAprobacion(PermisoTrabajoTO pto)throws LlaveDuplicadaException, ParametroException;
+    
+    List findUsersAprobadores(PermisoTrabajo pto);
+
+    List findGruposAprobadores(PermisoTrabajo pto);
 
     //Servicios para la aprobacion del permiso de trabajo
     void aprobarPermiso(PermisoTrabajoTO pto)throws LlaveDuplicadaException;
@@ -70,6 +75,8 @@ public interface PermisoServicesLocal {
     void cancelarPermiso(PermisoTrabajoTO pto)throws LlaveDuplicadaException;
 
     void finalizarPermiso(PermisoTrabajoTO pto)throws LlaveDuplicadaException;
+
+    
 
     
     
