@@ -5,6 +5,7 @@ import com.vbrothers.common.exceptions.LlaveDuplicadaException;
 import com.vbrothers.common.exceptions.ParametroException;
 import com.vbrothers.common.exceptions.ValidacionException;
 import com.vbrothers.locator.ServiceLocator;
+import com.vbrothers.permisostrabajo.dominio.Certificado;
 import com.vbrothers.permisostrabajo.dominio.Contratista;
 import com.vbrothers.permisostrabajo.dominio.ControlesPeligroTarea;
 import com.vbrothers.permisostrabajo.dominio.Disciplina;
@@ -192,6 +193,11 @@ public class PermisoServices implements PermisoServicesLocal {
             sectoresAfectados = new ArrayList<Sector>();
             permiso.setSectoresAfectados(sectoresAfectados);
         }
+        List<Certificado> certificados = permiso.getCertificados();
+        if(certificados == null){
+            certificados = new ArrayList<Certificado>();
+            permiso.setCertificados(certificados);
+        }
         Disciplina disciplina = permiso.getDisciplina();
         if(disciplina == null){
             disciplina = new Disciplina(-1);
@@ -236,7 +242,7 @@ public class PermisoServices implements PermisoServicesLocal {
         }
         //-------------------------------------------------------------------------------------------------
 
-        System.out.println("Cantidad sectores afectados :"+permiso.getSectoresAfectados().size()+" - Cantidad peligros: "+permiso.getTareas().size());
+        System.out.println("Cantidad sectores afectados :"+permiso.getSectoresAfectados().size()+" - Cantidad peligros: "+permiso.getTareas().size()+" - Certificados: "+permiso.getCertificados().size());
         pto.setPermiso(permiso);
         if(permiso.isEjecutorContratista()){
             Contratista cont = new Contratista();
@@ -275,7 +281,7 @@ public class PermisoServices implements PermisoServicesLocal {
     }
     
     @Override
-    public PermisoTrabajo guardarGestionPeligro(PermisoTrabajoTO pto)throws LlaveDuplicadaException{
+    public PermisoTrabajo guardarGestion(PermisoTrabajoTO pto)throws LlaveDuplicadaException{
         List<Tarea> tareas = new ArrayList<Tarea>();
         Set<Integer> cons = new HashSet<Integer>();//Nos aseguramos de no guardar 2 veces el mismo paso
         for(Tarea t : pto.getTareasVista()){
@@ -368,7 +374,7 @@ public class PermisoServices implements PermisoServicesLocal {
     @Override
     public void solicitarAprobacion(PermisoTrabajoTO pto)throws LlaveDuplicadaException, ParametroException{
         pto.getPermiso().setEstadoPermiso(EstadosPermiso.DILIGENCIADO);
-        guardarGestionPeligro(pto);
+        guardarGestion(pto);
         adminEstadosServices.solicitarAprobacion(pto);
     }
     

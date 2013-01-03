@@ -331,8 +331,18 @@
                 <Indexattribute attributerefid="1b7f0be4-fee8-4731-824f-d6173f62acee" id="30924d9a-31aa-4300-9bc6-f91ae254895c"/>
             </Index>
         </Table>
+        <Table id="30349961-b39d-4c5c-8d1e-bffed8049d47" name="certificado" schema="">
+            <Property name="LOCATION" value="263:430"/>
+            <Attribute datatype="int4" defaultvalue="" extra="" fraction="0" id="7fc963ef-954c-4537-bed4-45fbdc89d23d" name="id" nullable="false" scale="10" size=""/>
+            <Attribute datatype="varchar" defaultvalue="" extra="" fraction="0" id="daa06039-e5a4-4844-bde7-00870f2886d3" name="nombre" nullable="true" scale="10" size="1500"/>
+            <Attribute datatype="varchar" defaultvalue="" extra="" fraction="0" id="05a3b97c-a0db-4dc9-82f6-58f64e3d0993" name="ruta_check_list" nullable="true" scale="10" size="1500"/>
+            <Attribute datatype="boolean" defaultvalue="" extra="" fraction="0" id="3fe30ae9-7341-4fc8-9f92-d4d440568288" name="cl_cargado" nullable="true" scale="10" size=""/>
+            <Index id="53363037-fa41-4995-9a14-5bcbb6e65034" indextype="PRIMARYKEY" name="certificados_pk">
+                <Indexattribute attributerefid="7fc963ef-954c-4537-bed4-45fbdc89d23d" id="31811438-3438-4e29-995f-0c155ef3000d"/>
+            </Index>
+        </Table>
         <Table id="c419a0bb-d999-4e2e-aee5-10cad8db3469" name="certificados_trabajo" schema="">
-            <Property name="LOCATION" value="317:785"/>
+            <Property name="LOCATION" value="322:818"/>
             <Attribute datatype="bigserial" defaultvalue="" extra="" fraction="0" id="5c7b667b-b87a-4a9b-a15e-063885b2cb84" name="id" nullable="false" scale="10" size=""/>
             <Attribute datatype="bigint" defaultvalue="" extra="" fraction="0" id="cd4941d5-6039-4e61-af02-3a328266364b" name="id_permiso" nullable="false" scale="10" size=""/>
             <Attribute datatype="int4" defaultvalue="" extra="" fraction="0" id="16c01ece-8b28-4920-8bc8-0afeba1107ce" name="id_certificado" nullable="false" scale="10" size=""/>
@@ -537,16 +547,6 @@
                 <Indexattribute attributerefid="cfc9abfe-c677-472e-8931-06432095af13" id="eaa14ac3-dbd3-4af8-a938-74720a254c71"/>
             </Index>
         </Table>
-        <Table id="6034e315-86a6-449e-a815-9af014ba7457" name="certificado" schema="">
-            <Property name="LOCATION" value="337:504"/>
-            <Attribute datatype="serial" defaultvalue="" extra="" fraction="null" id="b778993e-28e9-4547-99c2-350b1db99800" name="id" nullable="false" scale="10" size=""/>
-            <Attribute datatype="varchar" defaultvalue="" extra="" fraction="null" id="841cd46f-ea47-4185-afcd-4bc8a0f6bbe3" name="nombre" nullable="false" scale="10" size="1500"/>
-            <Attribute datatype="varchar" defaultvalue="" extra="" fraction="null" id="7fac2f50-bc17-4e1c-9a14-3afb86432653" name="ruta_check_list" nullable="false" scale="10" size="1500"/>
-            <Attribute datatype="boolean" defaultvalue="" extra="" fraction="null" id="5e486765-afa2-4a39-9b4e-d3eadfb1161d" name="cl_cargado" nullable="true" scale="10" size=""/>
-            <Index id="10bc5c36-3711-4794-8d16-b1ac1057a5d7" indextype="PRIMARYKEY" name="certificado_pk">
-                <Indexattribute attributerefid="b778993e-28e9-4547-99c2-350b1db99800" id="1965fd89-9ff9-4160-b10a-692e99803c38"/>
-            </Index>
-        </Table>
     </Tables>
     <Relations>
         <Relation exportingtablerefid="85c75b3e-a3cc-4cdf-a9e4-5ba5a0ffea3f" id="6aabcae1-b197-4a8e-a568-95e1f35784e8" importingtablerefid="27425395-3ef1-4b34-bbdb-3b9fe683a14d" name="recurso_menu_fk" ondelete="NOTHING" onupdate="NOTHING">
@@ -581,6 +581,9 @@
             <Property name="points" value="374:917,451:1017"/>
             <Property name="textoffset" value="-5:72"/>
             <Mapping exportingexpressionrefid="b257ed36-e869-4267-bd39-0d239864280b" importingattributerefid="cd4941d5-6039-4e61-af02-3a328266364b"/>
+        </Relation>
+        <Relation exportingtablerefid="30349961-b39d-4c5c-8d1e-bffed8049d47" id="bd82f67c-cdaf-4797-89d7-e5538c80882e" importingtablerefid="c419a0bb-d999-4e2e-aee5-10cad8db3469" name="certificado_cert_trab_fk" ondelete="NOTHING" onupdate="NOTHING">
+            <Mapping exportingexpressionrefid="31811438-3438-4e29-995f-0c155ef3000d" importingattributerefid="16c01ece-8b28-4920-8bc8-0afeba1107ce"/>
         </Relation>
         <Relation exportingtablerefid="9ec94d8b-532b-4d37-ad3f-b2682bf579a2" id="6a83ec4c-ba0f-4ed7-aa86-ff9368fe8445" importingtablerefid="4b9ac36b-60ce-4a52-aaa6-af6fab5608c9" name="user_group_fk" ondelete="NOTHING" onupdate="NOTHING">
             <Mapping exportingexpressionrefid="12293c99-08e8-476c-8f2a-f17c5b098193" importingattributerefid="f310e46b-be4c-4624-9de0-0d3d5d3b5378"/>
@@ -673,9 +676,6 @@
         </Relation>
         <Relation exportingtablerefid="1cd3550c-c89c-4354-98e0-69625cd2b5f3" id="0af51df5-4a3b-4eef-8db2-4c18c469e4b5" importingtablerefid="767b1d1d-29a8-4aa0-ba8c-716e3f5cb2b6" name="cont_peligro_tarea_fk" ondelete="CASCADE" onupdate="CASCADE">
             <Mapping exportingexpressionrefid="864c939d-45d9-42be-8442-6deaf4cf810e" importingattributerefid="9bbcb0d3-2983-4425-9c28-c865724efaf7"/>
-        </Relation>
-        <Relation exportingtablerefid="6034e315-86a6-449e-a815-9af014ba7457" id="37b9e569-53d5-46d7-843c-d106eaa138f4" importingtablerefid="c419a0bb-d999-4e2e-aee5-10cad8db3469" name="cert_cert_trabajo_fk" ondelete="NOTHING" onupdate="NOTHING">
-            <Mapping exportingexpressionrefid="1965fd89-9ff9-4160-b10a-692e99803c38" importingattributerefid="16c01ece-8b28-4920-8bc8-0afeba1107ce"/>
         </Relation>
     </Relations>
     <Views/>

@@ -12,7 +12,7 @@ ALTER TABLE sectores_afectados_permiso DROP CONSTRAINT areas_afectadas_permiso_f
 ALTER TABLE sectores_afectados_permiso ADD CONSTRAINT areas_afectadas_permiso_fk FOREIGN KEY (id_permiso) REFERENCES permiso_trabajo(id) ON DELETE CASCADE ON UPDATE CASCADE;
 ALTER TABLE trazabilidad_permiso DROP CONSTRAINT trazabilidad_permiso_fk;
 ALTER TABLE trazabilidad_permiso ADD CONSTRAINT trazabilidad_permiso_fk FOREIGN KEY (id_permiso) REFERENCES permiso_trabajo(id) ON DELETE CASCADE ON UPDATE CASCADE;
-ALTER TABLE proyecto ADD usuario_creacion varchar(300) NOT NULL;
+ALTER TABLE proyecto ADD usuario_creacion varchar(300) NOT NULL default 'admin';
 ALTER TABLE proyecto ADD fecha_hora_creacion timestamp NOT NULL DEFAULT now();
 ALTER TABLE contratistas_proyecto DROP CONSTRAINT contra_proy_contra;
 ALTER TABLE contratistas_proyecto DROP COLUMN id_contratista;

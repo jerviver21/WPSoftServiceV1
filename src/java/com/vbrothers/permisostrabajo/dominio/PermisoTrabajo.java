@@ -102,6 +102,12 @@ public class PermisoTrabajo implements Serializable {
             inverseJoinColumns=@JoinColumn(name="id_sector",referencedColumnName="id"))
     private List<Sector> sectoresAfectados;
     
+    @ManyToMany(fetch=FetchType.LAZY, cascade=CascadeType.ALL)
+    @JoinTable(name="certificados_trabajo",
+            joinColumns=@JoinColumn(name="id_permiso", referencedColumnName="id"),
+            inverseJoinColumns=@JoinColumn(name="id_certificado",referencedColumnName="id"))
+    private List<Certificado> certificados;
+    
     @Column(name = "consideraciones")
     private String consideraciones;
 
@@ -389,6 +395,20 @@ public class PermisoTrabajo implements Serializable {
      */
     public void setConsideraciones(String consideraciones) {
         this.consideraciones = consideraciones;
+    }
+
+    /**
+     * @return the certificados
+     */
+    public List<Certificado> getCertificados() {
+        return certificados;
+    }
+
+    /**
+     * @param certificados the certificados to set
+     */
+    public void setCertificados(List<Certificado> certificados) {
+        this.certificados = certificados;
     }
 
 

@@ -4,8 +4,8 @@
  */
 package com.vbrothers.permisostrabajo.dominio;
 
+import java.io.InputStream;
 import java.io.Serializable;
-import java.util.List;
 import javax.persistence.*;
 
 /**
@@ -21,16 +21,21 @@ public class Certificado implements Serializable {
     @Id
     @Basic(optional = false)
     @Column(name = "id")
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
     private Integer id;
-    @Column(name = "descripcion")
-    private String descripcion;
+    @Column(name = "nombre")
+    private String nombre;
     @Column(name = "ruta_check_list")
     private String rutaCheckList;
-    @Column(name = "activo")
-    private Boolean activo;
+    @Column(name = "cl_cargado")
+    private Boolean clCargado;
+    
+    @Transient
+    private InputStream datosArchivo;
 
 
     public Certificado() {
+        clCargado = false;
     }
 
     public Certificado(Integer id) {
@@ -45,13 +50,7 @@ public class Certificado implements Serializable {
         this.id = id;
     }
 
-    public String getDescripcion() {
-        return descripcion;
-    }
 
-    public void setDescripcion(String descripcion) {
-        this.descripcion = descripcion;
-    }
 
     public String getRutaCheckList() {
         return rutaCheckList;
@@ -61,13 +60,7 @@ public class Certificado implements Serializable {
         this.rutaCheckList = rutaCheckList;
     }
 
-    public Boolean getActivo() {
-        return activo;
-    }
 
-    public void setActivo(Boolean activo) {
-        this.activo = activo;
-    }
 
 
     @Override
@@ -92,7 +85,49 @@ public class Certificado implements Serializable {
 
     @Override
     public String toString() {
-        return "com.vbrothers.permisostrabajo.dominio.Certificados[ id=" + id + " ]";
+        return nombre;
+    }
+
+    /**
+     * @return the clCargado
+     */
+    public Boolean getClCargado() {
+        return clCargado;
+    }
+
+    /**
+     * @param clCargado the clCargado to set
+     */
+    public void setClCargado(Boolean clCargado) {
+        this.clCargado = clCargado;
+    }
+
+    /**
+     * @return the nombre
+     */
+    public String getNombre() {
+        return nombre;
+    }
+
+    /**
+     * @param nombre the nombre to set
+     */
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
+
+    /**
+     * @return the datosArchivo
+     */
+    public InputStream getDatosArchivo() {
+        return datosArchivo;
+    }
+
+    /**
+     * @param datosArchivo the datosArchivo to set
+     */
+    public void setDatosArchivo(InputStream datosArchivo) {
+        this.datosArchivo = datosArchivo;
     }
     
 }
