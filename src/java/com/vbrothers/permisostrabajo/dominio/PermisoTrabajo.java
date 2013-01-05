@@ -102,11 +102,12 @@ public class PermisoTrabajo implements Serializable {
             inverseJoinColumns=@JoinColumn(name="id_sector",referencedColumnName="id"))
     private List<Sector> sectoresAfectados;
     
-    @ManyToMany(fetch=FetchType.LAZY, cascade=CascadeType.ALL)
-    @JoinTable(name="certificados_trabajo",
-            joinColumns=@JoinColumn(name="id_permiso", referencedColumnName="id"),
-            inverseJoinColumns=@JoinColumn(name="id_certificado",referencedColumnName="id"))
-    private List<Certificado> certificados;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "permiso", fetch = FetchType.LAZY)
+    private List<CertificadosTrabajo> certificados;
+    
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "permiso", fetch = FetchType.LAZY)
+    private List<NotasPermiso> notas;
+    
     
     @Column(name = "consideraciones")
     private String consideraciones;
@@ -400,16 +401,31 @@ public class PermisoTrabajo implements Serializable {
     /**
      * @return the certificados
      */
-    public List<Certificado> getCertificados() {
+    public List<CertificadosTrabajo> getCertificados() {
         return certificados;
     }
 
     /**
      * @param certificados the certificados to set
      */
-    public void setCertificados(List<Certificado> certificados) {
+    public void setCertificados(List<CertificadosTrabajo> certificados) {
         this.certificados = certificados;
     }
+
+    /**
+     * @return the notas
+     */
+    public List<NotasPermiso> getNotas() {
+        return notas;
+    }
+
+    /**
+     * @param notas the notas to set
+     */
+    public void setNotas(List<NotasPermiso> notas) {
+        this.notas = notas;
+    }
+
 
 
 }

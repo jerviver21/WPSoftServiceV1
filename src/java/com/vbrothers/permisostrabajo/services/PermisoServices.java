@@ -6,11 +6,13 @@ import com.vbrothers.common.exceptions.ParametroException;
 import com.vbrothers.common.exceptions.ValidacionException;
 import com.vbrothers.locator.ServiceLocator;
 import com.vbrothers.permisostrabajo.dominio.Certificado;
+import com.vbrothers.permisostrabajo.dominio.CertificadosTrabajo;
 import com.vbrothers.permisostrabajo.dominio.Contratista;
 import com.vbrothers.permisostrabajo.dominio.ControlesPeligroTarea;
 import com.vbrothers.permisostrabajo.dominio.Disciplina;
 import com.vbrothers.permisostrabajo.dominio.Empleado;
 import com.vbrothers.permisostrabajo.dominio.EstadoPermiso;
+import com.vbrothers.permisostrabajo.dominio.NotasPermiso;
 import com.vbrothers.permisostrabajo.dominio.PeligrosTarea;
 import com.vbrothers.permisostrabajo.dominio.PermisoTrabajo;
 import com.vbrothers.permisostrabajo.dominio.RiesgosPeligroTarea;
@@ -118,6 +120,12 @@ public class PermisoServices implements PermisoServicesLocal {
         PermisoTrabajoTO pto = new PermisoTrabajoTO();
         PermisoTrabajo permiso = em.find(PermisoTrabajo.class, id);
         pto.setPermiso(permiso);
+        List<NotasPermiso> notas = permiso.getNotas();
+        if(notas == null){
+            notas = new ArrayList<NotasPermiso>();
+            permiso.setNotas(notas);
+        }
+        permiso.getNotas().size();
         if(permiso.isEjecutorContratista()){
             Contratista cont = contratistaServices.findByUser(permiso.getUsuariosEjecutante());
             pto.setContratista(cont);
@@ -193,9 +201,9 @@ public class PermisoServices implements PermisoServicesLocal {
             sectoresAfectados = new ArrayList<Sector>();
             permiso.setSectoresAfectados(sectoresAfectados);
         }
-        List<Certificado> certificados = permiso.getCertificados();
+        List<CertificadosTrabajo> certificados = permiso.getCertificados();
         if(certificados == null){
-            certificados = new ArrayList<Certificado>();
+            certificados = new ArrayList<CertificadosTrabajo>();
             permiso.setCertificados(certificados);
         }
         Disciplina disciplina = permiso.getDisciplina();
@@ -207,6 +215,12 @@ public class PermisoServices implements PermisoServicesLocal {
         if(tareas == null){
             tareas = new ArrayList<Tarea>();
             permiso.setTareas(tareas);
+        }
+        
+        List<NotasPermiso> notas = permiso.getNotas();
+        if(notas == null){
+            notas = new ArrayList<NotasPermiso>();
+            permiso.setNotas(notas);
         }
 
         pto.setTareasVista(new ArrayList<Tarea>());
@@ -242,7 +256,7 @@ public class PermisoServices implements PermisoServicesLocal {
         }
         //-------------------------------------------------------------------------------------------------
 
-        System.out.println("Cantidad sectores afectados :"+permiso.getSectoresAfectados().size()+" - Cantidad peligros: "+permiso.getTareas().size()+" - Certificados: "+permiso.getCertificados().size());
+        System.out.println("Cantidad sectores afectados :"+permiso.getSectoresAfectados().size()+" - Cantidad peligros: "+permiso.getTareas().size()+" - Certificados: "+permiso.getCertificados().size()+" - Notas: "+permiso.getNotas());
         pto.setPermiso(permiso);
         if(permiso.isEjecutorContratista()){
             Contratista cont = new Contratista();
@@ -317,12 +331,16 @@ public class PermisoServices implements PermisoServicesLocal {
     @Override
     public List<PermisoTrabajo> findPermisosPendientes(Users usr) {
         String cond = "t.usrGrpAsignado = '"+usr.getUsr()+"'";
+        boolean validador = false;
         for(Groups grp : usr.getGrupos()){
             cond = cond + " OR t.usrGrpAsignado = '"+grp.getCodigo()+"'";
+            if(grp.getCodigo().equalsIgnoreCase(ServiceLocator.getInstance().getParameter("grupoValidador"))){
+                validador = true;
+            }
         }
         String sql = "SELECT t "
                 + "FROM TrazabilidadPermiso t "
-                + "WHERE t.estadoTraz =:estado AND ("+cond+")";
+                + "WHERE t.estadoTraz =:estado "+ (validador?"":" AND ("+cond+")");
 
 
         List<TrazabilidadPermiso> permisosAsignados = em.createQuery(sql)
@@ -448,6 +466,17 @@ public class PermisoServices implements PermisoServicesLocal {
                 .setParameter("permiso", pto)
                 .setParameter("operacion", OperacionesPermiso.APROBAR).getResultList();   
         return groups;
+    }
+
+    @Override
+    public void guardarNota(NotasPermiso nota) {
+        NotasPermiso n = em.merge(nota);
+        nota.setId(n.getId());
+    }
+
+    @Override
+    public void borrarNota(NotasPermiso nota) {
+        em.remove(em.merge(nota));
     }
     
     

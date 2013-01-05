@@ -1,0 +1,1 @@
+ALTER TABLE notas_permiso ADD usr varchar(255) NOT NULL DEFAULT 'VALIDADOR';

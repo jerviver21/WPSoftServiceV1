@@ -161,7 +161,6 @@
             <Attribute datatype="serial" defaultvalue="" extra="" fraction="0" id="40587edd-ff3f-4ce2-bad9-0496ba23c503" name="id" nullable="false" scale="10" size="0"/>
             <Attribute datatype="bigint" defaultvalue="" extra="" fraction="0" id="fd41efb9-a71d-4277-817c-1aabaf2e966b" name="id_permiso" nullable="false" scale="10" size=""/>
             <Attribute datatype="varchar" defaultvalue="" extra="" fraction="null" id="6dea8250-25a2-40df-b115-30f8506f2276" name="nota" nullable="false" scale="10" size="2500"/>
-            <Attribute datatype="varchar" defaultvalue="'VALIDADOR'" extra="" fraction="null" id="1d55591a-1852-415d-a224-885e40812c2b" name="usr" nullable="false" scale="10" size="255"/>
             <Index id="a4bdf9cf-8aa1-4088-b3af-90f77d37d81f" indextype="PRIMARYKEY" name="precauciones_permiso_pk">
                 <Indexattribute attributerefid="40587edd-ff3f-4ce2-bad9-0496ba23c503" id="0a343c13-e501-4d11-a859-635daa6612fc"/>
             </Index>

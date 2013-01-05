@@ -12,28 +12,28 @@ import javax.persistence.*;
  * @author jerviver21
  */
 @Entity
-@Table(name = "precauciones_trabajo")
+@Table(name = "notas_permiso")
 @NamedQueries({
-    @NamedQuery(name = "PrecaucionesTrabajo.findAll", query = "SELECT p FROM PrecaucionesTrabajo p")})
-public class PrecaucionesTrabajo implements Serializable {
+    @NamedQuery(name = "NotasPermiso.findAll", query = "SELECT p FROM NotasPermiso p")})
+public class NotasPermiso implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
     @Basic(optional = false)
     @Column(name = "id")
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
     private Integer id;
-    @Column(name = "otros_cual")
-    private String otrosCual;
-    @JoinColumn(name = "id_precaucion", referencedColumnName = "id")
-    @ManyToOne(optional = false, fetch = FetchType.LAZY)
-    private Precaucion precaucion;
+    @Column(name = "nota")
+    private String nota;
+    @Column(name = "usr")
+    private String usr;
     @JoinColumn(name = "id_permiso", referencedColumnName = "id")
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private PermisoTrabajo permiso;
 
-    public PrecaucionesTrabajo() {
+    public NotasPermiso() {
     }
 
-    public PrecaucionesTrabajo(Integer id) {
+    public NotasPermiso(Integer id) {
         this.id = id;
     }
 
@@ -45,21 +45,6 @@ public class PrecaucionesTrabajo implements Serializable {
         this.id = id;
     }
 
-    public String getOtrosCual() {
-        return otrosCual;
-    }
-
-    public void setOtrosCual(String otrosCual) {
-        this.otrosCual = otrosCual;
-    }
-
-    public Precaucion getPrecaucion() {
-        return precaucion;
-    }
-
-    public void setPrecaucion(Precaucion fkPrecaucionId) {
-        this.precaucion = fkPrecaucionId;
-    }
 
     public PermisoTrabajo getPermiso() {
         return permiso;
@@ -80,10 +65,10 @@ public class PrecaucionesTrabajo implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof PrecaucionesTrabajo)) {
+        if (!(object instanceof NotasPermiso)) {
             return false;
         }
-        PrecaucionesTrabajo other = (PrecaucionesTrabajo) object;
+        NotasPermiso other = (NotasPermiso) object;
         if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
             return false;
         }
@@ -93,6 +78,34 @@ public class PrecaucionesTrabajo implements Serializable {
     @Override
     public String toString() {
         return "com.vbrothers.permisostrabajo.dominio.PrecaucionesTrabajo[ id=" + id + " ]";
+    }
+
+    /**
+     * @return the nota
+     */
+    public String getNota() {
+        return nota;
+    }
+
+    /**
+     * @param nota the nota to set
+     */
+    public void setNota(String nota) {
+        this.nota = nota;
+    }
+
+    /**
+     * @return the usr
+     */
+    public String getUsr() {
+        return usr;
+    }
+
+    /**
+     * @param usr the usr to set
+     */
+    public void setUsr(String usr) {
+        this.usr = usr;
     }
     
 }

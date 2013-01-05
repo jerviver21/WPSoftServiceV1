@@ -20,13 +20,16 @@ public class CertificadosTrabajo implements Serializable {
     @Id
     @Basic(optional = false)
     @Column(name = "id")
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
     private Long id;
     @JoinColumn(name = "id_permiso", referencedColumnName = "id")
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private PermisoTrabajo permiso;
     @JoinColumn(name = "id_certificado", referencedColumnName = "id")
-    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    @ManyToOne(optional = false, fetch = FetchType.EAGER)
     private Certificado certificado;
+    @Column(name = "restriccion")
+    private String restriccion;
 
 
     public CertificadosTrabajo() {
@@ -63,7 +66,9 @@ public class CertificadosTrabajo implements Serializable {
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (id != null ? id.hashCode() : 0);
+        if(certificado.getId() != null){
+            hash = certificado.hashCode();
+        }
         return hash;
     }
 
@@ -74,15 +79,29 @@ public class CertificadosTrabajo implements Serializable {
             return false;
         }
         CertificadosTrabajo other = (CertificadosTrabajo) object;
-        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
-            return false;
+        if(this.getCertificado().getId() != null && other.getCertificado().getId() != null && this.getCertificado().equals(other.getCertificado())){
+            return true;
         }
-        return true;
+        return false;
     }
 
     @Override
     public String toString() {
         return "com.vbrothers.permisostrabajo.dominio.CertificadosTrabajo[ id=" + id + " ]";
+    }
+
+    /**
+     * @return the restriccion
+     */
+    public String getRestriccion() {
+        return restriccion;
+    }
+
+    /**
+     * @param restriccion the restriccion to set
+     */
+    public void setRestriccion(String restriccion) {
+        this.restriccion = restriccion;
     }
     
 }

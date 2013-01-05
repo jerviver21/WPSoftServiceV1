@@ -156,12 +156,12 @@
                 <Indexattribute attributerefid="7975b1c1-8bea-409d-b101-52c4b226465e" id="c2e0bd7f-e98f-450f-80d5-6a9e9f13bf8a"/>
             </Index>
         </Table>
-        <Table id="3f22dec6-1858-4eac-a58f-5b988ae79923" name="notas_permiso" schema="">
+        <Table id="3f22dec6-1858-4eac-a58f-5b988ae79923" name="precauciones_trabajo" schema="">
             <Property name="LOCATION" value="39:807"/>
             <Attribute datatype="serial" defaultvalue="" extra="" fraction="0" id="40587edd-ff3f-4ce2-bad9-0496ba23c503" name="id" nullable="false" scale="10" size="0"/>
+            <Attribute datatype="varchar" defaultvalue="" extra="" fraction="0" id="2465e026-75a0-4d22-b0da-c5d8e2802ce6" name="otros_cual" nullable="true" scale="10" size="1000"/>
             <Attribute datatype="bigint" defaultvalue="" extra="" fraction="0" id="fd41efb9-a71d-4277-817c-1aabaf2e966b" name="id_permiso" nullable="false" scale="10" size=""/>
-            <Attribute datatype="varchar" defaultvalue="" extra="" fraction="null" id="6dea8250-25a2-40df-b115-30f8506f2276" name="nota" nullable="false" scale="10" size="2500"/>
-            <Attribute datatype="varchar" defaultvalue="'VALIDADOR'" extra="" fraction="null" id="1d55591a-1852-415d-a224-885e40812c2b" name="usr" nullable="false" scale="10" size="255"/>
+            <Attribute datatype="int4" defaultvalue="" extra="" fraction="0" id="1a9924a0-9249-4215-821a-122ed5651fb2" name="id_precaucion" nullable="false" scale="10" size="0"/>
             <Index id="a4bdf9cf-8aa1-4088-b3af-90f77d37d81f" indextype="PRIMARYKEY" name="precauciones_permiso_pk">
                 <Indexattribute attributerefid="40587edd-ff3f-4ce2-bad9-0496ba23c503" id="0a343c13-e501-4d11-a859-635daa6612fc"/>
             </Index>
@@ -200,6 +200,15 @@
             <Attribute datatype="bigint" defaultvalue="" extra="" fraction="0" id="83b996b0-30fe-4a3c-9c0a-bfeb97f3fdca" name="id_tarea" nullable="false" scale="10" size=""/>
             <Index id="f0832783-f3d6-4a4b-8e53-7d4b9c040896" indextype="PRIMARYKEY" name="riesgos_trabajo_pk">
                 <Indexattribute attributerefid="b164e8dc-1283-4c6e-9e13-24160d64ae89" id="864c939d-45d9-42be-8442-6deaf4cf810e"/>
+            </Index>
+        </Table>
+        <Table id="268c112c-1029-4004-a7d9-30c1945724c3" name="precaucion" schema="">
+            <Property name="LOCATION" value="23:542"/>
+            <Attribute datatype="int4" defaultvalue="" extra="" fraction="0" id="fbaf97d3-976d-405f-8c0f-5c17170af249" name="id" nullable="false" scale="10" size="0"/>
+            <Attribute datatype="varchar" defaultvalue="" extra="" fraction="0" id="2cc5c872-00f5-4011-b198-f52f9710e3a4" name="descripcion" nullable="false" scale="10" size="1500"/>
+            <Attribute datatype="boolean" defaultvalue="" extra="" fraction="0" id="8112686a-f130-4183-8eba-c208512cf2a4" name="activo" nullable="false" scale="10" size="0"/>
+            <Index id="f502d303-9afd-490d-9a60-171cc4f053a1" indextype="PRIMARYKEY" name="precaucion_pk">
+                <Indexattribute attributerefid="fbaf97d3-976d-405f-8c0f-5c17170af249" id="7fc9c2c4-707c-4885-ba3d-4ba7ee1a4da3"/>
             </Index>
         </Table>
         <Table id="d28ee84c-e1b6-4d6a-ad3d-e13e6b681ce5" name="proyecto" schema="">
@@ -564,6 +573,9 @@
         </Relation>
         <Relation exportingtablerefid="2b4ec5ec-1fb8-4900-9f55-a3ef82532abb" id="90daf38c-d4b6-4065-8c09-96eefc2d2f6f" importingtablerefid="3f22dec6-1858-4eac-a58f-5b988ae79923" name="permiso_prec_trab_fk" ondelete="NOTHING" onupdate="NOTHING">
             <Mapping exportingexpressionrefid="b257ed36-e869-4267-bd39-0d239864280b" importingattributerefid="fd41efb9-a71d-4277-817c-1aabaf2e966b"/>
+        </Relation>
+        <Relation exportingtablerefid="268c112c-1029-4004-a7d9-30c1945724c3" id="144f075a-b42d-4c46-a01b-47c7d3fe01e6" importingtablerefid="3f22dec6-1858-4eac-a58f-5b988ae79923" name="precaucion_prec_trab_fk" ondelete="NOTHING" onupdate="NOTHING">
+            <Mapping exportingexpressionrefid="7fc9c2c4-707c-4885-ba3d-4ba7ee1a4da3" importingattributerefid="1a9924a0-9249-4215-821a-122ed5651fb2"/>
         </Relation>
         <Relation exportingtablerefid="2b4ec5ec-1fb8-4900-9f55-a3ef82532abb" id="a4b93a40-2020-4e83-93d4-a894f49cd0d9" importingtablerefid="c419a0bb-d999-4e2e-aee5-10cad8db3469" name="permiso_cert_trab_fk" ondelete="NOTHING" onupdate="NOTHING">
             <Property name="labelposition" value="457:74"/>

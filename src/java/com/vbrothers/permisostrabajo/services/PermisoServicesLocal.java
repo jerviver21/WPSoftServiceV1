@@ -5,6 +5,7 @@ import com.vbrothers.common.exceptions.LlaveDuplicadaException;
 import com.vbrothers.common.exceptions.ParametroException;
 import com.vbrothers.common.exceptions.ValidacionException;
 import com.vbrothers.permisostrabajo.dominio.ControlesPeligroTarea;
+import com.vbrothers.permisostrabajo.dominio.NotasPermiso;
 import com.vbrothers.permisostrabajo.dominio.PeligrosTarea;
 import com.vbrothers.permisostrabajo.dominio.PermisoTrabajo;
 import com.vbrothers.permisostrabajo.dominio.RiesgosPeligroTarea;
@@ -75,6 +76,10 @@ public interface PermisoServicesLocal {
     void cancelarPermiso(PermisoTrabajoTO pto)throws LlaveDuplicadaException;
 
     void finalizarPermiso(PermisoTrabajoTO pto)throws LlaveDuplicadaException;
+
+    public void guardarNota(NotasPermiso nota);
+
+    public void borrarNota(NotasPermiso nota);
 
     
 
