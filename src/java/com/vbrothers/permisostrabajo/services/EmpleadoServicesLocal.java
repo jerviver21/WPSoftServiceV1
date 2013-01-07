@@ -33,14 +33,16 @@ public interface EmpleadoServicesLocal {
     
     String cargarCertificado(String nombre, long cedula, InputStream input)throws ParametroException, IOException;
 
-    public void updateEmpleados(List<Empleado> empleadosContratista);
+    void updateEmpleados(List<Empleado> empleadosContratista);
 
-    public void activarEmpleado(Empleado emp)throws EmpActivoOtroContException;
-
-    public List<Empleado> findEmpleadosXContratita(Long idContratista);
-
-    public List<Empleado> findEmpleadosActivosXContratita(Long idContratista);
+    void activarEmpleado(Empleado emp)throws EmpActivoOtroContException;
     
-    public List<Empleado> findEmpleadosActivosPlanta();
+    void desactivarEmpleados();
+
+    List<Empleado> findEmpleadosXContratita(Long idContratista);
+
+    List<Empleado> findEmpleadosActivosXContratita(Long idContratista);
+    
+    List<Empleado> findEmpleadosActivosPlanta();
     
 }

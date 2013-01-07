@@ -140,6 +140,11 @@ public class EmpleadoServices extends AbstractFacade<Empleado> implements Emplea
         }
         em.merge(emp);
     }
+    
+    @Override
+    public void desactivarEmpleados() {
+        em.createNativeQuery("UPDATE empleado SET activo = false").executeUpdate();
+    }
 
     @Override
     public List<Empleado> findEmpleadosXContratita(Long idContratista) {
