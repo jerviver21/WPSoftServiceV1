@@ -30,8 +30,6 @@ public interface GruposServicesLocal {
     List<Groups> findAll();
 
     List<Rol> findRolesByGroup(Groups group);
-    
-    List<Groups> findGruposByRol(String rol);
 
     Groups findByCodigo(String codigo);
 }

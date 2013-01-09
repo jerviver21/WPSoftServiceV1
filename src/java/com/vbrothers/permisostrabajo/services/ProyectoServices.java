@@ -85,7 +85,7 @@ public class ProyectoServices extends AbstractFacade<Proyecto> implements Proyec
                 .setParameter("fechaIni",fechaDesde)
                 .setParameter("fechaFin", fechaHasta)
                 .getResultList();
-        if(usr.getRoles().contains(rolAdmin) || usr.getRoles().contains(rolGerente))  {
+        if(usr.getRolesUsr().contains(rolAdmin) || usr.getRolesUsr().contains(rolGerente))  {
             proyectos = em.createQuery("SELECT p FROM Proyecto p "
                 + "WHERE p.fechaHoraCreacion BETWEEN :fechaIni AND :fechaFin ")
                 .setParameter("fechaIni",fechaDesde)
@@ -127,7 +127,7 @@ public class ProyectoServices extends AbstractFacade<Proyecto> implements Proyec
         String rolGerente = ServiceLocator.getInstance().getParameter("rolGerente") ;
         String query = "SELECT p FROM Proyecto p "
                 + "WHERE p.usuarioCreacion = '"+usr.getUsr()+"' AND p.estado.id = "+EstadosProyecto.ACTIVO.getId();
-        if(usr.getRoles().contains(rolAdmin) || usr.getRoles().contains(rolGerente))  {
+        if(usr.getRolesUsr().contains(rolAdmin) || usr.getRolesUsr().contains(rolGerente))  {
             query = "SELECT p FROM Proyecto p "
                 + "WHERE p.estado.id = "+EstadosProyecto.ACTIVO.getId();
             

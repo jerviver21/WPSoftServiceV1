@@ -6,7 +6,6 @@ package com.vbrothers.permisostrabajo.services;
 
 import com.vbrothers.common.exceptions.ParametroException;
 import com.vbrothers.permisostrabajo.dominio.PermisoTrabajo;
-import com.vbrothers.permisostrabajo.to.PermisoTrabajoTO;
 import javax.ejb.Local;
 
 /**
@@ -15,21 +14,21 @@ import javax.ejb.Local;
 @Local
 public interface AdminEstadosPermisosServicesLocal {
 
-    void crearPermiso(PermisoTrabajoTO permiso);
+    void crearPermiso(PermisoTrabajo permiso);
 
-    void solicitarAprobacion(PermisoTrabajoTO permiso)throws ParametroException;
+    void solicitarAprobacion(PermisoTrabajo permiso)throws ParametroException;
 
-    void aprobarPermiso(PermisoTrabajoTO permiso);
+    void aprobarPermiso(PermisoTrabajo permiso);
 
-    void terminarPermiso(PermisoTrabajoTO permiso)throws ParametroException;
+    void terminarPermiso(PermisoTrabajo permiso)throws ParametroException;
 
-    void noAprobarPermiso(PermisoTrabajoTO permiso);
+    void noAprobarPermiso(PermisoTrabajo permiso);
     
-    void agregarAprobador(PermisoTrabajoTO pto, String usrGrupo);
+    void agregarAprobador(PermisoTrabajo pto, String usrGrupo);
 
-    void cancelarPermiso(PermisoTrabajoTO permiso);
+    void cancelarPermiso(PermisoTrabajo permiso);
 
-    void finalizarPermiso(PermisoTrabajoTO pto);
+    void finalizarPermiso(PermisoTrabajo pto);
     
     //void desbloquearPermiso(PermisoTrabajo permiso);
     

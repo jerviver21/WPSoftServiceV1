@@ -17,8 +17,6 @@
             <Attribute datatype="varchar" defaultvalue="" extra="" fraction="0" id="7d5cefbc-9e22-4e2b-9e4c-3d0608460de5" name="usr" nullable="false" scale="10" size="300"/>
             <Attribute datatype="varchar" defaultvalue="" extra="" fraction="0" id="1487348f-f289-4b42-bb15-027dfd074dc2" name="pwd" nullable="false" scale="10" size="250"/>
             <Attribute datatype="int4" defaultvalue="1" extra="" fraction="0" id="782318a9-d01a-4ec9-a3d7-5af5c034675f" name="estado" nullable="false" scale="10" size="0"/>
-            <Attribute datatype="varchar" defaultvalue="" extra="" fraction="null" id="1e6d1655-6287-41f6-8726-709e1fdc286b" name="nombre" nullable="true" scale="10" size="1500"/>
-            <Attribute datatype="varchar" defaultvalue="" extra="" fraction="null" id="1aef5717-f3e4-4264-a695-2f2af633f982" name="mail" nullable="true" scale="10" size="1500"/>
             <Index id="3ae699da-25ac-434a-b795-f935d5ff676b" indextype="UNIQUE" name="usuario_ui1">
                 <Indexattribute attributerefid="7d5cefbc-9e22-4e2b-9e4c-3d0608460de5" id="b7997164-4b4e-47f3-8a03-9e568410101d"/>
             </Index>
@@ -104,7 +102,7 @@
             </Index>
         </Table>
         <Table id="46597fd1-7cef-40a5-ab8b-94b2c593f805" name="estado_permiso" schema="">
-            <Property name="LOCATION" value="761:1499"/>
+            <Property name="LOCATION" value="1049:1346"/>
             <Attribute datatype="int4" defaultvalue="" extra="" fraction="0" id="1033ee1d-eb35-415f-824e-e2dc2eb56406" name="id" nullable="false" scale="10" size="0"/>
             <Attribute datatype="varchar" defaultvalue="" extra="" fraction="0" id="a338c7c9-051d-49bd-9b39-7946586a8a59" name="descripcion" nullable="false" scale="10" size="100"/>
             <Index id="f3d77b5a-9370-4a55-ae77-e61dbb6584e6" indextype="PRIMARYKEY" name="estado_trabajo_pk">
@@ -112,7 +110,7 @@
             </Index>
         </Table>
         <Table id="af41741a-6fd2-4f9e-915b-8fb0225b6033" name="trazabilidad_permiso" schema="">
-            <Property name="LOCATION" value="970:670"/>
+            <Property name="LOCATION" value="1023:1009"/>
             <Attribute datatype="bigserial" defaultvalue="" extra="" fraction="0" id="79833757-4e79-44f6-9984-cb0e039d4902" name="id" nullable="false" scale="10" size="0"/>
             <Attribute datatype="timestamp" defaultvalue="now()" extra="" fraction="0" id="0c9558e6-1dac-4434-8a03-216723d1af5f" name="fecha_hora" nullable="false" scale="10" size="0"/>
             <Attribute datatype="int4" defaultvalue="" extra="" fraction="0" id="0e8290b3-745d-43ea-835f-5de81e7ace74" name="id_estado_trazabilidad" nullable="false" scale="10" size="0"/>
@@ -126,7 +124,7 @@
             </Index>
         </Table>
         <Table id="3e84ee83-9381-4188-8e27-7a8b6dc4864e" name="estado_trazabilidad" schema="">
-            <Property name="LOCATION" value="802:601"/>
+            <Property name="LOCATION" value="1040:802"/>
             <Attribute datatype="int4" defaultvalue="" extra="" fraction="0" id="04ea620b-13fc-4abc-894e-79174e27feac" name="id" nullable="false" scale="10" size="0"/>
             <Attribute datatype="varchar" defaultvalue="" extra="" fraction="0" id="ae6952b3-ed24-4324-a2a2-04bc9970a375" name="descripcion" nullable="false" scale="10" size="250"/>
             <Index id="eced92c6-22f2-4585-be07-78002a736a41" indextype="PRIMARYKEY" name="estado_trazabilidad_pk">
@@ -187,7 +185,7 @@
             </Index>
         </Table>
         <Table id="6ed4f48b-23eb-4032-83a0-ebf2af0b87e6" name="disciplina" schema="">
-            <Property name="LOCATION" value="605:1351"/>
+            <Property name="LOCATION" value="747:1411"/>
             <Attribute datatype="serial" defaultvalue="" extra="" fraction="0" id="678c0aac-5924-4c5a-9403-6e0b1ed7c3a4" name="id" nullable="false" scale="10" size="0"/>
             <Attribute datatype="varchar" defaultvalue="" extra="" fraction="0" id="e6719404-2672-424f-9d9d-d0574816b45c" name="nombre" nullable="false" scale="10" size="250"/>
             <Attribute datatype="text" defaultvalue="" extra="" fraction="0" id="a4865c04-865b-4c9c-9b97-fc548181e0cc" name="descripcion" nullable="true" scale="10" size="0"/>
@@ -205,7 +203,7 @@
             </Index>
         </Table>
         <Table id="d28ee84c-e1b6-4d6a-ad3d-e13e6b681ce5" name="proyecto" schema="">
-            <Property name="LOCATION" value="1122:1389"/>
+            <Property name="LOCATION" value="1604:1138"/>
             <Attribute datatype="bigserial" defaultvalue="" extra="" fraction="0" id="0cbaaec2-2376-4f2a-8a84-7add5f79f17b" name="id" nullable="false" scale="10" size=""/>
             <Attribute datatype="bigint" defaultvalue="" extra="" fraction="0" id="2803a076-bbe8-47bd-9c04-a7b8e143b365" name="num_cuenta_cargada" nullable="false" scale="10" size=""/>
             <Attribute datatype="varchar" defaultvalue="" extra="" fraction="0" id="da42597f-32fd-4a15-b994-ce8cc18a6dc0" name="nombre" nullable="false" scale="10" size="1000"/>
@@ -233,7 +231,7 @@
             </Index>
         </Table>
         <Table id="02781496-90c8-4ffb-967f-bb21956f69b0" name="contratista" schema="">
-            <Property name="LOCATION" value="1523:1342"/>
+            <Property name="LOCATION" value="2138:524"/>
             <Attribute datatype="bigserial" defaultvalue="" extra="" fraction="0" id="64b93e56-237f-421b-a6c2-2adb1caf7abb" name="id" nullable="true" scale="10" size=""/>
             <Attribute datatype="bigint" defaultvalue="" extra="" fraction="0" id="568ff470-deab-43e4-aab0-9acbc1d2d844" name="num_id" nullable="false" scale="10" size=""/>
             <Attribute datatype="varchar" defaultvalue="" extra="" fraction="0" id="f1f8db84-8f7d-4efe-81f8-eba33b7fb91c" name="nombre" nullable="false" scale="10" size="500"/>
@@ -261,7 +259,7 @@
             </Index>
         </Table>
         <Table id="e40b774b-360a-4bd4-b8a1-fcb46e1bce17" name="empleado" schema="">
-            <Property name="LOCATION" value="1517:766"/>
+            <Property name="LOCATION" value="1336:516"/>
             <Attribute datatype="bigserial" defaultvalue="" extra="" fraction="0" id="6d2db063-b277-48c6-8551-410fabacc342" name="id" nullable="false" scale="10" size=""/>
             <Attribute datatype="bigint" defaultvalue="" extra="" fraction="0" id="62812da5-8ba1-498b-af9f-19594a5feb3d" name="num_id" nullable="false" scale="10" size=""/>
             <Attribute datatype="varchar" defaultvalue="" extra="" fraction="0" id="b1de80c8-71e3-4b63-b187-d3bb862a12c1" name="nombres_apellidos" nullable="false" scale="10" size="500"/>
@@ -293,10 +291,11 @@
             </Index>
         </Table>
         <Table id="2b4ec5ec-1fb8-4900-9f55-a3ef82532abb" name="permiso_trabajo" schema="">
-            <Property name="LOCATION" value="836:1006"/>
+            <Property name="LOCATION" value="682:1062"/>
             <Attribute datatype="bigserial" defaultvalue="" extra="" fraction="0" id="c608d94a-98cd-4cb4-89d8-c97f8e087874" name="id" nullable="false" scale="10" size=""/>
             <Attribute datatype="int4" defaultvalue="" extra="" fraction="0" id="4422c325-3474-4eb5-9f6b-ee8a7320200c" name="id_disciplina" nullable="true" scale="10" size="0"/>
             <Attribute datatype="varchar" defaultvalue="" extra="" fraction="0" id="c1dec398-9315-48fc-9bc2-2d40895da680" name="otra_disciplina" nullable="true" scale="10" size="1000"/>
+            <Attribute datatype="varchar" defaultvalue="" extra="" fraction="null" id="0e94ffa8-24b1-44d7-b8ec-2ee5e651e98d" name="usuarios_ejecutante" nullable="true" scale="10" size="600"/>
             <Attribute datatype="int4" defaultvalue="" extra="" fraction="null" id="ee4758e5-1be0-4f9a-a226-ebf4eace3f84" name="id_estado_permiso" nullable="true" scale="10" size=""/>
             <Attribute datatype="text" defaultvalue="" extra="" fraction="null" id="f4668462-bfd9-415e-9ef5-e0508525270f" name="tarea" nullable="true" scale="10" size=""/>
             <Attribute datatype="varchar" defaultvalue="" extra="" fraction="null" id="6fc53c36-5675-468e-beb4-e95f3b5d2a32" name="usuario_creacion" nullable="true" scale="10" size="600"/>
@@ -310,7 +309,6 @@
             <Attribute datatype="timestamp" defaultvalue="" extra="" fraction="null" id="c9015da8-f96e-4400-97fc-dd8a1bdb02ce" name="fecha_hora_ini" nullable="true" scale="10" size=""/>
             <Attribute datatype="int4" defaultvalue="" extra="" fraction="null" id="4736fb4c-9310-443c-907b-a16d2a64c190" name="id_estado_anterior" nullable="true" scale="10" size=""/>
             <Attribute datatype="text" defaultvalue="" extra="" fraction="null" id="f0055ea4-cf7b-4f59-a772-425353518d41" name="consideraciones" nullable="true" scale="10" size=""/>
-            <Attribute datatype="bigint" defaultvalue="" extra="" fraction="null" id="bf51ab86-8062-4bf1-93ba-a5afd72bf443" name="id_contratista" nullable="true" scale="10" size=""/>
             <Index id="edf17a11-96a2-4b96-9911-a7405ca45738" indextype="PRIMARYKEY" name="permiso_pk">
                 <Indexattribute attributerefid="c608d94a-98cd-4cb4-89d8-c97f8e087874" id="b257ed36-e869-4267-bd39-0d239864280b"/>
             </Index>
@@ -428,7 +426,7 @@
             </Index>
         </Table>
         <Table id="6b01b30a-d9ac-4577-9617-e2267019ecb5" name="certificados_emp" schema="">
-            <Property name="LOCATION" value="1952:909"/>
+            <Property name="LOCATION" value="1931:935"/>
             <Attribute datatype="serial" defaultvalue="" extra="" fraction="null" id="ceccd882-d37c-4bac-b406-3bf7a0a0a5f4" name="id" nullable="false" scale="10" size=""/>
             <Attribute datatype="varchar" defaultvalue="" extra="" fraction="null" id="817e1ddb-6395-4821-b319-60e7f30c9e82" name="nombre" nullable="false" scale="10" size="500"/>
             <Attribute datatype="varchar" defaultvalue="" extra="" fraction="null" id="2c2060fc-8264-46bf-ad61-a3e8ff54c857" name="ruta" nullable="false" scale="10" size="1000"/>
@@ -439,7 +437,7 @@
             </Index>
         </Table>
         <Table id="3f7b2376-2362-495f-b10d-328d1025a4e2" name="tipo_certificado_emp" schema="">
-            <Property name="LOCATION" value="1953:1100"/>
+            <Property name="LOCATION" value="1930:1098"/>
             <Attribute datatype="int4" defaultvalue="" extra="" fraction="null" id="0ac04d74-8724-4762-9be7-34f22fbb5ae0" name="id" nullable="false" scale="10" size=""/>
             <Attribute datatype="varchar" defaultvalue="" extra="" fraction="null" id="09054206-9e92-4c9f-aa37-cfb91bc4e498" name="nombre" nullable="false" scale="10" size="500"/>
             <Index id="6c1a418d-8192-45f0-b321-b2cc8becd06f" indextype="PRIMARYKEY" name="tipo_certificado_pk">
@@ -447,7 +445,7 @@
             </Index>
         </Table>
         <Table id="f8c733b7-b1b5-4bd1-b36a-11d18fc73a3f" name="trazabilidad_activacion_emps" schema="">
-            <Property name="LOCATION" value="1521:617"/>
+            <Property name="LOCATION" value="1678:528"/>
             <Attribute datatype="bigserial" defaultvalue="" extra="" fraction="null" id="6818d08f-35da-4048-af07-f8c2bdea61e9" name="id" nullable="false" scale="10" size=""/>
             <Attribute datatype="bigint" defaultvalue="" extra="" fraction="null" id="0f44ab51-6d30-4cba-8ddf-53ecb58bdee6" name="id_empleado" nullable="false" scale="10" size=""/>
             <Attribute datatype="date" defaultvalue="" extra="" fraction="null" id="578fbcb2-898d-4a72-aa83-1f1ed5b7ff62" name="fecha_activacion" nullable="true" scale="10" size=""/>
@@ -457,7 +455,7 @@
             </Index>
         </Table>
         <Table id="04639fe0-1f52-44e3-ab07-979849b6cd0f" name="estados_proyecto" schema="">
-            <Property name="LOCATION" value="1204:1578"/>
+            <Property name="LOCATION" value="1622:1497"/>
             <Attribute datatype="serial" defaultvalue="" extra="" fraction="null" id="5032c424-879e-4e63-9ef2-20a17fb34446" name="id" nullable="false" scale="10" size=""/>
             <Attribute datatype="varchar" defaultvalue="" extra="" fraction="null" id="944d5f94-d167-4ceb-896c-7d92eeffc23c" name="nombre" nullable="false" scale="10" size="600"/>
             <Index id="fb165178-53bb-4426-a0f4-916e08b05c27" indextype="PRIMARYKEY" name="estados_proyecto_pk">
@@ -501,9 +499,13 @@
             <Index id="0fa1b97d-c99a-4c67-97c9-9b79222534c3" indextype="PRIMARYKEY" name="tarea_pk">
                 <Indexattribute attributerefid="eac0794c-88a4-47b9-be6c-93ae141d483a" id="dd383c2b-080a-4104-b795-d877d198237c"/>
             </Index>
+            <Index id="4a18acfa-ef62-4d56-84a4-5be7eaee0b1e" indextype="UNIQUE" name="tarea_ui1">
+                <Indexattribute attributerefid="ef74dd78-7ee3-4a5c-8743-69199824d1e2" id="daf93df5-26d0-44d7-97dc-ffa330138f88"/>
+                <Indexattribute attributerefid="3bd9fbbb-2d89-4dd2-9409-97289158d916" id="d53cf869-0141-40b1-87b5-90b7a1803567"/>
+            </Index>
         </Table>
         <Table id="dbd82831-57cd-4ef2-83de-f50869d58b6a" name="operacion_permiso" schema="">
-            <Property name="LOCATION" value="1117:605"/>
+            <Property name="LOCATION" value="1344:1051"/>
             <Attribute datatype="int4" defaultvalue="" extra="" fraction="null" id="85c7c556-9783-4e5d-9698-f697659e073c" name="id" nullable="false" scale="10" size=""/>
             <Attribute datatype="varchar" defaultvalue="" extra="" fraction="null" id="737e1192-6d0c-4ed3-9613-59a1f0e81f0b" name="descripcion" nullable="false" scale="10" size="255"/>
             <Index id="91352e0b-1e14-4742-a581-290d0f36c753" indextype="PRIMARYKEY" name="operaciones_permiso_pk">
@@ -537,15 +539,6 @@
                 <Indexattribute attributerefid="b778993e-28e9-4547-99c2-350b1db99800" id="1965fd89-9ff9-4160-b10a-692e99803c38"/>
             </Index>
         </Table>
-        <Table id="f849e138-736c-4a7c-948c-4481cf4099db" name="empleados_permiso" schema="">
-            <Property name="LOCATION" value="1199:930"/>
-            <Attribute datatype="bigserial" defaultvalue="" extra="" fraction="null" id="2e1617cd-0352-4a24-8437-86881a02ba33" name="id" nullable="false" scale="10" size=""/>
-            <Attribute datatype="bigint" defaultvalue="" extra="" fraction="null" id="457b9640-cb5e-405c-aa7b-df328d8266d8" name="id_permiso" nullable="false" scale="10" size=""/>
-            <Attribute datatype="bigint" defaultvalue="" extra="" fraction="null" id="c6cb975e-187a-443e-aa4a-81447cb0749c" name="id_empleado" nullable="false" scale="10" size=""/>
-            <Index id="2b07b19e-6e0f-4122-aec5-72bd7a78f4a4" indextype="PRIMARYKEY" name="empleados_permiso_pk">
-                <Indexattribute attributerefid="2e1617cd-0352-4a24-8437-86881a02ba33" id="356a1440-aa2a-49bc-8c5c-4d754cdceada"/>
-            </Index>
-        </Table>
     </Tables>
     <Relations>
         <Relation exportingtablerefid="85c75b3e-a3cc-4cdf-a9e4-5ba5a0ffea3f" id="6aabcae1-b197-4a8e-a568-95e1f35784e8" importingtablerefid="27425395-3ef1-4b34-bbdb-3b9fe683a14d" name="recurso_menu_fk" ondelete="NOTHING" onupdate="NOTHING">
@@ -555,9 +548,6 @@
             <Mapping exportingexpressionrefid="97f24baf-a3e3-4230-ba52-b72c0b184c1f" importingattributerefid="f2baba20-ad00-4c13-b647-4eadf35388d9"/>
         </Relation>
         <Relation exportingtablerefid="02781496-90c8-4ffb-967f-bb21956f69b0" id="0dd0b476-ca37-448d-ace9-30753b0be1a5" importingtablerefid="e40b774b-360a-4bd4-b8a1-fcb46e1bce17" name="empleado_contratista_fk" ondelete="NOTHING" onupdate="NOTHING">
-            <Property name="labelposition" value="1000:25"/>
-            <Property name="points" value="1622:1058,1558:1027"/>
-            <Property name="textoffset" value="-17:-8"/>
             <Mapping exportingexpressionrefid="12a697ff-aa24-4454-86aa-01402a36ab04" importingattributerefid="5c5dc870-86ac-4db2-a75e-66ffd7783b2f"/>
         </Relation>
         <Relation exportingtablerefid="3e84ee83-9381-4188-8e27-7a8b6dc4864e" id="3f8c7611-5697-46b6-8ada-7a72e91d459c" importingtablerefid="af41741a-6fd2-4f9e-915b-8fb0225b6033" name="estado_traz_trab_fk" ondelete="NOTHING" onupdate="NOTHING">
@@ -675,15 +665,6 @@
         </Relation>
         <Relation exportingtablerefid="6034e315-86a6-449e-a815-9af014ba7457" id="37b9e569-53d5-46d7-843c-d106eaa138f4" importingtablerefid="c419a0bb-d999-4e2e-aee5-10cad8db3469" name="cert_cert_trabajo_fk" ondelete="NOTHING" onupdate="NOTHING">
             <Mapping exportingexpressionrefid="1965fd89-9ff9-4160-b10a-692e99803c38" importingattributerefid="16c01ece-8b28-4920-8bc8-0afeba1107ce"/>
-        </Relation>
-        <Relation exportingtablerefid="2b4ec5ec-1fb8-4900-9f55-a3ef82532abb" id="b86a174d-d007-4ed5-aa28-907e1747b8cc" importingtablerefid="f849e138-736c-4a7c-948c-4481cf4099db" name="pt_emp_fk" ondelete="CASCADE" onupdate="CASCADE">
-            <Mapping exportingexpressionrefid="b257ed36-e869-4267-bd39-0d239864280b" importingattributerefid="457b9640-cb5e-405c-aa7b-df328d8266d8"/>
-        </Relation>
-        <Relation exportingtablerefid="e40b774b-360a-4bd4-b8a1-fcb46e1bce17" id="1d6e99b3-91e1-44e4-99ae-75ec646ea722" importingtablerefid="f849e138-736c-4a7c-948c-4481cf4099db" name="emp_ep_fk" ondelete="NOTHING" onupdate="NOTHING">
-            <Mapping exportingexpressionrefid="e3462035-b680-4fc5-b3b1-af8f0f5b2feb" importingattributerefid="c6cb975e-187a-443e-aa4a-81447cb0749c"/>
-        </Relation>
-        <Relation exportingtablerefid="02781496-90c8-4ffb-967f-bb21956f69b0" id="8254b496-76e8-478f-a789-3d6626d856f8" importingtablerefid="2b4ec5ec-1fb8-4900-9f55-a3ef82532abb" name="pt_cont_fk" ondelete="NOTHING" onupdate="NOTHING">
-            <Mapping exportingexpressionrefid="12a697ff-aa24-4454-86aa-01402a36ab04" importingattributerefid="bf51ab86-8062-4bf1-93ba-a5afd72bf443"/>
         </Relation>
     </Relations>
     <Views/>

@@ -2,9 +2,9 @@ package com.vbrothers.permisostrabajo.services;
 
 import com.vbrothers.common.exceptions.ParametroException;
 import com.vbrothers.locator.ServiceLocator;
+import com.vbrothers.permisostrabajo.dominio.Empleado;
 import com.vbrothers.permisostrabajo.dominio.PermisoTrabajo;
 import com.vbrothers.permisostrabajo.dominio.TrazabilidadPermiso;
-import com.vbrothers.permisostrabajo.to.PermisoTrabajoTO;
 import com.vbrothers.usuarios.dominio.Groups;
 import com.vbrothers.usuarios.dominio.Users;
 import com.vbrothers.util.EstadosPermiso;
@@ -31,38 +31,45 @@ public class AdminEstadosPermisosServices implements AdminEstadosPermisosService
     }
 
     @Override
-    public void crearPermiso(PermisoTrabajoTO pto) {
-        PermisoTrabajo permiso = pto.getPermiso();
-        Users usuario = pto.getUsr();
+    public void crearPermiso(PermisoTrabajo pto) {
+        Users usuario = pto.getUsuario();
         
         TrazabilidadPermiso traza1 = new TrazabilidadPermiso();
-        traza1.setPermisoTrabajo(permiso);
+        traza1.setPermisoTrabajo(pto);
         traza1.setEstadoTraz(EstadosTraz.EJECUTADO);
-        traza1.setUsrGrpAsignado(permiso.getUsuarioCreacion());
-        traza1.setFechaHora(permiso.getFechaHoraCreacion());
+        traza1.setUsrGrpAsignado(pto.getUsuarioCreacion());
+        traza1.setFechaHora(pto.getFechaHoraCreacion());
         traza1.setUsuario(usuario.getUsr());
         traza1.setOperacion(OperacionesPermiso.CREAR);
         em.merge(traza1);
         
-        System.out.println("Usuario ejecutante: "+permiso.getUsuariosEjecutante());
-        String[] usrs = permiso.getUsuariosEjecutante().split(";");
-        for(String usr : usrs){
+        List<Empleado> emps = pto.getEmpleados();
+        for(Empleado emp : emps){
             TrazabilidadPermiso traza2 = new TrazabilidadPermiso();
-            traza2.setPermisoTrabajo(permiso);
+            traza2.setPermisoTrabajo(pto);
             traza2.setEstadoTraz(EstadosTraz.ASIGNADO);
-            traza2.setUsrGrpAsignado(usr);
-            traza2.setFechaHora(permiso.getFechaHoraCreacion());
+            traza2.setUsrGrpAsignado(emp.getUsuario());
+            traza2.setFechaHora(pto.getFechaHoraCreacion());
             traza2.setOperacion(OperacionesPermiso.DILIGENCIAR);
             em.merge(traza2);
         }
         
+        if(pto.getContratista() != null){
+            TrazabilidadPermiso traza2 = new TrazabilidadPermiso();
+            traza2.setPermisoTrabajo(pto);
+            traza2.setEstadoTraz(EstadosTraz.ASIGNADO);
+            System.out.println("--> "+pto.getContratista().getUsuario());
+            traza2.setUsrGrpAsignado(pto.getContratista().getUsuario());
+            traza2.setFechaHora(pto.getFechaHoraCreacion());
+            traza2.setOperacion(OperacionesPermiso.DILIGENCIAR);
+            em.merge(traza2);
+        }
         
     }
 
     @Override
-    public void solicitarAprobacion(PermisoTrabajoTO pto) throws ParametroException{
-        PermisoTrabajo permiso = pto.getPermiso();
-        Users usuario = pto.getUsr();
+    public void solicitarAprobacion(PermisoTrabajo permiso) throws ParametroException{
+        Users usuario = permiso.getUsuario();
         List<TrazabilidadPermiso> trazs = em.createQuery("SELECT t "
                 + "FROM TrazabilidadPermiso t "
                 + "WHERE t.permisoTrabajo =:permiso AND t.estadoTraz =:estado AND t.operacion =:operacion ")
@@ -101,8 +108,6 @@ public class AdminEstadosPermisosServices implements AdminEstadosPermisosService
             for(String grupo: gruposAprobacion){
                 if(grupo.equals("SECTOR")){
                     grupo = permiso.getSector().getGrupo();
-                }else{
-                    grupo = locator.getParameter(grupo) != null ? locator.getParameter(grupo) : grupo;
                 }
                 TrazabilidadPermiso traza = new TrazabilidadPermiso();
                 traza.setPermisoTrabajo(permiso);
@@ -118,17 +123,12 @@ public class AdminEstadosPermisosServices implements AdminEstadosPermisosService
                 t.setFechaHora(new Date());
             }
         }
-        
-        
-        
-
     }
 
     @Override
-    public void aprobarPermiso(PermisoTrabajoTO pto) {
-        PermisoTrabajo permiso = pto.getPermiso();
-        Users usuario = pto.getUsr();
-        String notaAprobacion = pto.getNota();
+    public void aprobarPermiso(PermisoTrabajo permiso) {
+        Users usuario = permiso.getUsuario();
+        String notaAprobacion = permiso.getNotaGestion();
         
         String cond = "t.usrGrpAsignado = '"+usuario.getUsr()+"'";
         for(Groups grp : usuario.getGrupos()){
@@ -165,13 +165,21 @@ public class AdminEstadosPermisosServices implements AdminEstadosPermisosService
                     .getResultList();
 
         if(trazs.isEmpty()){
-            System.out.println("Usuario ejecutante: "+permiso.getUsuariosEjecutante());
-            String[] usrs = permiso.getUsuariosEjecutante().split(";");
-            for(String usr : usrs){
+            List<Empleado> emps = permiso.getEmpleados();
+            for(Empleado emp : emps){
                 TrazabilidadPermiso traza = new TrazabilidadPermiso();
                 traza.setPermisoTrabajo(permiso);
                 traza.setEstadoTraz(EstadosTraz.ASIGNADO);
-                traza.setUsrGrpAsignado(usr);
+                traza.setUsrGrpAsignado(emp.getUsuario());
+                traza.setFechaHora(new Date());
+                traza.setOperacion(OperacionesPermiso.TERMINAR);
+                em.merge(traza);
+            }
+            if(permiso.getContratista() != null){
+                TrazabilidadPermiso traza = new TrazabilidadPermiso();
+                traza.setPermisoTrabajo(permiso);
+                traza.setEstadoTraz(EstadosTraz.ASIGNADO);
+                traza.setUsrGrpAsignado(permiso.getContratista().getUsuario());
                 traza.setFechaHora(new Date());
                 traza.setOperacion(OperacionesPermiso.TERMINAR);
                 em.merge(traza);
@@ -183,10 +191,9 @@ public class AdminEstadosPermisosServices implements AdminEstadosPermisosService
     }
 
     @Override
-    public void noAprobarPermiso(PermisoTrabajoTO pto) {
-        PermisoTrabajo permiso = pto.getPermiso();
-        Users usuario = pto.getUsr();
-        String notaDesaprobacion = pto.getNota();
+    public void noAprobarPermiso(PermisoTrabajo permiso) {
+        Users usuario = permiso.getUsuario();
+        String notaDesaprobacion = permiso.getNotaGestion();
         TrazabilidadPermiso traz = new TrazabilidadPermiso();
         traz.setEstadoTraz(EstadosTraz.EJECUTADO);
         traz.setFechaHora(new Date());
@@ -211,24 +218,33 @@ public class AdminEstadosPermisosServices implements AdminEstadosPermisosService
             em.merge(traza);
         }
 
-        System.out.println("Usuario ejecutante: "+permiso.getUsuariosEjecutante());
-        String[] usrs = permiso.getUsuariosEjecutante().split(";");
-        for(String usr : usrs){
+        List<Empleado> emps = permiso.getEmpleados();
+        for(Empleado emp : emps){
             TrazabilidadPermiso traza = new TrazabilidadPermiso();
             traza.setPermisoTrabajo(permiso);
             traza.setEstadoTraz(EstadosTraz.ASIGNADO);
-            traza.setUsrGrpAsignado(usr);
+            traza.setUsrGrpAsignado(emp.getUsuario());
+            traza.setFechaHora(new Date());
+            traza.setOperacion(OperacionesPermiso.DILIGENCIAR);
+            em.merge(traza);
+        }
+        if(permiso.getContratista() != null){
+            TrazabilidadPermiso traza = new TrazabilidadPermiso();
+            traza.setPermisoTrabajo(permiso);
+            traza.setEstadoTraz(EstadosTraz.ASIGNADO);
+            traza.setUsrGrpAsignado(permiso.getContratista().getUsuario());
             traza.setFechaHora(new Date());
             traza.setOperacion(OperacionesPermiso.DILIGENCIAR);
             em.merge(traza);
         }
 
+
     }
     
     @Override
-    public void agregarAprobador(PermisoTrabajoTO pto, String usrGrupo){
+    public void agregarAprobador(PermisoTrabajo permiso, String usrGrupo){
         TrazabilidadPermiso traza = new TrazabilidadPermiso();
-        traza.setPermisoTrabajo(pto.getPermiso());
+        traza.setPermisoTrabajo(permiso);
         traza.setEstadoTraz(EstadosTraz.ASIGNADO);
         traza.setUsrGrpAsignado(usrGrupo);
         traza.setFechaHora(new Date());
@@ -237,10 +253,9 @@ public class AdminEstadosPermisosServices implements AdminEstadosPermisosService
     }
 
     @Override
-    public void terminarPermiso(PermisoTrabajoTO pto) throws ParametroException{
-        PermisoTrabajo permiso = pto.getPermiso();
-        Users usuario = pto.getUsr();
-        String nota = pto.getNota();
+    public void terminarPermiso(PermisoTrabajo permiso) throws ParametroException{
+        Users usuario = permiso.getUsuario();
+        String nota = permiso.getNotaGestion();
         List<TrazabilidadPermiso> trazs = em.createQuery("SELECT t "
                 + "FROM TrazabilidadPermiso t "
                 + "WHERE t.permisoTrabajo =:permiso AND t.estadoTraz = "+EstadosTraz.ASIGNADO.getId()+")")
@@ -264,14 +279,12 @@ public class AdminEstadosPermisosServices implements AdminEstadosPermisosService
         
         String paramAprobDefecto = locator.getParameter("cancela_defecto");
         if(paramAprobDefecto == null){
-            throw new ParametroException("No existe el parámetro aprueba_defecto");
+            throw new ParametroException("No existe el parámetro cancela_defecto");
         }
         String[] gruposAprobacion = paramAprobDefecto.split(","); 
         for(String grupo: gruposAprobacion){
             if(grupo.equals("SECTOR")){
                 grupo = permiso.getSector().getGrupo();
-            }else{
-                grupo = locator.getParameter(grupo) != null ? locator.getParameter(grupo) : grupo;
             }
             TrazabilidadPermiso traza = new TrazabilidadPermiso();
             traza.setPermisoTrabajo(permiso);
@@ -284,10 +297,9 @@ public class AdminEstadosPermisosServices implements AdminEstadosPermisosService
     }
 
     @Override
-    public void cancelarPermiso(PermisoTrabajoTO pto) {
-        PermisoTrabajo permiso = pto.getPermiso();
-        Users usuario = pto.getUsr();
-        String nota = pto.getNota();
+    public void cancelarPermiso(PermisoTrabajo permiso) {
+        Users usuario = permiso.getUsuario();
+        String nota = permiso.getNotaGestion();
         
         String cond = "t.usrGrpAsignado = '"+usuario.getUsr()+"'";
         for(Groups grp : usuario.getGrupos()){
@@ -337,17 +349,17 @@ public class AdminEstadosPermisosServices implements AdminEstadosPermisosService
     }
     
     @Override
-    public void finalizarPermiso(PermisoTrabajoTO pto){
+    public void finalizarPermiso(PermisoTrabajo permiso){
         List<TrazabilidadPermiso> trazs = em.createQuery("SELECT t "
                     + "FROM TrazabilidadPermiso t "
                     + "WHERE t.permisoTrabajo =:permiso AND t.estadoTraz.id = "+EstadosTraz.ASIGNADO.getId())
-                    .setParameter("permiso", pto.getPermiso())
+                    .setParameter("permiso", permiso)
                     .getResultList();
         TrazabilidadPermiso traz = trazs.get(0);
         traz.setEstadoTraz(EstadosTraz.EJECUTADO);
         traz.setFechaHora(new Date());
-        traz.setUsuario(pto.getPermiso().getUsuarioCreacion());
-        traz.setNota(pto.getNota());
+        traz.setUsuario(permiso.getUsuarioCreacion());
+        traz.setNota(permiso.getNotaGestion());
         em.merge(traz);
         
     }

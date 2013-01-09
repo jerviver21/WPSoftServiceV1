@@ -138,6 +138,8 @@ public class EmpleadoServices extends AbstractFacade<Empleado> implements Emplea
                 throw new EmpActivoOtroContException("El empleado se encuentra activo con otro contratista");
             }
         }
+        Users usr = usuarioService.findByUser(emp.getUsuario());
+        usr.setEstado(emp.getActivo() ? 1 : 0);em.merge(usr);
         em.merge(emp);
     }
     

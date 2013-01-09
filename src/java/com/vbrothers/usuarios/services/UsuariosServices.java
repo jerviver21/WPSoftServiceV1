@@ -86,7 +86,7 @@ public class UsuariosServices extends AbstractFacade<Users> implements UsuariosS
     public Users findFullUser(String usr)throws NoResultException{
         Users usuario = (Users)em.createNamedQuery("Users.findUserByUsr")
                 .setParameter("usr", usr).getSingleResult();
-        usuario.setRecursosUsr(new TreeSet<Resource>());
+        usuario.setRecursos(new TreeSet<Resource>());
         List<Groups> grupos = usuario.getGrupos();
         for(Groups grupo:grupos){
             List<Rol> roles = grupo.getRoles();
@@ -95,19 +95,12 @@ public class UsuariosServices extends AbstractFacade<Users> implements UsuariosS
                 for(Resource recurso:recursos){
                     System.out.println(recurso.getNombre()+" - "+recurso.getUrl());
                 }
-                usuario.getRecursosUsr().addAll(recursos);
+                usuario.getRecursos().addAll(recursos);
             }
         }
         return usuario;
     }
 
-    @Override
-    public List<Users> findUsersByRol(String rol) {
-        List<Users> users = em.createQuery("SELECT u "
-                        + "FROM Users u JOIN u.grupos g JOIN g.roles r "
-                        + "WHERE r.codigo = :rol")
-                .setParameter("rol", rol).getResultList();
-        return users;
-    }
+    
     
 }

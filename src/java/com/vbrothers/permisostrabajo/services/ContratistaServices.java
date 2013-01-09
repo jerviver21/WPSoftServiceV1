@@ -86,19 +86,27 @@ public class ContratistaServices extends AbstractFacade<Contratista>implements C
     @Override
     public void guardar(Contratista entity) throws LlaveDuplicadaException, ParametroException{
         try {
-            Users usr = new Users();
-            usr.setEstado(1);
-            String groupParam = locator.getParameter("grupoContratista");
-            if(groupParam == null){
-                throw  new ParametroException("No existe el parámetro: grupoContratista");
+            Users usr;
+            if(entity.getId() == null || entity.getId() == 0){
+                usr = new Users();
+                String groupParam = locator.getParameter("grupoContratista");
+                if(groupParam == null){
+                    throw  new ParametroException("No existe el parámetro: grupoContratista");
+                }
+                Groups grupo = grupoService.findByCodigo(groupParam);
+                if (grupo == null) {
+                    throw new ParametroException("El grupo "+groupParam+" no existe, cambie el parámetro");
+                }
+                List<Groups> grupoUsr = new ArrayList<Groups>();
+                grupoUsr.add(grupo);
+                usr.setGrupos(grupoUsr);
+            }else{
+                usr = usuarioService.findByUser(entity.getUsuario());
             }
-            Groups grupo = grupoService.findByCodigo(groupParam);
-            if (grupo == null) {
-                throw new ParametroException("El grupo "+groupParam+" no existe, cambie el parámetro");
-            }
-            List<Groups> grupoUsr = new ArrayList<Groups>();
-            grupoUsr.add(grupo);
-            usr.setGrupos(grupoUsr);
+            
+            usr.setEstado(entity.getActivo() ? 1 : 0);
+            usr.setNombre(entity.getNombre());
+            usr.setMail(entity.getMail());
             usr.setUsr(entity.getUsuario());
             usr.setPwd(entity.getPwd());
             usuarioService.edit(usr);
@@ -106,7 +114,7 @@ public class ContratistaServices extends AbstractFacade<Contratista>implements C
             getEntityManager().merge(entity);
         } catch (PersistenceException e) {
             if(e.getCause() instanceof ConstraintViolationException){
-                throw new LlaveDuplicadaException("El contratista ya existe");
+                throw new LlaveDuplicadaException("El contratista o usuario asociado ya existe");
             }
             throw e;
         }

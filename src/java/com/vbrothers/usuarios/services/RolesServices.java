@@ -4,6 +4,7 @@ import com.vbrothers.common.services.AbstractFacade;
 import com.vbrothers.usuarios.dominio.Groups;
 import com.vbrothers.usuarios.dominio.Resource;
 import com.vbrothers.usuarios.dominio.Rol;
+import com.vbrothers.usuarios.dominio.Users;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -61,11 +62,21 @@ public class RolesServices extends AbstractFacade<Rol> implements RolesServicesL
         return rol;
     }
 
+    @Override
     public List<Groups> findGruposByRol(String rol) {
         List<Groups> grupos = em.createQuery("SELECT g "
-                + "FROM Groups g JOIN g.roles r"
+                + "FROM Groups g JOIN g.roles r "
                 + "WHERE r.codigo =:rol ").setParameter("rol", rol).getResultList();
         return grupos;
+    }
+    
+    @Override
+    public List<Users> findUsersByRol(String rol) {
+        List<Users> users = em.createQuery("SELECT u "
+                        + "FROM Users u JOIN u.grupos g JOIN g.roles r "
+                        + "WHERE r.codigo = :rol")
+                .setParameter("rol", rol).getResultList();
+        return users;
     }
 
 

@@ -62,14 +62,7 @@ public class GruposServices extends AbstractFacade<Groups>  implements GruposSer
         return null;
     }
 
-    @Override
-    public List<Groups> findGruposByRol(String rol) {
-        List<Groups> grupos = em.createQuery("SELECT g "
-                        + "FROM Groups g JOIN g.roles r "
-                        + "WHERE r.codigo = :rol")
-                .setParameter("rol", rol).getResultList();
-        return grupos;
-    }
+
 
 
  

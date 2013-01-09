@@ -11,7 +11,6 @@ import com.vbrothers.permisostrabajo.dominio.PermisoTrabajo;
 import com.vbrothers.permisostrabajo.dominio.RiesgosPeligroTarea;
 import com.vbrothers.permisostrabajo.dominio.Tarea;
 import com.vbrothers.permisostrabajo.dominio.TrazabilidadPermiso;
-import com.vbrothers.permisostrabajo.to.PermisoTrabajoTO;
 import com.vbrothers.usuarios.dominio.Users;
 import java.util.Date;
 import java.util.List;
@@ -25,64 +24,58 @@ import javax.ejb.Local;
 public interface PermisoServicesLocal {
     
     //Servicios generales del permiso de trabajo
-    List<PermisoTrabajo> findPermisos(Users user, int estado, Date fechaIni, Date fechaFin);
-    
-    void actualizarPermiso(PermisoTrabajoTO pto);
-    
-    void deletePermiso(PermisoTrabajo pt)throws EstadoException;
-
     void cambiarEstado(PermisoTrabajo pt, int estado);
     
+    PermisoTrabajo actualizarPermiso(PermisoTrabajo pto);
+    
     //Servicios para la creación de permisos de trabajo
-    PermisoTrabajoTO findPermisoForCreacion(Object id);
+    List<PermisoTrabajo> findPermisos(Users user, int estado, Date fechaIni, Date fechaFin);
+      
+    PermisoTrabajo findPermisoForCreacion(Object id);
     
     List<PermisoTrabajo> findPermisosEnProceso(Users user);
     
-    void crearPermiso(PermisoTrabajoTO pto)throws LlaveDuplicadaException, ValidacionException;
+    void crearPermiso(PermisoTrabajo pto)throws LlaveDuplicadaException, ValidacionException;
+    
+    void deletePermiso(PermisoTrabajo pt)throws EstadoException;
 
     //Servicios para gestion en general del permiso de trabajo
-    PermisoTrabajoTO findPermisoForGestion(Object id);
+    PermisoTrabajo findPermisoForGestion(Object id);
 
-    PermisoTrabajo guardarGestion(PermisoTrabajoTO pto)throws LlaveDuplicadaException;
+    void guardarGestion(PermisoTrabajo pto)throws LlaveDuplicadaException;
     
     List<PermisoTrabajo> findPermisosPendientes(Users usr);
     
     List<TrazabilidadPermiso> findTrazabilidadPermiso(PermisoTrabajo permiso);
     
-    public void borrarTarea(Tarea tarea);
+    void borrarTarea(Tarea tarea);
     
-    public void borrarPeligro(PeligrosTarea pt);
+    void borrarPeligro(PeligrosTarea pt);
     
-    public void borrarRiesgo(RiesgosPeligroTarea rpt);
+    void borrarRiesgo(RiesgosPeligroTarea rpt);
 
-    public void borrarControl(ControlesPeligroTarea ctr);
-    
+    void borrarControl(ControlesPeligroTarea ctr);
+
+    void borrarNota(NotasPermiso nota);
 
     //Servicios para el diligenciamiento del permiso de trabajo
-    void solicitarAprobacion(PermisoTrabajoTO pto)throws LlaveDuplicadaException, ParametroException;
+    void solicitarAprobacion(PermisoTrabajo pto)throws LlaveDuplicadaException, ParametroException;
+
+    //Servicios para la aprobacion del permiso de trabajo
+    void aprobarPermiso(PermisoTrabajo pto)throws LlaveDuplicadaException;
+   
+    void noAprobarPermiso(PermisoTrabajo pto)throws LlaveDuplicadaException;
     
     List findUsersAprobadores(PermisoTrabajo pto);
 
     List findGruposAprobadores(PermisoTrabajo pto);
 
-    //Servicios para la aprobacion del permiso de trabajo
-    void aprobarPermiso(PermisoTrabajoTO pto)throws LlaveDuplicadaException;
-   
-    void noAprobarPermiso(PermisoTrabajoTO pto)throws LlaveDuplicadaException;
-
     //Servicios para etapas finales de gestion del permiso
-    void terminarPermiso(PermisoTrabajoTO pto)throws LlaveDuplicadaException, ParametroException;
+    void terminarPermiso(PermisoTrabajo pto)throws LlaveDuplicadaException, ParametroException;
 
-    void cancelarPermiso(PermisoTrabajoTO pto)throws LlaveDuplicadaException;
+    void cancelarPermiso(PermisoTrabajo pto)throws LlaveDuplicadaException;
 
-    void finalizarPermiso(PermisoTrabajoTO pto)throws LlaveDuplicadaException;
+    void finalizarPermiso(PermisoTrabajo pto)throws LlaveDuplicadaException;
 
-    public void guardarNota(NotasPermiso nota);
-
-    public void borrarNota(NotasPermiso nota);
-
-    
-
-    
     
 }

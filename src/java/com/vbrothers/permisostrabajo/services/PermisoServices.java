@@ -5,9 +5,7 @@ import com.vbrothers.common.exceptions.LlaveDuplicadaException;
 import com.vbrothers.common.exceptions.ParametroException;
 import com.vbrothers.common.exceptions.ValidacionException;
 import com.vbrothers.locator.ServiceLocator;
-import com.vbrothers.permisostrabajo.dominio.Certificado;
 import com.vbrothers.permisostrabajo.dominio.CertificadosTrabajo;
-import com.vbrothers.permisostrabajo.dominio.Contratista;
 import com.vbrothers.permisostrabajo.dominio.ControlesPeligroTarea;
 import com.vbrothers.permisostrabajo.dominio.Disciplina;
 import com.vbrothers.permisostrabajo.dominio.Empleado;
@@ -19,20 +17,18 @@ import com.vbrothers.permisostrabajo.dominio.RiesgosPeligroTarea;
 import com.vbrothers.permisostrabajo.dominio.Sector;
 import com.vbrothers.permisostrabajo.dominio.Tarea;
 import com.vbrothers.permisostrabajo.dominio.TrazabilidadPermiso;
-import com.vbrothers.permisostrabajo.to.PermisoTrabajoTO;
 import com.vbrothers.usuarios.dominio.Groups;
 import com.vbrothers.usuarios.dominio.Users;
 import com.vbrothers.usuarios.services.GruposServicesLocal;
 import com.vbrothers.usuarios.services.UsuariosServicesLocal;
 import com.vbrothers.util.EstadosPermiso;
 import com.vbrothers.util.EstadosTraz;
+import com.vbrothers.util.EtapaPermiso;
 import com.vbrothers.util.OperacionesPermiso;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -43,6 +39,8 @@ import javax.persistence.PersistenceContext;
  */
 @Stateless
 public class PermisoServices implements PermisoServicesLocal {
+    
+    ServiceLocator locator;
 
     @PersistenceContext(unitName = "WPSoftPU")
     private EntityManager em;
@@ -62,11 +60,29 @@ public class PermisoServices implements PermisoServicesLocal {
     @EJB
     UsuariosServicesLocal usersServices;
     
+    
+    public PermisoServices(){
+        locator = ServiceLocator.getInstance();
+    }
+    
     //Servicios generales del permiso de trabajo
     @Override
+    public void cambiarEstado(PermisoTrabajo pt, int estado) {
+        pt.setEstadoAnterior(pt.getEstadoPermiso());
+        pt.setEstadoPermiso(em.find(EstadoPermiso.class, estado));
+        em.merge(pt);
+    }
+    
+    @Override
+    public PermisoTrabajo actualizarPermiso(PermisoTrabajo pto){
+        return em.merge(pto);
+    }
+    
+    //Servicios para la creación de permisos de trabajo
+    @Override
     public List<PermisoTrabajo> findPermisos(Users user, int estado, Date fechaIni, Date fechaFin) {
-        String rolAdmin = ServiceLocator.getInstance().getParameter("rolAdmin") ;
-        String rolGerente = ServiceLocator.getInstance().getParameter("rolGerente") ;
+        String rolAdmin = locator.getParameter("rolAdmin") ;
+        String rolGerente = locator.getParameter("rolGerente") ;
         List<PermisoTrabajo> permisos = em.createQuery("SELECT p "
                 + "FROM PermisoTrabajo p "
                 + "WHERE p.usuarioCreacion =:user "
@@ -77,7 +93,7 @@ public class PermisoServices implements PermisoServicesLocal {
                 .setParameter("fechaIni",fechaIni)
                 .setParameter("fechaFin", fechaFin)
                 .getResultList();
-        if(user.getRoles().contains(rolAdmin) || user.getRoles().contains(rolGerente))  {
+        if(user.getRolesUsr().contains(rolAdmin) || user.getRolesUsr().contains(rolGerente))  {
             permisos = em.createQuery("SELECT p "
                 + "FROM PermisoTrabajo p "
                 + "WHERE  p.estadoPermiso.id =:estado "
@@ -90,11 +106,70 @@ public class PermisoServices implements PermisoServicesLocal {
         }
         return permisos;
     }
-     
+
     @Override
-    public void actualizarPermiso(PermisoTrabajoTO pto){
-        PermisoTrabajo permiso = pto.getPermiso();
-        pto.setPermiso(em.merge(pto.getPermiso()));
+    public PermisoTrabajo findPermisoForCreacion(Object id){
+        PermisoTrabajo permiso = em.find(PermisoTrabajo.class, id);
+
+        List<NotasPermiso> notas = permiso.getNotas();
+        if(notas == null){
+            notas = new ArrayList<NotasPermiso>();
+            permiso.setNotas(notas);
+        }
+        List<Empleado> empleados = permiso.getEmpleados();
+        if(empleados == null){
+            empleados = new ArrayList<Empleado>();
+            permiso.setEmpleados(empleados);
+        }
+        
+        permiso.getNotas().size();
+        permiso.getEmpleados().size();
+        
+        return permiso;
+    }
+    
+    @Override
+    public List<PermisoTrabajo> findPermisosEnProceso(Users usr) {
+        String rolAdmin = locator.getParameter("rolAdmin") ;
+        String rolGerente = locator.getParameter("rolGerente") ;
+        String query = "SELECT p FROM PermisoTrabajo p WHERE p.usuarioCreacion = '"+usr.getUsr()+"' "
+                + "AND p.estadoPermiso.id != "+EstadosPermiso.CANCELADO.getId()+" "
+                + "AND p.estadoPermiso.id != "+EstadosPermiso.SUSPENDIDO.getId();
+        if(usr.getRolesUsr().contains(rolAdmin) || usr.getRolesUsr().contains(rolGerente))  {
+            query = "SELECT p FROM PermisoTrabajo p WHERE "
+                + " p.estadoPermiso.id != "+EstadosPermiso.CANCELADO.getId()+" "
+                + "AND p.estadoPermiso.id != "+EstadosPermiso.SUSPENDIDO.getId();
+            
+        }
+        return em.createQuery(query).getResultList();
+    }
+    
+    @Override
+    public void crearPermiso(PermisoTrabajo permiso)throws LlaveDuplicadaException, ValidacionException{
+        permiso.setFechaHoraCreacion(new Date());
+        permiso.setUsuarioCreacion(permiso.getUsuario().getUsr());
+        
+        if(permiso.getEquipo().getId() == null || permiso.getEquipo().getId() == 0 ){
+            permiso.setEquipo(null);
+        }
+
+        permiso.setEjecutorContratista(false);
+        if(permiso.getContratista() != null){
+            permiso.setEjecutorContratista(true);
+            permiso.setContratista(contratistaServices.find(permiso.getContratista().getId()));
+            List<Empleado> empleadosContratista = empleadoServices.findEmpleadosXContratita(permiso.getContratista().getId());
+            permiso.getEmpleados().addAll(empleadosContratista);
+        }
+        
+        if(permiso.getEmpleados().isEmpty()){
+            throw new ValidacionException("Debe agregar empleados ejecutantes");
+        }
+        permiso.setEstadoPermiso(EstadosPermiso.CREADO);
+        permiso.setEstadoAnterior(EstadosPermiso.SUSPENDIDO);
+
+        permiso.setId(em.merge(permiso).getId());
+        System.out.println("Id nuevo permiso de trabajo: -> "+permiso.getId()+" - Usr: "+permiso.getUsuario());
+        adminEstadosServices.crearPermiso(permiso);
     }
     
     @Override
@@ -106,95 +181,9 @@ public class PermisoServices implements PermisoServicesLocal {
         em.remove(em.merge(pt));
     }
 
-    @Override
-    public void cambiarEstado(PermisoTrabajo pt, int estado) {
-        pt.setEstadoAnterior(pt.getEstadoPermiso());
-        pt.setEstadoPermiso(em.find(EstadoPermiso.class, estado));
-        em.merge(pt);
-    }
-    
-    //Servicios para la creación de permisos de trabajo
-
-    @Override
-    public PermisoTrabajoTO findPermisoForCreacion(Object id){
-        PermisoTrabajoTO pto = new PermisoTrabajoTO();
-        PermisoTrabajo permiso = em.find(PermisoTrabajo.class, id);
-        pto.setPermiso(permiso);
-        List<NotasPermiso> notas = permiso.getNotas();
-        if(notas == null){
-            notas = new ArrayList<NotasPermiso>();
-            permiso.setNotas(notas);
-        }
-        permiso.getNotas().size();
-        if(permiso.isEjecutorContratista()){
-            Contratista cont = contratistaServices.findByUser(permiso.getUsuariosEjecutante());
-            pto.setContratista(cont);
-        }else{
-            String[] usrs = permiso.getUsuariosEjecutante().split(";");
-            for(String usr : usrs){
-                pto.getEmpleados().add(empleadoServices.findByUser(usr));
-            }
-        }
-        return pto;
-    }
-    
-    @Override
-    public List<PermisoTrabajo> findPermisosEnProceso(Users usr) {
-        String rolAdmin = ServiceLocator.getInstance().getParameter("rolAdmin") ;
-        String rolGerente = ServiceLocator.getInstance().getParameter("rolGerente") ;
-        String query = "SELECT p FROM PermisoTrabajo p WHERE p.usuarioCreacion = '"+usr.getUsr()+"' "
-                + "AND p.estadoPermiso.id != "+EstadosPermiso.CANCELADO.getId()+" "
-                + "AND p.estadoPermiso.id != "+EstadosPermiso.SUSPENDIDO.getId();
-        if(usr.getRoles().contains(rolAdmin) || usr.getRoles().contains(rolGerente))  {
-            query = "SELECT p FROM PermisoTrabajo p WHERE "
-                + " p.estadoPermiso.id != "+EstadosPermiso.CANCELADO.getId()+" "
-                + "AND p.estadoPermiso.id != "+EstadosPermiso.SUSPENDIDO.getId();
-            
-        }
-        return em.createQuery(query).getResultList();
-    }
-    
-    @Override
-    public void crearPermiso(PermisoTrabajoTO pto)throws LlaveDuplicadaException, ValidacionException{
-        PermisoTrabajo permiso = pto.getPermiso();
-        permiso.setFechaHoraCreacion(new Date());
-        
-        if(permiso.getEquipo().getId() == null || permiso.getEquipo().getId() == 0 ){
-            permiso.setEquipo(null);
-        }
-
-        if(pto.getContratista() != null){
-            permiso.setEjecutorContratista(true);
-            Contratista cont = contratistaServices.find(pto.getContratista().getId());
-            String usr = cont.getUsuario();
-            System.out.println("Usuario Contratista: "+usr);
-            permiso.setUsuariosEjecutante(usr);
-        }
-
-        if(pto.getContratista() == null){
-            permiso.setEjecutorContratista(false);
-            if(pto.getEmpleados().isEmpty()){
-                throw new ValidacionException("Debe agregar empleados ejecutantes");
-            }
-            for(Empleado emp:pto.getEmpleados()){
-                String usr = emp.getUsuario();
-                System.out.println("Usuario empleado: "+usr);
-                permiso.setUsuariosEjecutante(permiso.getUsuariosEjecutante() == null
-                        ? usr : permiso.getUsuariosEjecutante()+";"+usr);
-            }
-        }
-        permiso.setEstadoPermiso(EstadosPermiso.CREADO);
-        permiso.setEstadoAnterior(EstadosPermiso.SUSPENDIDO);
-        //permiso.setProyecto(em.find(Proyecto.class, trabajo.getIdProyecto()));
-        pto.setPermiso(em.merge(pto.getPermiso()));
-        System.out.println("Id nuevo permiso de trabajo: -> "+pto.getPermiso().getId());
-        adminEstadosServices.crearPermiso(pto);
-    }
-
     //Servicios para gestion en general del permiso de trabajo
     @Override
-    public PermisoTrabajoTO findPermisoForGestion(Object id){
-        PermisoTrabajoTO pto = new PermisoTrabajoTO();
+    public PermisoTrabajo findPermisoForGestion(Object id){
         PermisoTrabajo permiso = em.find(PermisoTrabajo.class, id);
         List<Sector> sectoresAfectados = permiso.getSectoresAfectados();
         if(sectoresAfectados == null){
@@ -211,141 +200,100 @@ public class PermisoServices implements PermisoServicesLocal {
             disciplina = new Disciplina(-1);
             permiso.setDisciplina(disciplina);
         }
-        List<Tarea> tareas = permiso.getTareas();
-        if(tareas == null){
-            tareas = new ArrayList<Tarea>();
-            permiso.setTareas(tareas);
-        }
         
         List<NotasPermiso> notas = permiso.getNotas();
         if(notas == null){
             notas = new ArrayList<NotasPermiso>();
             permiso.setNotas(notas);
         }
+        
+        List<Empleado> empleados = permiso.getEmpleados();
+        if(empleados == null){
+            empleados = new ArrayList<Empleado>();
+            permiso.setEmpleados(empleados);
+        }
+        
+        permiso.setOtrosAprobadores(new ArrayList<String>());
+        
+        List<Tarea> tareas = permiso.getTareas();
+        if(tareas == null){
+            tareas = new ArrayList<Tarea>();
+            permiso.setTareas(tareas);
+        }
 
-        pto.setTareasVista(new ArrayList<Tarea>());
         for(Tarea t : tareas){
             List<PeligrosTarea> pst = t.getPeligros();
             if(pst == null){
                 t.setPeligros(new ArrayList<PeligrosTarea>());
             }else {
                 for(PeligrosTarea pt : pst){
-                    
                     List<RiesgosPeligroTarea> rspt = pt.getRiesgos();
                     for(RiesgosPeligroTarea rpt : rspt){
                         rpt.getNombre();
                     }
-                    
                     List<ControlesPeligroTarea> ctrpt = pt.getControles();
                     for(ControlesPeligroTarea cpr : ctrpt){
                         cpr.getControl();
                     }
                 }
             }
-            pto.getTareasVista().add(t);
         }
-        
-        Collections.sort(pto.getTareasVista());
-        
-        //Esto se hace por especificación del cliente! Que quiere que por defecto el cuadro tenga 6 tareas. (Trate de encontrar una forma más limpia de hacer esto)
-        while(pto.getTareasVista().size() < 6){
-            Tarea t = new Tarea();
-            t.setConsecutivo(pto.getTareasVista().size()+1);
-            t.setPermiso(permiso);
-            pto.getTareasVista().add(t);
-        }
-        //-------------------------------------------------------------------------------------------------
-
-        System.out.println("Cantidad sectores afectados :"+permiso.getSectoresAfectados().size()+" - Cantidad peligros: "+permiso.getTareas().size()+" - Certificados: "+permiso.getCertificados().size()+" - Notas: "+permiso.getNotas());
-        pto.setPermiso(permiso);
-        if(permiso.isEjecutorContratista()){
-            Contratista cont = new Contratista();
-            //Aqui se llama al service que con el nombre de usuario me trae el contratista
-            pto.setContratista(cont);
-        }else{
-            List<Empleado> empleados = new ArrayList<Empleado>();
-            if(permiso.getUsuariosEjecutante() != null){
-                String[] usrs = permiso.getUsuariosEjecutante().split(";");
-                for(String usr : usrs){
-                    //Aqui llamamos al servicio que conecta mis usuarios con mis empleados
-                }
-            }
-            
-            pto.setEmpleados(empleados);
-        }
+        Collections.sort(permiso.getTareas());
+        System.out.println("Cantidad sectores afectados :"+permiso.getSectoresAfectados().size()
+                +" - Cantidad peligros: "+permiso.getTareas().size()+" - Certificados: "
+                +permiso.getCertificados().size()+" - Notas: "+permiso.getNotas()+" - Empleados: "
+                +permiso.getEmpleados().size());
 
         if(permiso.getEstadoPermiso() != null){
             if(permiso.getEstadoPermiso().getId() == EstadosPermiso.CREADO.getId()
                     || permiso.getEstadoPermiso().getId() == EstadosPermiso.NO_APROBADO.getId()){
-                pto.setEtapa(pto.getDILIGENCIAR());
+                permiso.setEtapa(EtapaPermiso.DILIGENCIAR);
             }else if(permiso.getEstadoPermiso().getId() == EstadosPermiso.DILIGENCIADO.getId()
                     || permiso.getEstadoPermiso().getId() == EstadosPermiso.PREAPROBADO.getId()){
-                pto.setEtapa(pto.getAPROBAR());
+                permiso.setEtapa(EtapaPermiso.APROBAR);
             }else if(permiso.getEstadoPermiso().getId() == EstadosPermiso.APROBADO.getId()){
-                pto.setEtapa(pto.getTERMINAR());
+                permiso.setEtapa(EtapaPermiso.TERMINAR);
             }else if(permiso.getEstadoPermiso().getId() == EstadosPermiso.TERMINADO.getId()
                     || permiso.getEstadoPermiso().getId() == EstadosPermiso.PRECANCELADO.getId()){
-                pto.setEtapa(pto.getCANCELAR());
+                permiso.setEtapa(EtapaPermiso.CANCELAR);
             }else if(permiso.getEstadoPermiso().getId() == EstadosPermiso.APROBADA_CANCELACION.getId()){
-                pto.setEtapa(pto.getFINALIZAR());
+                permiso.setEtapa(EtapaPermiso.FINALIZAR);
             }
-
         }
-        return pto;
+        return permiso;
     }
     
     @Override
-    public PermisoTrabajo guardarGestion(PermisoTrabajoTO pto)throws LlaveDuplicadaException{
-        List<Tarea> tareas = new ArrayList<Tarea>();
-        Set<Integer> cons = new HashSet<Integer>();//Nos aseguramos de no guardar 2 veces el mismo paso
-        for(Tarea t : pto.getTareasVista()){
-            if(t.getDatos() != null && !t.getDatos().equalsIgnoreCase("") && !cons.contains(t.getConsecutivo())){
-                tareas.add(t);
-                cons.add(t.getConsecutivo());
-            }
-        }
-        pto.getPermiso().setTareas(tareas);
-        pto.setPermiso(em.merge(pto.getPermiso()));
-        
-        tareas = pto.getPermiso().getTareas();
-        for(Tarea t : tareas){
+    public void guardarGestion(PermisoTrabajo permiso)throws LlaveDuplicadaException{
+        PermisoTrabajo pta = actualizarPermiso(permiso);
+        permiso.setTareas(pta.getTareas());
+        for(Tarea t : permiso.getTareas()){
             List<PeligrosTarea> pst = t.getPeligros();
             for(PeligrosTarea pt : pst){
-
                 List<RiesgosPeligroTarea> rspt = pt.getRiesgos();
                 for(RiesgosPeligroTarea rpt : rspt){
                     rpt.getNombre();
                 }
-
                 List<ControlesPeligroTarea> ctrpt = pt.getControles();
                 for(ControlesPeligroTarea cpr : ctrpt){
                     cpr.getControl();
                 }
             }
         }
-        
-        pto.setTareasVista(tareas);
-        return pto.getPermiso();
     }
     
     @Override
     public List<PermisoTrabajo> findPermisosPendientes(Users usr) {
         String cond = "t.usrGrpAsignado = '"+usr.getUsr()+"'";
-        boolean validador = false;
         for(Groups grp : usr.getGrupos()){
             cond = cond + " OR t.usrGrpAsignado = '"+grp.getCodigo()+"'";
-            if(grp.getCodigo().equalsIgnoreCase(ServiceLocator.getInstance().getParameter("grupoValidador"))){
-                validador = true;
-            }
         }
         String sql = "SELECT t "
                 + "FROM TrazabilidadPermiso t "
-                + "WHERE t.estadoTraz =:estado "+ (validador?"":" AND ("+cond+")");
-
+                + "WHERE t.estadoTraz =:estado "+ (usr.getRolesUsr().contains(locator.getParameter("rolValidador")) ?"":" AND ("+cond+")");
 
         List<TrazabilidadPermiso> permisosAsignados = em.createQuery(sql)
                 .setParameter("estado", EstadosTraz.ASIGNADO).getResultList();
-
         System.out.println(sql);
         List<PermisoTrabajo> permisos = new ArrayList<PermisoTrabajo>();
         for(TrazabilidadPermiso tt : permisosAsignados){
@@ -386,67 +334,48 @@ public class PermisoServices implements PermisoServicesLocal {
     public void borrarControl(ControlesPeligroTarea ctr){
         em.remove(em.merge(ctr));
     }
+    
+    @Override
+    public void borrarNota(NotasPermiso nota) {
+        em.remove(em.merge(nota));
+    }
 
     
     //Servicios para el diligenciamiento del permiso de trabajo
     @Override
-    public void solicitarAprobacion(PermisoTrabajoTO pto)throws LlaveDuplicadaException, ParametroException{
-        pto.getPermiso().setEstadoPermiso(EstadosPermiso.DILIGENCIADO);
-        guardarGestion(pto);
+    public void solicitarAprobacion(PermisoTrabajo pto)throws LlaveDuplicadaException, ParametroException{
+        pto.setEstadoPermiso(EstadosPermiso.DILIGENCIADO);
+        actualizarPermiso(pto);
         adminEstadosServices.solicitarAprobacion(pto);
     }
     
     
     //Servicios para la aprobacion del permiso de trabajo
     @Override
-    public void aprobarPermiso(PermisoTrabajoTO pto)throws LlaveDuplicadaException{
-        for(String usr:pto.getAprobadoresAdicionales()){
+    public void aprobarPermiso(PermisoTrabajo pto)throws LlaveDuplicadaException{
+        for(String usr:pto.getOtrosAprobadores()){
             adminEstadosServices.agregarAprobador(pto, usr);
         }
-        pto.getPermiso().setEstadoPermiso(EstadosPermiso.PREAPROBADO);
-        em.merge(pto.getPermiso());
+        pto.setEstadoPermiso(EstadosPermiso.PREAPROBADO);
+        em.merge(pto);
         adminEstadosServices.aprobarPermiso(pto);
     }
 
     @Override
-    public void noAprobarPermiso(PermisoTrabajoTO pto)throws LlaveDuplicadaException{
-        for(String usr:pto.getAprobadoresAdicionales()){
+    public void noAprobarPermiso(PermisoTrabajo pto)throws LlaveDuplicadaException{
+        for(String usr:pto.getOtrosAprobadores()){
             adminEstadosServices.agregarAprobador(pto, usr);
         }
-        pto.getPermiso().setEstadoPermiso(EstadosPermiso.NO_APROBADO);
-        em.merge(pto.getPermiso());
+        pto.setEstadoPermiso(EstadosPermiso.NO_APROBADO);
+        em.merge(pto);
         adminEstadosServices.noAprobarPermiso(pto);
     }
-
     
-    //Servicios para etapas finales de gestion del permiso
-    @Override
-    public void terminarPermiso(PermisoTrabajoTO pto)throws LlaveDuplicadaException, ParametroException{
-        pto.getPermiso().setEstadoPermiso(EstadosPermiso.TERMINADO);
-        em.merge(pto.getPermiso());
-        adminEstadosServices.terminarPermiso(pto);
-    }
-
-    @Override
-    public void cancelarPermiso(PermisoTrabajoTO pto)throws LlaveDuplicadaException{
-        pto.getPermiso().setEstadoPermiso(EstadosPermiso.PRECANCELADO);
-        em.merge(pto.getPermiso());
-        adminEstadosServices.cancelarPermiso(pto);
-    }
-
-
-    @Override
-    public void finalizarPermiso(PermisoTrabajoTO pto)throws LlaveDuplicadaException{
-        pto.getPermiso().setEstadoPermiso(EstadosPermiso.CANCELADO);
-        em.merge(pto.getPermiso());
-        adminEstadosServices.finalizarPermiso(pto);
-    }
-
     @Override
     public List<Users> findUsersAprobadores(PermisoTrabajo pto) {
         List<Users> users = em.createQuery("SELECT u "
                 + "FROM Users u JOIN u.grupos g JOIN g.roles r "
-                + "WHERE r.codigo = 'aprobadores' AND u.usr NOT IN (SELECT t.usrGrpAsignado "
+                + "WHERE r.codigo = '"+locator.getParameter("rolAprobador") +"' AND u.usr NOT IN (SELECT t.usrGrpAsignado "
                 + "FROM TrazabilidadPermiso t "
                 + "WHERE t.permisoTrabajo =:permiso "
                 + "AND t.operacion =:operacion)")
@@ -459,7 +388,7 @@ public class PermisoServices implements PermisoServicesLocal {
     public List<Groups> findGruposAprobadores(PermisoTrabajo pto) {
         List<Groups> groups = em.createQuery("SELECT g "
                 + "FROM Groups g JOIN g.roles r "
-                + "WHERE r.codigo = 'aprobadores' AND g.codigo NOT IN (SELECT t.usrGrpAsignado "
+                + "WHERE r.codigo = '"+locator.getParameter("rolAprobador") +"' AND g.codigo NOT IN (SELECT t.usrGrpAsignado "
                 + "FROM TrazabilidadPermiso t "
                 + "WHERE t.permisoTrabajo =:permiso "
                 + "AND t.operacion =:operacion)")
@@ -468,16 +397,33 @@ public class PermisoServices implements PermisoServicesLocal {
         return groups;
     }
 
+    
+    //Servicios para etapas finales de gestion del permiso
     @Override
-    public void guardarNota(NotasPermiso nota) {
-        NotasPermiso n = em.merge(nota);
-        nota.setId(n.getId());
+    public void terminarPermiso(PermisoTrabajo pto)throws LlaveDuplicadaException, ParametroException{
+        pto.setEstadoPermiso(EstadosPermiso.TERMINADO);
+        em.merge(pto);
+        adminEstadosServices.terminarPermiso(pto);
     }
 
     @Override
-    public void borrarNota(NotasPermiso nota) {
-        em.remove(em.merge(nota));
+    public void cancelarPermiso(PermisoTrabajo pto)throws LlaveDuplicadaException{
+        pto.setEstadoPermiso(EstadosPermiso.PRECANCELADO);
+        em.merge(pto);
+        adminEstadosServices.cancelarPermiso(pto);
     }
+
+
+    @Override
+    public void finalizarPermiso(PermisoTrabajo pto)throws LlaveDuplicadaException{
+        pto.setEstadoPermiso(EstadosPermiso.CANCELADO);
+        em.merge(pto);
+        adminEstadosServices.finalizarPermiso(pto);
+    }
+
+    
+
+    
     
     
 

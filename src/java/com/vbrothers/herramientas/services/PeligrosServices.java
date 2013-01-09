@@ -3,7 +3,12 @@ package com.vbrothers.herramientas.services;
 import com.vbrothers.common.exceptions.LlaveDuplicadaException;
 import com.vbrothers.common.services.AbstractFacade;
 import com.vbrothers.permisostrabajo.dominio.Control;
+import com.vbrothers.permisostrabajo.dominio.ControlesPeligroTarea;
 import com.vbrothers.permisostrabajo.dominio.Peligro;
+import com.vbrothers.permisostrabajo.dominio.PeligrosTarea;
+import com.vbrothers.permisostrabajo.dominio.RiesgosPeligroTarea;
+import com.vbrothers.permisostrabajo.dominio.Tarea;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.ejb.Stateless;
@@ -40,6 +45,24 @@ public class PeligrosServices extends AbstractFacade<Peligro>  implements Peligr
     public List<Control> findControlsByRiesgo(Peligro riesgo){
         List<Control> controles = em.createQuery("Select c FROM Control c WHERE c.riesgo =:riesgo").setParameter("riesgo", riesgo).getResultList();
         return controles;
+    }
+
+    @Override
+    public PeligrosTarea findPeligroTarea(Peligro peligro, Tarea tarea) {
+        peligro = find(peligro.getId());
+        PeligrosTarea pelTarea = new PeligrosTarea();
+        pelTarea.setTarea(tarea);
+        pelTarea.setPeligro(peligro);
+        List<ControlesPeligroTarea> controles = new ArrayList<ControlesPeligroTarea>();
+        for(Control c : peligro.getControles()){
+            ControlesPeligroTarea cpt = new ControlesPeligroTarea();
+            cpt.setControl(c.getNombre());
+            cpt.setPeligrosTarea(pelTarea);
+            controles.add(cpt);
+        }
+        pelTarea.setControles(controles);
+        pelTarea.setRiesgos(new ArrayList<RiesgosPeligroTarea>());
+        return pelTarea;
     }
  
 }

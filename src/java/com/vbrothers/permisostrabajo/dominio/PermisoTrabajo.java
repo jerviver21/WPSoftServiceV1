@@ -5,10 +5,12 @@
 
 package com.vbrothers.permisostrabajo.dominio;
 
+import com.vbrothers.usuarios.dominio.Users;
+import com.vbrothers.util.EtapaPermiso;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Set;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -46,9 +48,7 @@ public class PermisoTrabajo implements Serializable {
     private Long id;
     @Column(name = "otra_disciplina")
     private String otraDisciplina;
-    @Basic(optional = false)
-    @Column(name = "usuarios_ejecutante")
-    private String usuariosEjecutante;
+
     @Column(name = "tarea")
     private String tarea;
     @Column(name = "fecha_hora_fin")
@@ -96,11 +96,22 @@ public class PermisoTrabajo implements Serializable {
     
     
 
-    @ManyToMany(fetch=FetchType.LAZY, cascade=CascadeType.ALL)
+    @ManyToMany(fetch=FetchType.LAZY)
     @JoinTable(name="sectores_afectados_permiso",
             joinColumns=@JoinColumn(name="id_permiso", referencedColumnName="id"),
             inverseJoinColumns=@JoinColumn(name="id_sector",referencedColumnName="id"))
     private List<Sector> sectoresAfectados;
+    
+    @ManyToMany(fetch=FetchType.LAZY)
+    @JoinTable(name="empleados_permiso",
+            joinColumns=@JoinColumn(name="id_permiso", referencedColumnName="id"),
+            inverseJoinColumns=@JoinColumn(name="id_empleado",referencedColumnName="id"))
+    private List<Empleado> empleados;
+    
+    @JoinColumn(name = "id_contratista", referencedColumnName = "id")
+    @ManyToOne(fetch = FetchType.EAGER)
+    private Contratista contratista;
+    
     
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "permiso", fetch = FetchType.LAZY)
     private List<CertificadosTrabajo> certificados;
@@ -111,9 +122,28 @@ public class PermisoTrabajo implements Serializable {
     
     @Column(name = "consideraciones")
     private String consideraciones;
+    
+   
+    //Atributos que se requieren para guardar datos importantes del permiso de trabajo
+    @Transient
+    private EtapaPermiso etapa;
+    
+    @Transient
+    private String notaGestion;
+    
+    @Transient 
+    private Users usuario;
+    
+    @Transient
+    private List<String> otrosAprobadores;
 
     
-    
+    public PermisoTrabajo(Users usr) {
+        sector = new Sector(null);
+        equipo = new Equipo(null);
+        usuario = usr;
+        empleados = new ArrayList<Empleado>();
+    }
 
 
     public PermisoTrabajo() {
@@ -146,14 +176,6 @@ public class PermisoTrabajo implements Serializable {
 
     public void setOtraDisciplina(String otraDisciplina) {
         this.otraDisciplina = otraDisciplina;
-    }
-
-    public String getUsuariosEjecutante() {
-        return usuariosEjecutante;
-    }
-
-    public void setUsuariosEjecutante(String usuarioEjecutante) {
-        this.usuariosEjecutante = usuarioEjecutante;
     }
 
     public String getTarea() {
@@ -424,6 +446,90 @@ public class PermisoTrabajo implements Serializable {
      */
     public void setNotas(List<NotasPermiso> notas) {
         this.notas = notas;
+    }
+
+    /**
+     * @return the empleados
+     */
+    public List<Empleado> getEmpleados() {
+        return empleados;
+    }
+
+    /**
+     * @param empleados the empleados to set
+     */
+    public void setEmpleados(List<Empleado> empleados) {
+        this.empleados = empleados;
+    }
+
+    /**
+     * @return the contratista
+     */
+    public Contratista getContratista() {
+        return contratista;
+    }
+
+    /**
+     * @param contratista the contratista to set
+     */
+    public void setContratista(Contratista contratista) {
+        this.contratista = contratista;
+    }
+
+    /**
+     * @return the etapa
+     */
+    public EtapaPermiso getEtapa() {
+        return etapa;
+    }
+
+    /**
+     * @param etapa the etapa to set
+     */
+    public void setEtapa(EtapaPermiso etapa) {
+        this.etapa = etapa;
+    }
+
+    /**
+     * @return the notaGestion
+     */
+    public String getNotaGestion() {
+        return notaGestion;
+    }
+
+    /**
+     * @param notaGestion the notaGestion to set
+     */
+    public void setNotaGestion(String notaGestion) {
+        this.notaGestion = notaGestion;
+    }
+
+    /**
+     * @return the usuario
+     */
+    public Users getUsuario() {
+        return usuario;
+    }
+
+    /**
+     * @param usuario the usuario to set
+     */
+    public void setUsuario(Users usuario) {
+        this.usuario = usuario;
+    }
+
+    /**
+     * @return the otrosAprobadores
+     */
+    public List<String> getOtrosAprobadores() {
+        return otrosAprobadores;
+    }
+
+    /**
+     * @param otrosAprobadores the otrosAprobadores to set
+     */
+    public void setOtrosAprobadores(List<String> otrosAprobadores) {
+        this.otrosAprobadores = otrosAprobadores;
     }
 
 

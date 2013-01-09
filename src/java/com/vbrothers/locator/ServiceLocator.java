@@ -23,6 +23,7 @@ public class ServiceLocator {
     public static int COMB_ID_IDIOMA = 9;
     public static int COMB_ID_ESTADOSPERMISOS = 10;
     public static int COMB_ID_ESTADOSPROYECTO = 11;
+    public static int COMB_ID_CERTIFICADO = 12;
     //Identificadores de cache para subcombos
     public static int SUBC_SECTOR_EQUIPO = 100;
 
@@ -78,6 +79,9 @@ public class ServiceLocator {
                 cache.put(TABLA, resultado);
             }else if(TABLA == COMB_ID_SECTOR){
                 resultado = commonFacade.getReferenceTableForCombo("SELECT id, nombre FROM sector");
+                cache.put(TABLA, resultado);
+            }else if(TABLA == COMB_ID_CERTIFICADO){
+                resultado = commonFacade.getReferenceTableForCombo("SELECT id, nombre FROM certificado");
                 cache.put(TABLA, resultado);
             }else if(TABLA == COMB_ID_DISCIPLINA){
                 resultado = commonFacade.getReferenceTableForCombo("SELECT id, nombre FROM disciplina");

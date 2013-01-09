@@ -4,6 +4,8 @@ package com.vbrothers.herramientas.services;
 import com.vbrothers.common.exceptions.LlaveDuplicadaException;
 import com.vbrothers.permisostrabajo.dominio.Control;
 import com.vbrothers.permisostrabajo.dominio.Peligro;
+import com.vbrothers.permisostrabajo.dominio.PeligrosTarea;
+import com.vbrothers.permisostrabajo.dominio.Tarea;
 import java.util.List;
 import javax.ejb.Local;
 
@@ -23,4 +25,6 @@ public interface PeligrosServicesLocal {
     Peligro find(Object id);
 
     List<Peligro> findAll();
+
+    PeligrosTarea findPeligroTarea(Peligro peligro, Tarea tarea);
 }

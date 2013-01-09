@@ -29,8 +29,6 @@ public interface UsuariosServicesLocal {
     
     public List<Groups> findGroupsUser(Users usr);
     
-    public List<Users> findUsersByRol(String rol);
-    
     public Users findFullUser(String usr)throws NoResultException;
     
 }

@@ -501,6 +501,10 @@
             <Index id="0fa1b97d-c99a-4c67-97c9-9b79222534c3" indextype="PRIMARYKEY" name="tarea_pk">
                 <Indexattribute attributerefid="eac0794c-88a4-47b9-be6c-93ae141d483a" id="dd383c2b-080a-4104-b795-d877d198237c"/>
             </Index>
+            <Index id="4a18acfa-ef62-4d56-84a4-5be7eaee0b1e" indextype="UNIQUE" name="tarea_ui1">
+                <Indexattribute attributerefid="ef74dd78-7ee3-4a5c-8743-69199824d1e2" id="daf93df5-26d0-44d7-97dc-ffa330138f88"/>
+                <Indexattribute attributerefid="3bd9fbbb-2d89-4dd2-9409-97289158d916" id="d53cf869-0141-40b1-87b5-90b7a1803567"/>
+            </Index>
         </Table>
         <Table id="dbd82831-57cd-4ef2-83de-f50869d58b6a" name="operacion_permiso" schema="">
             <Property name="LOCATION" value="1117:605"/>

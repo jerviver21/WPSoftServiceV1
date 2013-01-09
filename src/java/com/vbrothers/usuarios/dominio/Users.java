@@ -32,6 +32,10 @@ public class Users implements Serializable {
     @Basic(optional = false)
     @Column(name = "pwd")
     private String pwd = "";
+    @Column(name = "nombre")
+    private String nombre = "";
+    @Column(name = "mail")
+    private String mail = "";
     @Basic(optional = false)
     @Column(name = "estado")
     private int estado = 1;
@@ -42,10 +46,10 @@ public class Users implements Serializable {
     private List<Groups> grupos;
     
     @Transient
-    private Set<Resource> recursosUsr;
+    private Set<Resource> recursos;
 
     @Transient
-    private Set<String> roles;
+    private Set<String> rolesUsr;
 
     @Transient
     private Set<String> gruposUsr;
@@ -138,29 +142,29 @@ public class Users implements Serializable {
     /**
      * @return the recursosUsr
      */
-    public Set<Resource> getRecursosUsr() {
-        return recursosUsr;
+    public Set<Resource> getRecursos() {
+        return recursos;
     }
 
     /**
      * @param recursosUsr the recursosUsr to set
      */
-    public void setRecursosUsr(Set<Resource> recursosUsr) {
-        this.recursosUsr = recursosUsr;
+    public void setRecursos(Set<Resource> recursosUsr) {
+        this.recursos = recursosUsr;
     }
 
     /**
      * @return the rol
      */
-    public Set<String> getRoles() {
-        return roles;
+    public Set<String> getRolesUsr() {
+        return rolesUsr;
     }
 
     /**
      * @param rol the rol to set
      */
-    public void setRoles(Set<String> rol) {
-        this.roles = rol;
+    public void setRolesUsr(Set<String> rol) {
+        this.rolesUsr = rol;
     }
 
     /**
@@ -175,6 +179,34 @@ public class Users implements Serializable {
      */
     public void setGruposUsr(Set<String> gruposUsr) {
         this.gruposUsr = gruposUsr;
+    }
+
+    /**
+     * @return the nombre
+     */
+    public String getNombre() {
+        return nombre;
+    }
+
+    /**
+     * @param nombre the nombre to set
+     */
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
+
+    /**
+     * @return the mail
+     */
+    public String getMail() {
+        return mail;
+    }
+
+    /**
+     * @param mail the mail to set
+     */
+    public void setMail(String mail) {
+        this.mail = mail;
     }
 
     
