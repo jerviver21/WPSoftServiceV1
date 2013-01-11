@@ -104,7 +104,7 @@ public class ContratistaServices extends AbstractFacade<Contratista>implements C
                 usr = usuarioService.findByUser(entity.getUsuario());
             }
             
-            usr.setEstado(entity.getActivo() ? 1 : 0);
+            usr.setEstado(entity.getActivo()?1:0);
             usr.setNombre(entity.getNombre());
             usr.setMail(entity.getMail());
             usr.setUsr(entity.getUsuario());

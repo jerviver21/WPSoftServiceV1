@@ -32,13 +32,15 @@ public class Users implements Serializable {
     @Basic(optional = false)
     @Column(name = "pwd")
     private String pwd = "";
+    @Basic(optional = false)
+    @Column(name = "estado")
+    private Integer estado = 1;
     @Column(name = "nombre")
     private String nombre = "";
     @Column(name = "mail")
     private String mail = "";
-    @Basic(optional = false)
-    @Column(name = "estado")
-    private int estado = 1;
+    @Column(name = "vetado")
+    private boolean vetado = false;
     @ManyToMany(fetch=FetchType.LAZY, cascade=CascadeType.MERGE)
     @JoinTable(name="user_group",
             joinColumns=@JoinColumn(name="id_user", referencedColumnName="id"),
@@ -75,11 +77,10 @@ public class Users implements Serializable {
         this.id = id;
     }
 
-    public Users(Long id, String usr, String pwd, int estado) {
+    public Users(Long id, String usr, String pwd) {
         this.id = id;
         this.usr = usr;
         this.pwd = pwd;
-        this.estado = estado;
     }
 
     public Long getId() {
@@ -106,13 +107,6 @@ public class Users implements Serializable {
         this.pwd = pwd;
     }
 
-    public int getEstado() {
-        return estado;
-    }
-
-    public void setEstado(int estado) {
-        this.estado = estado;
-    }
 
     @Override
     public int hashCode() {
@@ -207,6 +201,35 @@ public class Users implements Serializable {
      */
     public void setMail(String mail) {
         this.mail = mail;
+    }
+
+
+    /**
+     * @return the vetado
+     */
+    public boolean isVetado() {
+        return vetado;
+    }
+
+    /**
+     * @param vetado the vetado to set
+     */
+    public void setVetado(boolean vetado) {
+        this.vetado = vetado;
+    }
+
+    /**
+     * @return the estado
+     */
+    public Integer getEstado() {
+        return estado;
+    }
+
+    /**
+     * @param estado the estado to set
+     */
+    public void setEstado(Integer estado) {
+        this.estado = estado;
     }
 
     

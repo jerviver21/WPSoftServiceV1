@@ -19,7 +19,7 @@
             <Attribute datatype="varchar" defaultvalue="" extra="" fraction="null" id="1e6d1655-6287-41f6-8726-709e1fdc286b" name="nombre" nullable="true" scale="10" size="1500"/>
             <Attribute datatype="varchar" defaultvalue="" extra="" fraction="null" id="1aef5717-f3e4-4264-a695-2f2af633f982" name="mail" nullable="true" scale="10" size="1500"/>
             <Attribute datatype="boolean" defaultvalue="false" extra="" fraction="null" id="17673d13-2d58-4df6-a312-a52121f6c760" name="vetado" nullable="true" scale="10" size=""/>
-            <Attribute datatype="int4" defaultvalue="" extra="" fraction="null" id="12162b0b-fb08-4c6a-8c79-6229804eacf7" name="estado" nullable="false" scale="10" size=""/>
+            <Attribute datatype="boolean" defaultvalue="true" extra="" fraction="null" id="ce7f8b3c-53e0-4b3e-9419-ec1f750b0587" name="activo" nullable="true" scale="10" size=""/>
             <Index id="3ae699da-25ac-434a-b795-f935d5ff676b" indextype="UNIQUE" name="usuario_ui1">
                 <Indexattribute attributerefid="7d5cefbc-9e22-4e2b-9e4c-3d0608460de5" id="b7997164-4b4e-47f3-8a03-9e568410101d"/>
             </Index>

@@ -101,6 +101,16 @@ public class UsuariosServices extends AbstractFacade<Users> implements UsuariosS
         return usuario;
     }
 
+    @Override
+    public boolean isUsuarioDisponible(String usr) {
+        List<Users> users = em.createQuery("SELECT u FROM Users u WHERE u.usr = :usr ").setParameter("usr", usr).getResultList();
+        if(users.isEmpty()){
+            return true;
+        }else{
+            return false;
+        }
+    }
+
     
     
 }

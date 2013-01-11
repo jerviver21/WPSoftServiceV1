@@ -88,7 +88,7 @@ public class EmpleadoServices extends AbstractFacade<Empleado> implements Emplea
             
             
             Users usr = new Users();
-            usr.setEstado(1);
+            usr.setEstado(entity.getActivo()?1:0);
             String groupParam = locator.getParameter("grupoEmpleado");
             if(groupParam == null){
                 throw  new ParametroException("No existe el parámetro: grupoEmpleado");
@@ -139,7 +139,8 @@ public class EmpleadoServices extends AbstractFacade<Empleado> implements Emplea
             }
         }
         Users usr = usuarioService.findByUser(emp.getUsuario());
-        usr.setEstado(emp.getActivo() ? 1 : 0);em.merge(usr);
+        usr.setEstado(emp.getActivo()?1:0);
+        em.merge(usr);
         em.merge(emp);
     }
     

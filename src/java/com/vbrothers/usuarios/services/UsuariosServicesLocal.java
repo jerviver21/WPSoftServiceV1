@@ -30,5 +30,7 @@ public interface UsuariosServicesLocal {
     public List<Groups> findGroupsUser(Users usr);
     
     public Users findFullUser(String usr)throws NoResultException;
+
+    public boolean isUsuarioDisponible(String usr);
     
 }

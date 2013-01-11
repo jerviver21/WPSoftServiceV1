@@ -16,10 +16,9 @@
             <Attribute datatype="bigserial" defaultvalue="" extra="" fraction="0" id="476420d9-e9a8-4894-9e33-d7b47ef64277" name="id" nullable="false" scale="10" size="0"/>
             <Attribute datatype="varchar" defaultvalue="" extra="" fraction="0" id="7d5cefbc-9e22-4e2b-9e4c-3d0608460de5" name="usr" nullable="false" scale="10" size="300"/>
             <Attribute datatype="varchar" defaultvalue="" extra="" fraction="0" id="1487348f-f289-4b42-bb15-027dfd074dc2" name="pwd" nullable="false" scale="10" size="250"/>
+            <Attribute datatype="int4" defaultvalue="1" extra="" fraction="0" id="782318a9-d01a-4ec9-a3d7-5af5c034675f" name="estado" nullable="false" scale="10" size="0"/>
             <Attribute datatype="varchar" defaultvalue="" extra="" fraction="null" id="1e6d1655-6287-41f6-8726-709e1fdc286b" name="nombre" nullable="true" scale="10" size="1500"/>
             <Attribute datatype="varchar" defaultvalue="" extra="" fraction="null" id="1aef5717-f3e4-4264-a695-2f2af633f982" name="mail" nullable="true" scale="10" size="1500"/>
-            <Attribute datatype="boolean" defaultvalue="false" extra="" fraction="null" id="17673d13-2d58-4df6-a312-a52121f6c760" name="vetado" nullable="true" scale="10" size=""/>
-            <Attribute datatype="int4" defaultvalue="" extra="" fraction="null" id="12162b0b-fb08-4c6a-8c79-6229804eacf7" name="estado" nullable="false" scale="10" size=""/>
             <Index id="3ae699da-25ac-434a-b795-f935d5ff676b" indextype="UNIQUE" name="usuario_ui1">
                 <Indexattribute attributerefid="7d5cefbc-9e22-4e2b-9e4c-3d0608460de5" id="b7997164-4b4e-47f3-8a03-9e568410101d"/>
             </Index>
@@ -545,15 +544,6 @@
             <Attribute datatype="bigint" defaultvalue="" extra="" fraction="null" id="c6cb975e-187a-443e-aa4a-81447cb0749c" name="id_empleado" nullable="false" scale="10" size=""/>
             <Index id="2b07b19e-6e0f-4122-aec5-72bd7a78f4a4" indextype="PRIMARYKEY" name="empleados_permiso_pk">
                 <Indexattribute attributerefid="2e1617cd-0352-4a24-8437-86881a02ba33" id="356a1440-aa2a-49bc-8c5c-4d754cdceada"/>
-            </Index>
-        </Table>
-        <Table id="149b8720-de70-4b4e-8872-6d5ce107266d" name="administradoras" schema="">
-            <Property name="LOCATION" value="456:195"/>
-            <Attribute datatype="varchar" defaultvalue="" extra="" fraction="null" id="e65e816c-7c69-4832-9e16-e8bf7ad4aa7a" name="codigo" nullable="false" scale="10" size="10"/>
-            <Attribute datatype="varchar" defaultvalue="" extra="" fraction="null" id="5a3e80ce-d005-4931-a3b2-17fecaca3acb" name="nombre" nullable="false" scale="10" size="1500"/>
-            <Attribute datatype="varchar" defaultvalue="" extra="" fraction="null" id="de23579c-a764-4d71-9ec7-967984d61c5f" name="tipo" nullable="false" scale="10" size="200"/>
-            <Index id="064fd80b-5085-43ba-8e3e-cf1c0cb5647c" indextype="PRIMARYKEY" name="administradoras_pk">
-                <Indexattribute attributerefid="e65e816c-7c69-4832-9e16-e8bf7ad4aa7a" id="0901e43b-4e66-4146-8c94-6a2748c3daf1"/>
             </Index>
         </Table>
     </Tables>

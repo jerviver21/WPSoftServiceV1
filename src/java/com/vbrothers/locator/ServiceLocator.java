@@ -24,6 +24,8 @@ public class ServiceLocator {
     public static int COMB_ID_ESTADOSPERMISOS = 10;
     public static int COMB_ID_ESTADOSPROYECTO = 11;
     public static int COMB_ID_CERTIFICADO = 12;
+    public static int COMB_COD_EPS = 13;
+    public static int COMB_COD_ARP = 14;
     //Identificadores de cache para subcombos
     public static int SUBC_SECTOR_EQUIPO = 100;
 
@@ -97,6 +99,12 @@ public class ServiceLocator {
                 cache.put(TABLA, resultado);
             }else if(TABLA == COMB_ID_ESTADOSPROYECTO){
                 resultado = commonFacade.getReferenceTableForCombo("SELECT * FROM estados_proyecto ");
+                cache.put(TABLA, resultado);
+            }else if(TABLA == COMB_COD_EPS){
+                resultado = commonFacade.getReferenceTableForCombo("SELECT codigo, nombre FROM administradoras WHERE tipo = 'EPS' ");
+                cache.put(TABLA, resultado);
+            }else if(TABLA == COMB_COD_ARP){
+                resultado = commonFacade.getReferenceTableForCombo("SELECT codigo, nombre FROM administradoras WHERE tipo = 'ARP' ");
                 cache.put(TABLA, resultado);
             }else if(TABLA == PARAMETROS){
                 resultado = commonFacade.getReferenceTableForCombo("SELECT nombre, valor FROM parametro");
