@@ -5,6 +5,7 @@
 package com.vbrothers.permisostrabajo.dominio;
 
 import com.vbrothers.usuarios.dominio.Users;
+import java.io.InputStream;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
@@ -78,6 +79,8 @@ public class Empleado implements Serializable {
     @Basic(optional = false)
     @Column(name = "usuario")
     private String usuario;
+    @Column(name = "mail")
+    private String mail;
     @Column(name = "fecha_induccion")
     @Temporal(TemporalType.DATE)
     private Date fechaInduccion;
@@ -89,7 +92,18 @@ public class Empleado implements Serializable {
     
     @OneToMany(mappedBy = "empleado", fetch = FetchType.LAZY, cascade=CascadeType.MERGE)
     private List<CertificadosEmp> certificados;
-
+    
+    @Transient
+    private String extCTA;
+    
+    @Transient
+    private InputStream certTrabAlt;
+    
+    @Transient 
+    private String extCM;
+    
+    @Transient
+    private InputStream certMedico;
 
     @Transient
     private String pwd;
@@ -395,6 +409,76 @@ public class Empleado implements Serializable {
      */
     public void setPwd(String pwd) {
         this.pwd = pwd;
+    }
+
+    /**
+     * @return the certTrabAlt
+     */
+    public InputStream getCertTrabAlt() {
+        return certTrabAlt;
+    }
+
+    /**
+     * @param certTrabAlt the certTrabAlt to set
+     */
+    public void setCertTrabAlt(InputStream certTrabAlt) {
+        this.certTrabAlt = certTrabAlt;
+    }
+
+    /**
+     * @return the certMedico
+     */
+    public InputStream getCertMedico() {
+        return certMedico;
+    }
+
+    /**
+     * @param certMedico the certMedico to set
+     */
+    public void setCertMedico(InputStream certMedico) {
+        this.certMedico = certMedico;
+    }
+
+    /**
+     * @return the extCTA
+     */
+    public String getExtCTA() {
+        return extCTA;
+    }
+
+    /**
+     * @param extCTA the extCTA to set
+     */
+    public void setExtCTA(String extCTA) {
+        this.extCTA = extCTA;
+    }
+
+    /**
+     * @return the extCM
+     */
+    public String getExtCM() {
+        return extCM;
+    }
+
+    /**
+     * @param extCM the extCM to set
+     */
+    public void setExtCM(String extCM) {
+        this.extCM = extCM;
+    }
+
+    /**
+     * @return the mail
+     */
+    public String getMail() {
+        return mail;
+    }
+
+    /**
+     * @param mail the mail to set
+     */
+    public void setMail(String mail) {
+        this.mail = mail;
     }
 
     

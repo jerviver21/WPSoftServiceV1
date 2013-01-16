@@ -29,20 +29,28 @@ public interface EmpleadoServicesLocal {
 
     List<Empleado> findAll();
 
-    void guardar(Empleado empleado)throws LlaveDuplicadaException, ParametroException;
-    
-    String cargarCertificado(String nombre, long cedula, InputStream input)throws ParametroException, IOException;
+    void guardar(Empleado empleado)throws LlaveDuplicadaException, ParametroException,IOException;
 
     void updateEmpleados(List<Empleado> empleadosContratista);
 
-    void activarEmpleado(Empleado emp)throws EmpActivoOtroContException;
     
-    void desactivarEmpleados();
 
     List<Empleado> findEmpleadosXContratita(Long idContratista);
 
     List<Empleado> findEmpleadosActivosXContratita(Long idContratista);
     
     List<Empleado> findEmpleadosActivosPlanta();
+
+    void eliminarCM(Empleado emp) throws java.lang.Exception;
+    
+    void eliminarCA(Empleado emp) throws java.lang.Exception;
+    
+    void activarEmpleado(Empleado emp, String usr)throws EmpActivoOtroContException;
+    
+    void desactivarEmpleados();
+
+    void betarEmpleado(Empleado emp, String usr);
+
+    void cambiarFechaInduccion(Empleado emp, String usr);
     
 }

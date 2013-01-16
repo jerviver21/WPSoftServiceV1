@@ -86,8 +86,8 @@ public class ContratistaServices extends AbstractFacade<Contratista>implements C
     @Override
     public void guardar(Contratista entity) throws LlaveDuplicadaException, ParametroException{
         try {
-            Users usr;
-            if(entity.getId() == null || entity.getId() == 0){
+            Users usr = usuarioService.findByUser(entity.getUsuario());
+            if(usr == null){
                 usr = new Users();
                 String groupParam = locator.getParameter("grupoContratista");
                 if(groupParam == null){
@@ -100,8 +100,6 @@ public class ContratistaServices extends AbstractFacade<Contratista>implements C
                 List<Groups> grupoUsr = new ArrayList<Groups>();
                 grupoUsr.add(grupo);
                 usr.setGrupos(grupoUsr);
-            }else{
-                usr = usuarioService.findByUser(entity.getUsuario());
             }
             
             usr.setEstado(entity.getActivo()?1:0);

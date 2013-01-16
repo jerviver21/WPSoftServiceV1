@@ -449,15 +449,11 @@
             </Index>
         </Table>
         <Table id="f8c733b7-b1b5-4bd1-b36a-11d18fc73a3f" name="trazabilidad_activacion_emps" schema="">
-            <Property name="LOCATION" value="1528:558"/>
+            <Property name="LOCATION" value="1521:617"/>
             <Attribute datatype="bigserial" defaultvalue="" extra="" fraction="null" id="6818d08f-35da-4048-af07-f8c2bdea61e9" name="id" nullable="false" scale="10" size=""/>
             <Attribute datatype="bigint" defaultvalue="" extra="" fraction="null" id="0f44ab51-6d30-4cba-8ddf-53ecb58bdee6" name="id_empleado" nullable="false" scale="10" size=""/>
             <Attribute datatype="date" defaultvalue="" extra="" fraction="null" id="578fbcb2-898d-4a72-aa83-1f1ed5b7ff62" name="fecha_activacion" nullable="true" scale="10" size=""/>
             <Attribute datatype="varchar" defaultvalue="" extra="" fraction="null" id="abafc467-f344-437d-b39f-c3f2349e4e1c" name="usuario_activador" nullable="true" scale="10" size="600"/>
-            <Attribute datatype="date" defaultvalue="" extra="" fraction="null" id="7318d9fa-9ee4-4c1e-afc1-4fe5df906165" name="fecha_induccion" nullable="true" scale="10" size=""/>
-            <Attribute datatype="date" defaultvalue="" extra="" fraction="null" id="53733735-fdc4-4153-a5a2-9a159d2ff979" name="fecha_vetacion" nullable="true" scale="10" size=""/>
-            <Attribute datatype="boolean" defaultvalue="" extra="" fraction="null" id="d87998e9-9143-4bc2-946d-49f85a0ec3ca" name="vetar" nullable="true" scale="10" size=""/>
-            <Attribute datatype="boolean" defaultvalue="" extra="" fraction="null" id="cee1cb7b-b814-4b1f-a948-37d96af83718" name="activar" nullable="true" scale="10" size=""/>
             <Index id="7662e6fa-c332-408a-8c37-e8590f1667d3" indextype="PRIMARYKEY" name="trazabilidad_activacion_emps_pk">
                 <Indexattribute attributerefid="6818d08f-35da-4048-af07-f8c2bdea61e9" id="08abc5f2-99e6-41ba-81b1-55fd51264a8f"/>
             </Index>

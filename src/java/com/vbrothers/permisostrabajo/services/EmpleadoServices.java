@@ -6,6 +6,7 @@ import com.vbrothers.common.exceptions.ParametroException;
 import com.vbrothers.common.services.AbstractFacade;
 import com.vbrothers.permisostrabajo.dominio.Contratista;
 import com.vbrothers.permisostrabajo.dominio.Empleado;
+import com.vbrothers.permisostrabajo.dominio.TrazabilidadActivacionEmps;
 import com.vbrothers.usuarios.dominio.Groups;
 import com.vbrothers.usuarios.dominio.Users;
 import com.vbrothers.usuarios.services.GruposServicesLocal;
@@ -15,6 +16,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
@@ -29,6 +31,10 @@ import org.hibernate.exception.ConstraintViolationException;
  */
 @Stateless
 public class EmpleadoServices extends AbstractFacade<Empleado> implements EmpleadoServicesLocal {
+    
+    //Constantes
+    private final String nombreArchCM = "CM";
+    private final String nombreArchTA = "TA";
 
     @PersistenceContext(unitName = "WPSoftPU")
     private EntityManager em;
@@ -38,6 +44,9 @@ public class EmpleadoServices extends AbstractFacade<Empleado> implements Emplea
 
     @EJB
     GruposServicesLocal grupoService;
+    
+    @EJB
+    TrazabilidadEmpleadosServiceLocal trazService;
 
     @Override
     protected EntityManager getEntityManager() {
@@ -77,33 +86,40 @@ public class EmpleadoServices extends AbstractFacade<Empleado> implements Emplea
     }
 
     @Override
-    public void guardar(Empleado entity) throws LlaveDuplicadaException, ParametroException{
+    public void guardar(Empleado entity) throws LlaveDuplicadaException, ParametroException, IOException{
         try {
-            //Por convencion si el empleado es de planta, selecciona -1
-            if(entity.getContratista().getId() == -1){
-                entity.setContratista(null);
+            Users usr = usuarioService.findByUser(entity.getUsuario());
+            if(usr  == null){
+                usr = new Users();
+                String groupParam = locator.getParameter("grupoEmpleado");
+                if(groupParam == null){
+                    throw  new ParametroException("No existe el parámetro: grupoEmpleado");
+                }
+                Groups grupo = grupoService.findByCodigo(groupParam);
+                if (grupo == null) {
+                    throw new ParametroException("El grupo "+groupParam+" no existe, cambie el parámetro");
+                }
+                 List<Groups> grupoUsr = new ArrayList<Groups>();
+                grupoUsr.add(grupo);
+                usr.setGrupos(grupoUsr);
             }
             
-            System.out.println("---> "+entity.getId());
-            
-            
-            Users usr = new Users();
             usr.setEstado(entity.getActivo()?1:0);
-            String groupParam = locator.getParameter("grupoEmpleado");
-            if(groupParam == null){
-                throw  new ParametroException("No existe el parámetro: grupoEmpleado");
-            }
-            Groups grupo = grupoService.findByCodigo(groupParam);
-            if (grupo == null) {
-                throw new ParametroException("El grupo "+groupParam+" no existe, cambie el parámetro");
-            }
-            List<Groups> grupoUsr = new ArrayList<Groups>();
-            grupoUsr.add(grupo);
-            usr.setGrupos(grupoUsr);
+            usr.setNombre(entity.getNombresApellidos());
+            usr.setMail(entity.getMail());
             usr.setUsr(entity.getUsuario());
             usr.setPwd(entity.getPwd());
             usuarioService.edit(usr);
 
+            if(entity.getCertMedico() != null){
+                entity.setRutaCertCm(cargarCertificado(nombreArchCM+"."+entity.getExtCM(), entity.getNumId(), entity.getCertMedico()));
+                entity.setCertificadoMedico(true);
+            }
+            
+            if(entity.getCertTrabAlt() != null){
+                entity.setRutaCertTA(cargarCertificado(nombreArchTA+"."+entity.getExtCTA(), entity.getNumId(), entity.getCertTrabAlt()));
+                entity.setTrabajoAlturas(true);
+            }
             getEntityManager().merge(entity);
         } catch (PersistenceException e) {
             if(e.getCause() instanceof ConstraintViolationException){
@@ -113,7 +129,6 @@ public class EmpleadoServices extends AbstractFacade<Empleado> implements Emplea
         }
     }
     
-    @Override
     public String cargarCertificado(String nombre, long cedula, InputStream input)throws ParametroException, IOException{
         String dirCertificados = locator.getParameter("dirCertificados");
         if(dirCertificados == null){
@@ -130,24 +145,7 @@ public class EmpleadoServices extends AbstractFacade<Empleado> implements Emplea
         }
     }
 
-    @Override
-    public void activarEmpleado(Empleado emp) throws EmpActivoOtroContException {
-        if(emp.getActivo()){
-            List datos = em.createNamedQuery("Empleado.findEmpleadoActivo").setParameter("numId", emp.getNumId()).getResultList();
-            if(datos.size() > 1){
-                throw new EmpActivoOtroContException("El empleado se encuentra activo con otro contratista");
-            }
-        }
-        Users usr = usuarioService.findByUser(emp.getUsuario());
-        usr.setEstado(emp.getActivo()?1:0);
-        em.merge(usr);
-        em.merge(emp);
-    }
     
-    @Override
-    public void desactivarEmpleados() {
-        em.createNativeQuery("UPDATE empleado SET activo = false").executeUpdate();
-    }
 
     @Override
     public List<Empleado> findEmpleadosXContratita(Long idContratista) {
@@ -186,6 +184,63 @@ public class EmpleadoServices extends AbstractFacade<Empleado> implements Emplea
         return (Empleado)em.createQuery("SELECT e FROM Empleado e WHERE e.usuario =:usr").setParameter("usr", usr).getSingleResult();
     }
 
+    @Override
+    public void eliminarCM(Empleado emp) throws Exception {
+        FilesUtils.borrarArchivo(emp.getRutaCertCm());
+        emp.setRutaCertCm(null);
+        emp.setCertificadoMedico(Boolean.FALSE);
+        getEntityManager().merge(emp);
+    }
+    
+    @Override
+    public void eliminarCA(Empleado emp) throws Exception {
+        FilesUtils.borrarArchivo(emp.getRutaCertTA());
+        emp.setRutaCertTA(null);
+        emp.setTrabajoAlturas(Boolean.FALSE);
+        getEntityManager().merge(emp);
+    }
+    
+    //Servicios de activación de empleados
+    @Override
+    public void activarEmpleado(Empleado emp, String usradm) throws EmpActivoOtroContException {
+        if(emp.getActivo()){
+            List datos = em.createNamedQuery("Empleado.findEmpleadoActivo").setParameter("numId", emp.getNumId()).getResultList();
+            if(datos.size() > 1){
+                throw new EmpActivoOtroContException("El empleado se encuentra activo con otro contratista");
+            }
+        }
+        Users usr = usuarioService.findByUser(emp.getUsuario());
+        usr.setEstado(emp.getActivo()?1:0);
+        em.merge(usr);
+        em.merge(emp);
+        
+        trazService.trazActivarEmpleado(emp, usradm);
+    }
+
+    @Override
+    public void betarEmpleado(Empleado emp, String usradm) {
+        Users usr = usuarioService.findByUser(emp.getUsuario());
+        usr.setVetado(emp.getBetado()?true:false);
+        em.merge(usr);
+        em.merge(emp);
+        
+        trazService.trazBetarEmpleado(emp, usradm);
+    }
+
+    @Override
+    public void cambiarFechaInduccion(Empleado emp, String usradm) {
+        em.merge(emp);
+        trazService.trazActivarEmpleado(emp, usradm);
+    }
+
+    @Override
+    public void desactivarEmpleados() {
+        List<Empleado> empleados = findAll();
+        for(Empleado empleado : empleados){
+            em.createNativeQuery("UPDATE users SET estado = 0 WHERE usr = '"+empleado.getUsuario()+"'").executeUpdate();
+        }
+        em.createNativeQuery("UPDATE empleado SET activo = false").executeUpdate();
+    }
 
    
     

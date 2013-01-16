@@ -40,8 +40,20 @@ public class TrazabilidadActivacionEmps implements Serializable {
     @Column(name = "fecha_activacion")
     @Temporal(TemporalType.DATE)
     private Date fechaActivacion;
+    @Column(name = "fecha_induccion")
+    @Temporal(TemporalType.DATE)
+    private Date fechaInduccion;
+    @Column(name = "fecha_vetacion")
+    @Temporal(TemporalType.DATE)
+    private Date fechaVetacion;
     @Column(name = "usuario_activador")
     private String usuarioActivador;
+    
+    @Column(name = "vetar")
+    private Boolean vetar;
+    @Column(name = "activar")
+    private Boolean activar;
+    
     @JoinColumn(name = "id_empleado", referencedColumnName = "id")
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private Empleado empleado;
@@ -108,6 +120,62 @@ public class TrazabilidadActivacionEmps implements Serializable {
     @Override
     public String toString() {
         return "com.vbrothers.permisostrabajo.dominio.TrazabilidadActivacionEmps[id=" + id + "]";
+    }
+
+    /**
+     * @return the fechaInduccion
+     */
+    public Date getFechaInduccion() {
+        return fechaInduccion;
+    }
+
+    /**
+     * @param fechaInduccion the fechaInduccion to set
+     */
+    public void setFechaInduccion(Date fechaInduccion) {
+        this.fechaInduccion = fechaInduccion;
+    }
+
+    /**
+     * @return the fechaVetacion
+     */
+    public Date getFechaVetacion() {
+        return fechaVetacion;
+    }
+
+    /**
+     * @param fechaVetacion the fechaVetacion to set
+     */
+    public void setFechaVetacion(Date fechaVetacion) {
+        this.fechaVetacion = fechaVetacion;
+    }
+
+    /**
+     * @return the vetar
+     */
+    public Boolean getVetar() {
+        return vetar;
+    }
+
+    /**
+     * @param vetar the vetar to set
+     */
+    public void setVetar(Boolean vetar) {
+        this.vetar = vetar;
+    }
+
+    /**
+     * @return the activar
+     */
+    public Boolean getActivar() {
+        return activar;
+    }
+
+    /**
+     * @param activar the activar to set
+     */
+    public void setActivar(Boolean activar) {
+        this.activar = activar;
     }
 
 }
