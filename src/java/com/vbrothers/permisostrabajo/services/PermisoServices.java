@@ -26,6 +26,7 @@ import com.vbrothers.util.EstadosTraz;
 import com.vbrothers.util.EtapaPermiso;
 import com.vbrothers.util.OperacionesPermiso;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -83,24 +84,30 @@ public class PermisoServices implements PermisoServicesLocal {
     public List<PermisoTrabajo> findPermisos(Users user, int estado, Date fechaIni, Date fechaFin) {
         String rolAdmin = locator.getParameter("rolAdmin") ;
         String rolGerente = locator.getParameter("rolGerente") ;
+        Calendar calIni = Calendar.getInstance();
+        Calendar calFin = Calendar.getInstance();
+        calIni.setTime(fechaIni);
+        calFin.setTime(fechaFin);
+        calIni.set(Calendar.HOUR_OF_DAY, 0);
+        calFin.set(Calendar.HOUR_OF_DAY, 23);
         List<PermisoTrabajo> permisos = em.createQuery("SELECT p "
                 + "FROM PermisoTrabajo p "
                 + "WHERE p.usuarioCreacion =:user "
                 + "AND p.estadoPermiso.id =:estado "
-                + "AND p.fechaHoraCreacion BETWEEN :fechaIni AND :fechaFin ")
+                + "AND p.fechaHoraCreacion >= :fechaIni AND p.fechaHoraCreacion <=  :fechaFin ")
                 .setParameter("user", user.getUsr())
                 .setParameter("estado", estado)
-                .setParameter("fechaIni",fechaIni)
-                .setParameter("fechaFin", fechaFin)
+                .setParameter("fechaIni",calIni.getTime())
+                .setParameter("fechaFin",calFin.getTime())
                 .getResultList();
         if(user.getRolesUsr().contains(rolAdmin) || user.getRolesUsr().contains(rolGerente))  {
             permisos = em.createQuery("SELECT p "
                 + "FROM PermisoTrabajo p "
                 + "WHERE  p.estadoPermiso.id =:estado "
-                + "AND p.fechaHoraCreacion BETWEEN :fechaIni AND :fechaFin ")
+                + "AND p.fechaHoraCreacion >= :fechaIni AND p.fechaHoraCreacion <= :fechaFin ")
                 .setParameter("estado", estado)
-                .setParameter("fechaIni",fechaIni)
-                .setParameter("fechaFin", fechaFin)
+                .setParameter("fechaIni",calIni.getTime())
+                .setParameter("fechaFin",calFin.getTime())
                 .getResultList();
             
         }
@@ -416,7 +423,7 @@ public class PermisoServices implements PermisoServicesLocal {
 
     @Override
     public void finalizarPermiso(PermisoTrabajo pto)throws LlaveDuplicadaException{
-        pto.setEstadoPermiso(EstadosPermiso.CANCELADO);
+        pto.setEstadoPermiso(EstadosPermiso.TERMINADO);
         em.merge(pto);
         adminEstadosServices.finalizarPermiso(pto);
     }
