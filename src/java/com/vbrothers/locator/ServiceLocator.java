@@ -1,5 +1,6 @@
 package com.vbrothers.locator;
 import com.vbrothers.common.services.CommonServicesLocal;
+import java.io.File;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -110,8 +111,10 @@ public class ServiceLocator {
                 resultado = commonFacade.getReferenceTableForCombo("SELECT nombre, valor FROM parametro");
                 cache.put(PARAMETROS, resultado);
             }
-
         }
+        
+        
+        
         //System.out.println("- "+resultado.size());
         return resultado;
     }
@@ -134,12 +137,20 @@ public class ServiceLocator {
     }
 
     public String getParameter(String parametro){
-        Map parametros = (Map)cache.get(PARAMETROS);
+        Map<String, String> parametros = (Map)cache.get(PARAMETROS);
         if(parametros == null){
             parametros = commonFacade.getReferenceTableForCombo("SELECT nombre, valor FROM parametro");
             cache.put(PARAMETROS, parametros);
         }
-        return (String)parametros.get(parametro);
+        String valorParametro = parametros.get(parametro);
+        if(valorParametro != null && valorParametro.startsWith("OPENSHIFT")){
+            String nombreVar = valorParametro.replaceAll("(.*)"+File.separator+".*", "$1");
+            String valorVar = System.getenv(nombreVar);
+            System.out.println("Variable de entorno: "+nombreVar+" - "+valorVar);
+            valorParametro = valorParametro.replace(nombreVar+File.separator, valorVar);
+            System.out.println("Parametro: "+valorParametro);
+        }
+        return valorParametro;
     }
 
 }

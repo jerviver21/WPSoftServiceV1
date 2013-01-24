@@ -222,12 +222,13 @@ public class PermisoTrabajo implements Serializable {
 
     @Override
     public boolean equals(Object object) {
+        
         // TODO: Warning - this method won't work in the case the id fields are not set
         if (!(object instanceof PermisoTrabajo)) {
             return false;
         }
         PermisoTrabajo other = (PermisoTrabajo) object;
-        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
+        if ((this.id == null && other.getId() != null) || (this.id != null && !this.id.equals(other.getId()))) {
             return false;
         }
         return true;
@@ -235,7 +236,7 @@ public class PermisoTrabajo implements Serializable {
 
     @Override
     public String toString() {
-        return "com.vbrothers.permisostrabajo.dominio.PermisoTrabajo[id=" + id + "]";
+        return "Permiso [id=" + id + "]";
     }
 
     /**

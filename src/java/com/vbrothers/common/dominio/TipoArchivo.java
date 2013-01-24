@@ -64,7 +64,7 @@ public class TipoArchivo implements Serializable {
             return false;
         }
         TipoArchivo other = (TipoArchivo) object;
-        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
+        if ((this.id == null && other.getId() != null) || (this.id != null && !this.id.equals(other.getId()))) {
             return false;
         }
         return true;

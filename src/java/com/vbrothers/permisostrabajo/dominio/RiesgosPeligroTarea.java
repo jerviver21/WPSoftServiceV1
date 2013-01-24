@@ -95,7 +95,7 @@ public class RiesgosPeligroTarea implements Serializable {
             return false;
         }
         RiesgosPeligroTarea other = (RiesgosPeligroTarea) object;
-        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
+        if ((this.id == null && other.getId() != null) || (this.id != null && !this.id.equals(other.getId()))) {
             return false;
         }
         return true;

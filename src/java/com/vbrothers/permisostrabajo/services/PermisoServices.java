@@ -305,8 +305,10 @@ public class PermisoServices implements PermisoServicesLocal {
         List<PermisoTrabajo> permisos = new ArrayList<PermisoTrabajo>();
         for(TrazabilidadPermiso tt : permisosAsignados){
             PermisoTrabajo permiso = tt.getPermisoTrabajo();
-            permiso.getEstadoPermiso();
-            permisos.add(permiso);
+            if(!permisos.contains(permiso)){
+                permiso.getEstadoPermiso();
+                permisos.add(permiso);
+            }
         }
 
         return permisos;

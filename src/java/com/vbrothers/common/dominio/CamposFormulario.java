@@ -67,7 +67,7 @@ public class CamposFormulario implements Serializable {
             return false;
         }
         CamposFormulario other = (CamposFormulario) object;
-        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
+        if ((this.id == null && other.getId() != null) || (this.id != null && !this.id.equals(other.getId()))) {
             return false;
         }
         return true;

@@ -69,7 +69,7 @@ public class EstadoPermiso implements Serializable {
             return false;
         }
         EstadoPermiso other = (EstadoPermiso) object;
-        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
+        if ((this.id == null && other.getId() != null) || (this.id != null && !this.id.equals(other.getId()))) {
             return false;
         }
         return true;

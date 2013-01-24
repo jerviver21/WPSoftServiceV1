@@ -73,7 +73,7 @@ public class Control implements Serializable {
             return false;
         }
         Control other = (Control) object;
-        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
+        if ((this.id == null && other.getId() != null) || (this.id != null && !this.id.equals(other.getId()))) {
             return false;
         }
         return true;

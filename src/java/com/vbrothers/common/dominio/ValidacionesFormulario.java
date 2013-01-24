@@ -67,7 +67,7 @@ public class ValidacionesFormulario implements Serializable {
             return false;
         }
         ValidacionesFormulario other = (ValidacionesFormulario) object;
-        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
+        if ((this.id == null && other.getId() != null) || (this.id != null && !this.id.equals(other.getId()))) {
             return false;
         }
         return true;
