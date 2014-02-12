@@ -48,7 +48,13 @@ public class RolesServices extends AbstractFacade<Rol> implements RolesServicesL
 
     @Override
     public List<Rol> findAll(){
-        List<Rol> roles = em.createNamedQuery("Rol.findAll").getResultList();
+        List<Rol> roles = em.createQuery("SELECT r FROM Rol r WHERE r.id != 1").getResultList();
+        return roles;
+    }
+    
+    @Override
+    public List<Rol> findAllE(){
+        List<Rol> roles = em.createQuery("SELECT r FROM Rol r WHERE r.id != 1").getResultList();
         return roles;
     }
 

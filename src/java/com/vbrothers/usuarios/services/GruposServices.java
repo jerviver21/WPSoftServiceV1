@@ -52,6 +52,13 @@ public class GruposServices extends AbstractFacade<Groups>  implements GruposSer
         List<Groups> roles = em.createNamedQuery("Groups.findAll").getResultList();
         return roles;
     }
+    
+    
+    @Override
+    public List<Groups> findAllE(){
+        List<Groups> roles = em.createQuery("SELECT g FROM Groups g WHERE g.id != 16 AND g.id != 17").getResultList();
+        return roles;
+    }
 
     @Override
     public Groups findByCodigo(String codigo) {

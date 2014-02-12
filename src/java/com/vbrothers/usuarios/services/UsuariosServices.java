@@ -55,7 +55,7 @@ public class UsuariosServices extends AbstractFacade<Users> implements UsuariosS
 
     @Override
     public List<Users> findAll(){
-        List<Users> usuarios = em.createNamedQuery("Users.findAll").getResultList();
+        List<Users> usuarios = em.createQuery("SELECT u FROM Users u WHERE u.id != 1 AND u.id != 14").getResultList();
         return usuarios;
     }
 

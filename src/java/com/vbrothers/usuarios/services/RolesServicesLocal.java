@@ -23,6 +23,8 @@ public interface RolesServicesLocal {
     Rol find(Object id);
 
     public List<Rol> findAll();
+    
+    public List<Rol> findAllE();
 
     public Set<Resource> findResourceByRol(Rol rol);
 

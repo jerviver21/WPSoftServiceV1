@@ -36,7 +36,7 @@ public class ReporteServices extends AbstractFacade<Reporte> implements ReporteS
     @PersistenceContext(unitName = "WPSoftPU")
     private EntityManager em;
 
-    @Resource(mappedName = "java:jboss/datasources/PostgreSQLDS")
+    @Resource(mappedName = "java:jboss/datasources/PostgreSQLDS2")
     private DataSource dataSource;
 
     @Override

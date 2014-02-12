@@ -28,6 +28,8 @@ public interface GruposServicesLocal {
     Groups find(Object id);
 
     List<Groups> findAll();
+    
+    List<Groups> findAllE();
 
     List<Rol> findRolesByGroup(Groups group);
 
