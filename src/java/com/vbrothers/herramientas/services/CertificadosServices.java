@@ -1,9 +1,9 @@
 
 package com.vbrothers.herramientas.services;
 
-import com.vbrothers.common.exceptions.ParametroException;
-import com.vbrothers.common.services.AbstractFacade;
+import com.vi.comun.exceptions.ParametroException;
 import com.vbrothers.permisostrabajo.dominio.Certificado;
+import com.vbrothers.permisostrabajo.services.AbstractFacade;
 import com.vbrothers.util.FilesUtils;
 import java.io.File;
 import java.io.IOException;

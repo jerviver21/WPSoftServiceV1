@@ -1,9 +1,9 @@
 package com.vbrothers.permisostrabajo.services;
  
-import com.vbrothers.common.exceptions.EstadoException;
-import com.vbrothers.common.exceptions.LlaveDuplicadaException;
-import com.vbrothers.common.exceptions.ParametroException;
-import com.vbrothers.common.exceptions.ValidacionException;
+import com.vi.comun.exceptions.EstadoException;
+import com.vi.comun.exceptions.LlaveDuplicadaException;
+import com.vi.comun.exceptions.ParametroException;
+import com.vi.comun.exceptions.ValidacionException;
 import com.vbrothers.locator.ServiceLocator;
 import com.vbrothers.permisostrabajo.dominio.CertificadosTrabajo;
 import com.vbrothers.permisostrabajo.dominio.ControlesPeligroTarea;
@@ -17,10 +17,10 @@ import com.vbrothers.permisostrabajo.dominio.RiesgosPeligroTarea;
 import com.vbrothers.permisostrabajo.dominio.Sector;
 import com.vbrothers.permisostrabajo.dominio.Tarea;
 import com.vbrothers.permisostrabajo.dominio.TrazabilidadPermiso;
-import com.vbrothers.usuarios.dominio.Groups;
-import com.vbrothers.usuarios.dominio.Users;
-import com.vbrothers.usuarios.services.GruposServicesLocal;
-import com.vbrothers.usuarios.services.UsuariosServicesLocal;
+import com.vi.usuarios.dominio.Groups;
+import com.vi.usuarios.dominio.Users;
+import com.vi.usuarios.services.GruposServicesLocal;
+import com.vi.usuarios.services.UsuariosServicesLocal;
 import com.vbrothers.util.EstadosPermiso;
 import com.vbrothers.util.EstadosTraz;
 import com.vbrothers.util.EtapaPermiso;

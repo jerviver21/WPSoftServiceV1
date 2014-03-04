@@ -1,7 +1,7 @@
 package com.vbrothers.herramientas.services;
 
-import com.vbrothers.common.services.AbstractFacade;
 import com.vbrothers.permisostrabajo.dominio.Control;
+import com.vbrothers.permisostrabajo.services.AbstractFacade;
 import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;

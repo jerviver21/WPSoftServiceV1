@@ -4,15 +4,13 @@
  */
 package com.vbrothers.permisostrabajo.services;
 
-import com.vbrothers.common.exceptions.LlaveDuplicadaException;
-import com.vbrothers.common.exceptions.ParametroException;
-import com.vbrothers.common.services.AbstractFacade;
+import com.vi.comun.exceptions.LlaveDuplicadaException;
+import com.vi.comun.exceptions.ParametroException;
 import com.vbrothers.permisostrabajo.dominio.Contratista;
-import com.vbrothers.permisostrabajo.dominio.Empleado;
-import com.vbrothers.usuarios.dominio.Groups;
-import com.vbrothers.usuarios.dominio.Users;
-import com.vbrothers.usuarios.services.GruposServicesLocal;
-import com.vbrothers.usuarios.services.UsuariosServicesLocal;
+import com.vi.usuarios.dominio.Groups;
+import com.vi.usuarios.dominio.Users;
+import com.vi.usuarios.services.GruposServicesLocal;
+import com.vi.usuarios.services.UsuariosServicesLocal;
 import java.util.ArrayList;
 import java.util.List;
 import javax.ejb.EJB;

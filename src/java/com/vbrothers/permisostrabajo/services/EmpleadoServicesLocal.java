@@ -1,12 +1,11 @@
 
 package com.vbrothers.permisostrabajo.services;
 
-import com.vbrothers.common.exceptions.EmpActivoOtroContException;
-import com.vbrothers.common.exceptions.LlaveDuplicadaException;
-import com.vbrothers.common.exceptions.ParametroException;
+import com.vbrothers.exceptions.EmpActivoOtroContException;
+import com.vi.comun.exceptions.LlaveDuplicadaException;
+import com.vi.comun.exceptions.ParametroException;
 import com.vbrothers.permisostrabajo.dominio.Empleado;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.List;
 import javax.ejb.Local;
 

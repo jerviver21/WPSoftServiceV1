@@ -1,20 +1,18 @@
 package com.vbrothers.herramientas.services;
 
-import com.vbrothers.common.exceptions.LlaveDuplicadaException;
-import com.vbrothers.common.services.AbstractFacade;
 import com.vbrothers.permisostrabajo.dominio.Control;
 import com.vbrothers.permisostrabajo.dominio.ControlesPeligroTarea;
 import com.vbrothers.permisostrabajo.dominio.Peligro;
 import com.vbrothers.permisostrabajo.dominio.PeligrosTarea;
 import com.vbrothers.permisostrabajo.dominio.RiesgosPeligroTarea;
 import com.vbrothers.permisostrabajo.dominio.Tarea;
+import com.vbrothers.permisostrabajo.services.AbstractFacade;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import org.hibernate.exception.ConstraintViolationException;
 
 /**
  * @author Jerson Viveros Aguirre

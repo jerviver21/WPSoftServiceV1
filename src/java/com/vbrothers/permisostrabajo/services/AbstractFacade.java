@@ -1,6 +1,6 @@
-package com.vbrothers.common.services;
+package com.vbrothers.permisostrabajo.services;
 
-import com.vbrothers.common.exceptions.LlaveDuplicadaException;
+import com.vi.comun.exceptions.LlaveDuplicadaException;
 import com.vbrothers.locator.ServiceLocator;
 import javax.persistence.EntityManager;
 import org.hibernate.exception.ConstraintViolationException;

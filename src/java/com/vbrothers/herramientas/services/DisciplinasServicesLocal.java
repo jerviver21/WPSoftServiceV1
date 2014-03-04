@@ -5,7 +5,7 @@
 
 package com.vbrothers.herramientas.services;
 
-import com.vbrothers.common.exceptions.LlaveDuplicadaException;
+import com.vi.comun.exceptions.LlaveDuplicadaException;
 import com.vbrothers.permisostrabajo.dominio.Disciplina;
 import java.util.List;
 import javax.ejb.Local;

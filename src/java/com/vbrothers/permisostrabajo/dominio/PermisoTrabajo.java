@@ -5,7 +5,7 @@
 
 package com.vbrothers.permisostrabajo.dominio;
 
-import com.vbrothers.usuarios.dominio.Users;
+import com.vi.usuarios.dominio.Users;
 import com.vbrothers.util.EtapaPermiso;
 import java.io.Serializable;
 import java.util.ArrayList;

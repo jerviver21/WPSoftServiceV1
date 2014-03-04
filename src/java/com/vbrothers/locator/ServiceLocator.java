@@ -1,5 +1,5 @@
 package com.vbrothers.locator;
-import com.vbrothers.common.services.CommonServicesLocal;
+import com.vi.comun.services.CommonServicesLocal;
 import java.io.File;
 import java.util.Collections;
 import java.util.HashMap;
@@ -48,7 +48,7 @@ public class ServiceLocator {
     private ServiceLocator() throws Exception{
         try {
             InitialContext contexto = new InitialContext();
-            commonFacade = (CommonServicesLocal)contexto.lookup("global/WPSoftWebV1/CommonServices!com.vbrothers.common.services.CommonServicesLocal");
+            commonFacade = (CommonServicesLocal)contexto.lookup("global/WPSoftWebV1/CommonServices!com.vi.comun.services.CommonServicesLocal");
             cache = Collections.synchronizedMap(new HashMap());
         } catch (Exception e) {
             System.err.println(e);

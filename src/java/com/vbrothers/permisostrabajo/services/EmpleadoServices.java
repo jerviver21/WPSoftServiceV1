@@ -1,15 +1,14 @@
 package com.vbrothers.permisostrabajo.services;
 
-import com.vbrothers.common.exceptions.EmpActivoOtroContException;
-import com.vbrothers.common.exceptions.LlaveDuplicadaException;
-import com.vbrothers.common.exceptions.ParametroException;
-import com.vbrothers.common.services.AbstractFacade;
+import com.vbrothers.exceptions.EmpActivoOtroContException;
+import com.vi.comun.exceptions.LlaveDuplicadaException;
+import com.vi.comun.exceptions.ParametroException;
 import com.vbrothers.permisostrabajo.dominio.Contratista;
 import com.vbrothers.permisostrabajo.dominio.Empleado;
-import com.vbrothers.usuarios.dominio.Groups;
-import com.vbrothers.usuarios.dominio.Users;
-import com.vbrothers.usuarios.services.GruposServicesLocal;
-import com.vbrothers.usuarios.services.UsuariosServicesLocal;
+import com.vi.usuarios.dominio.Groups;
+import com.vi.usuarios.dominio.Users;
+import com.vi.usuarios.services.GruposServicesLocal;
+import com.vi.usuarios.services.UsuariosServicesLocal;
 import com.vbrothers.util.FilesUtils;
 import java.io.File;
 import java.io.IOException;
@@ -218,7 +217,7 @@ public class EmpleadoServices extends AbstractFacade<Empleado> implements Emplea
     @Override
     public void betarEmpleado(Empleado emp, String usradm) {
         Users usr = usuarioService.findByUser(emp.getUsuario());
-        usr.setVetado(emp.getBetado()?true:false);
+        usr.setEstado(0);
         em.merge(usr);
         em.merge(emp);
         

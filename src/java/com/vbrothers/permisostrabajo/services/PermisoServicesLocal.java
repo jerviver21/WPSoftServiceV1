@@ -1,9 +1,9 @@
 package com.vbrothers.permisostrabajo.services;
 
-import com.vbrothers.common.exceptions.EstadoException;
-import com.vbrothers.common.exceptions.LlaveDuplicadaException;
-import com.vbrothers.common.exceptions.ParametroException;
-import com.vbrothers.common.exceptions.ValidacionException;
+import com.vi.comun.exceptions.EstadoException;
+import com.vi.comun.exceptions.LlaveDuplicadaException;
+import com.vi.comun.exceptions.ParametroException;
+import com.vi.comun.exceptions.ValidacionException;
 import com.vbrothers.permisostrabajo.dominio.ControlesPeligroTarea;
 import com.vbrothers.permisostrabajo.dominio.NotasPermiso;
 import com.vbrothers.permisostrabajo.dominio.PeligrosTarea;
@@ -11,7 +11,7 @@ import com.vbrothers.permisostrabajo.dominio.PermisoTrabajo;
 import com.vbrothers.permisostrabajo.dominio.RiesgosPeligroTarea;
 import com.vbrothers.permisostrabajo.dominio.Tarea;
 import com.vbrothers.permisostrabajo.dominio.TrazabilidadPermiso;
-import com.vbrothers.usuarios.dominio.Users;
+import com.vi.usuarios.dominio.Users;
 import java.util.Date;
 import java.util.List;
 import javax.ejb.Local;

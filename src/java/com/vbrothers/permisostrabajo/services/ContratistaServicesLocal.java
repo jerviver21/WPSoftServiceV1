@@ -4,8 +4,8 @@
  */
 package com.vbrothers.permisostrabajo.services;
 
-import com.vbrothers.common.exceptions.LlaveDuplicadaException;
-import com.vbrothers.common.exceptions.ParametroException;
+import com.vi.comun.exceptions.LlaveDuplicadaException;
+import com.vi.comun.exceptions.ParametroException;
 import com.vbrothers.permisostrabajo.dominio.Contratista;
 import java.util.List;
 import javax.ejb.Local;

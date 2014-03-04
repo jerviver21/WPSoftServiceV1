@@ -1,12 +1,12 @@
 package com.vbrothers.permisostrabajo.services;
 
-import com.vbrothers.common.exceptions.ParametroException;
+import com.vi.comun.exceptions.ParametroException;
 import com.vbrothers.locator.ServiceLocator;
 import com.vbrothers.permisostrabajo.dominio.Empleado;
 import com.vbrothers.permisostrabajo.dominio.PermisoTrabajo;
 import com.vbrothers.permisostrabajo.dominio.TrazabilidadPermiso;
-import com.vbrothers.usuarios.dominio.Groups;
-import com.vbrothers.usuarios.dominio.Users;
+import com.vi.usuarios.dominio.Groups;
+import com.vi.usuarios.dominio.Users;
 import com.vbrothers.util.EstadosPermiso;
 import com.vbrothers.util.EstadosTraz;
 import com.vbrothers.util.OperacionesPermiso;

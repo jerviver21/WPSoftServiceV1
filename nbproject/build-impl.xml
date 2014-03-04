@@ -408,7 +408,7 @@ or ant -Dj2ee.platform.classpath=&lt;server_classpath&gt; (where no properties f
                     </fileset>
                 </union>
                 <taskdef classname="org.testng.TestNGAntTask" classpath="${run.test.classpath}" name="testng"/>
-                <testng classfilesetref="test.set" failureProperty="tests.failed" methods="${testng.methods.arg}" mode="${testng.mode}" outputdir="${build.test.results.dir}" suitename="WPSoftServiceV1" testname="TestNG tests" workingDir="${basedir}">
+                <testng classfilesetref="test.set" failureProperty="tests.failed" listeners="org.testng.reporters.VerboseReporter" methods="${testng.methods.arg}" mode="${testng.mode}" outputdir="${build.test.results.dir}" suitename="WPSoftServiceV1" testname="TestNG tests" workingDir="${basedir}">
                     <xmlfileset dir="${build.test.classes.dir}" includes="@{testincludes}"/>
                     <propertyset>
                         <propertyref prefix="test-sys-prop."/>
@@ -780,8 +780,18 @@ exists or setup the property manually. For example like this:
     <!--
                 COMPILATION SECTION
             -->
-    <target depends="init" if="no.dist.ear.dir" name="-deps-module-jar" unless="no.deps"/>
-    <target depends="init" if="dist.ear.dir" name="-deps-ear-jar" unless="no.deps"/>
+    <target depends="init" if="no.dist.ear.dir" name="-deps-module-jar" unless="no.deps">
+        <ant antfile="${project.ComunServices}/build.xml" inheritall="false" target="dist"/>
+        <ant antfile="${project.UsuariosServices}/build.xml" inheritall="false" target="dist"/>
+    </target>
+    <target depends="init" if="dist.ear.dir" name="-deps-ear-jar" unless="no.deps">
+        <ant antfile="${project.ComunServices}/build.xml" inheritall="false" target="dist-ear">
+            <property location="${build.dir}" name="dist.ear.dir"/>
+        </ant>
+        <ant antfile="${project.UsuariosServices}/build.xml" inheritall="false" target="dist-ear">
+            <property location="${build.dir}" name="dist.ear.dir"/>
+        </ant>
+    </target>
     <target depends="init, -deps-module-jar, -deps-ear-jar" name="deps-jar"/>
     <target depends="init,deps-jar" name="-pre-pre-compile">
         <mkdir dir="${build.classes.dir}"/>
@@ -792,50 +802,11 @@ exists or setup the property manually. For example like this:
         <!-- You can override this target in the ../build.xml file. -->
     </target>
     <target depends="compile,-library-inclusion-in-archive-weblogic,-library-inclusion-in-archive-by-user" name="library-inclusion-in-archive"/>
-    <target if="is.jars.in.ejbjar" name="-library-inclusion-in-archive-by-user">
-        <copyfiles files="${libs.hibernate-persistence.classpath}" todir="${build.classes.dir}"/>
-        <copyfiles files="${file.reference.commons-collections-2.1.1.jar}" todir="${build.classes.dir}"/>
-        <copyfiles files="${file.reference.commons-digester-2.1.jar}" todir="${build.classes.dir}"/>
-        <copyfiles files="${file.reference.iText-2.1.7.jar}" todir="${build.classes.dir}"/>
-        <copyfiles files="${file.reference.jasperreports-5.0.0.jar}" todir="${build.classes.dir}"/>
-        <copyfiles files="${file.reference.jasperreports-applet-5.0.0.jar}" todir="${build.classes.dir}"/>
-        <copyfiles files="${file.reference.jasperreports-fonts-5.0.0.jar}" todir="${build.classes.dir}"/>
-        <copyfiles files="${file.reference.jasperreports-javaflow-5.0.0.jar}" todir="${build.classes.dir}"/>
-        <copyfiles files="${file.reference.jxl-2.6.10.jar}" todir="${build.classes.dir}"/>
-    </target>
+    <target if="is.jars.in.ejbjar" name="-library-inclusion-in-archive-by-user"/>
     <target if="is.server.weblogic" name="-library-inclusion-in-archive-weblogic">
-        <basename file="${libs.hibernate-persistence.classpath}" property="manifest.libs.hibernate-persistence.classpath"/>
-        <basename file="${file.reference.commons-collections-2.1.1.jar}" property="manifest.file.reference.commons-collections-2.1.1.jar"/>
-        <basename file="${file.reference.commons-digester-2.1.jar}" property="manifest.file.reference.commons-digester-2.1.jar"/>
-        <basename file="${file.reference.iText-2.1.7.jar}" property="manifest.file.reference.iText-2.1.7.jar"/>
-        <basename file="${file.reference.jasperreports-5.0.0.jar}" property="manifest.file.reference.jasperreports-5.0.0.jar"/>
-        <basename file="${file.reference.jasperreports-applet-5.0.0.jar}" property="manifest.file.reference.jasperreports-applet-5.0.0.jar"/>
-        <basename file="${file.reference.jasperreports-fonts-5.0.0.jar}" property="manifest.file.reference.jasperreports-fonts-5.0.0.jar"/>
-        <basename file="${file.reference.jasperreports-javaflow-5.0.0.jar}" property="manifest.file.reference.jasperreports-javaflow-5.0.0.jar"/>
-        <basename file="${file.reference.jxl-2.6.10.jar}" property="manifest.file.reference.jxl-2.6.10.jar"/>
-        <manifest file="${build.ear.classes.dir}/META-INF/MANIFEST.MF" mode="update">
-            <attribute name="Extension-List" value="jar-1 jar-2 jar-3 jar-4 jar-5 jar-6 jar-7 jar-8 jar-9 "/>
-            <attribute name="jar-1-Extension-Name" value="${manifest.libs.hibernate-persistence.classpath}"/>
-            <attribute name="jar-2-Extension-Name" value="${manifest.file.reference.commons-collections-2.1.1.jar}"/>
-            <attribute name="jar-3-Extension-Name" value="${manifest.file.reference.commons-digester-2.1.jar}"/>
-            <attribute name="jar-4-Extension-Name" value="${manifest.file.reference.iText-2.1.7.jar}"/>
-            <attribute name="jar-5-Extension-Name" value="${manifest.file.reference.jasperreports-5.0.0.jar}"/>
-            <attribute name="jar-6-Extension-Name" value="${manifest.file.reference.jasperreports-applet-5.0.0.jar}"/>
-            <attribute name="jar-7-Extension-Name" value="${manifest.file.reference.jasperreports-fonts-5.0.0.jar}"/>
-            <attribute name="jar-8-Extension-Name" value="${manifest.file.reference.jasperreports-javaflow-5.0.0.jar}"/>
-            <attribute name="jar-9-Extension-Name" value="${manifest.file.reference.jxl-2.6.10.jar}"/>
-        </manifest>
+        <manifest file="${build.ear.classes.dir}/META-INF/MANIFEST.MF" mode="update"/>
     </target>
     <target depends="compile" name="library-inclusion-in-manifest">
-        <copyfiles files="${libs.hibernate-persistence.classpath}" todir="${dist.ear.dir}/lib"/>
-        <copyfiles files="${file.reference.commons-collections-2.1.1.jar}" todir="${dist.ear.dir}/lib"/>
-        <copyfiles files="${file.reference.commons-digester-2.1.jar}" todir="${dist.ear.dir}/lib"/>
-        <copyfiles files="${file.reference.iText-2.1.7.jar}" todir="${dist.ear.dir}/lib"/>
-        <copyfiles files="${file.reference.jasperreports-5.0.0.jar}" todir="${dist.ear.dir}/lib"/>
-        <copyfiles files="${file.reference.jasperreports-applet-5.0.0.jar}" todir="${dist.ear.dir}/lib"/>
-        <copyfiles files="${file.reference.jasperreports-fonts-5.0.0.jar}" todir="${dist.ear.dir}/lib"/>
-        <copyfiles files="${file.reference.jasperreports-javaflow-5.0.0.jar}" todir="${dist.ear.dir}/lib"/>
-        <copyfiles files="${file.reference.jxl-2.6.10.jar}" todir="${dist.ear.dir}/lib"/>
         <manifest file="${build.ear.classes.dir}/META-INF/MANIFEST.MF" mode="update"/>
     </target>
     <target name="-copy-meta-inf">
@@ -1218,7 +1189,10 @@ exists or setup the property manually. For example like this:
     <!--
                 CLEANUP SECTION
             -->
-    <target depends="init" name="deps-clean" unless="no.deps"/>
+    <target depends="init" name="deps-clean" unless="no.deps">
+        <ant antfile="${project.ComunServices}/build.xml" inheritall="false" target="clean"/>
+        <ant antfile="${project.UsuariosServices}/build.xml" inheritall="false" target="clean"/>
+    </target>
     <target depends="init" name="-do-clean">
         <delete dir="${build.dir}"/>
         <delete dir="${dist.dir}"/>

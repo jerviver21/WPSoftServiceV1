@@ -1,6 +1,6 @@
 package com.vbrothers.herramientas.services;
 
-import com.vbrothers.common.exceptions.ParametroException;
+import com.vi.comun.exceptions.ParametroException;
 import com.vbrothers.permisostrabajo.dominio.Certificado;
 import java.io.IOException;
 import java.util.List;

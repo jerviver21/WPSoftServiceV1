@@ -4,7 +4,7 @@
  */
 package com.vbrothers.permisostrabajo.dominio;
 
-import com.vbrothers.usuarios.dominio.Users;
+import com.vi.usuarios.dominio.Users;
 import java.io.Serializable;
 import java.util.List;
 import javax.persistence.*;

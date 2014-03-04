@@ -4,7 +4,7 @@
  */
 package com.vbrothers.permisostrabajo.services;
 
-import com.vbrothers.common.exceptions.ParametroException;
+import com.vi.comun.exceptions.ParametroException;
 import com.vbrothers.permisostrabajo.dominio.PermisoTrabajo;
 import javax.ejb.Local;
 

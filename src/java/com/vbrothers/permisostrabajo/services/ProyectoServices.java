@@ -1,16 +1,15 @@
 
 package com.vbrothers.permisostrabajo.services;
 
-import com.vbrothers.common.exceptions.EstadoException;
-import com.vbrothers.common.exceptions.LlaveDuplicadaException;
-import com.vbrothers.common.services.AbstractFacade;
+import com.vi.comun.exceptions.EstadoException;
+import com.vi.comun.exceptions.LlaveDuplicadaException;
 import com.vbrothers.locator.ServiceLocator;
 import com.vbrothers.permisostrabajo.dominio.Contratista;
 import com.vbrothers.permisostrabajo.dominio.EstadoProyecto;
 import com.vbrothers.permisostrabajo.dominio.PermisoTrabajo;
 import com.vbrothers.permisostrabajo.dominio.Proyecto;
-import com.vbrothers.usuarios.dominio.Users;
 import com.vbrothers.util.EstadosProyecto;
+import com.vi.usuarios.dominio.Users;
 import java.util.Date;
 import java.util.List;
 import javax.ejb.EJB;
