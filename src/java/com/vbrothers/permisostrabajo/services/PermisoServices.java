@@ -168,7 +168,7 @@ public class PermisoServices implements PermisoServicesLocal {
             permiso.getEmpleados().addAll(empleadosContratista);
         }
         
-        if(permiso.getEmpleados().isEmpty()){
+        if(permiso.getEmpleados().isEmpty() && permiso.getContratista() == null){
             throw new ValidacionException("Debe agregar empleados ejecutantes");
         }
         permiso.setEstadoPermiso(EstadosPermiso.CREADO);

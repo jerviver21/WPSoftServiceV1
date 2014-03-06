@@ -2,7 +2,15 @@
 <persistence version="2.0" xmlns="http://java.sun.com/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/persistence http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd">
   <persistence-unit name="WPSoftPU" transaction-type="JTA">
     <jta-data-source>java:/jboss/datasources/PostgreSQLDS3</jta-data-source>
+    <class>com.vi.usuarios.dominio.Groups</class>
+    <class>com.vi.usuarios.dominio.Rol</class>
+    <class>com.vi.usuarios.dominio.Users</class>
+    <class>com.vi.usuarios.dominio.Resource</class>
+    <class>com.vi.usuarios.dominio.Menu</class>
+    <class>com.vi.usuarios.dominio.Idiomas</class>
+    
     <exclude-unlisted-classes>false</exclude-unlisted-classes>
+    
     <properties>
       <!--<property name = "hibernate.show_sql" value = "true" />-->
     </properties>
