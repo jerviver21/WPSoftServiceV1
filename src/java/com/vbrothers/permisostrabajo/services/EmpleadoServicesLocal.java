@@ -28,7 +28,7 @@ public interface EmpleadoServicesLocal {
 
     List<Empleado> findAll();
 
-    void guardar(Empleado empleado)throws LlaveDuplicadaException, ParametroException,IOException;
+    void guardar(Empleado empleado)throws LlaveDuplicadaException, ParametroException,IOException, Exception;
 
     void updateEmpleados(List<Empleado> empleadosContratista);
 

@@ -83,7 +83,7 @@ public class EmpleadoServices extends AbstractFacade<Empleado> implements Emplea
     }
 
     @Override
-    public void guardar(Empleado entity) throws LlaveDuplicadaException, ParametroException, IOException{
+    public void guardar(Empleado entity) throws LlaveDuplicadaException, ParametroException, IOException, Exception{
         try {
             Users usr = usuarioService.findByUser(entity.getUsuario());
             if(usr  == null){

@@ -82,7 +82,7 @@ public class ContratistaServices extends AbstractFacade<Contratista>implements C
     }
 
     @Override
-    public void guardar(Contratista entity) throws LlaveDuplicadaException, ParametroException{
+    public void guardar(Contratista entity) throws LlaveDuplicadaException, ParametroException, Exception{
         try {
             Users usr = usuarioService.findByUser(entity.getUsuario());
             if(usr == null){
@@ -108,7 +108,12 @@ public class ContratistaServices extends AbstractFacade<Contratista>implements C
             usuarioService.edit(usr);
             
             getEntityManager().merge(entity);
-        } catch (PersistenceException e) {
+        } catch (LlaveDuplicadaException e) {
+            if(e.getCause() instanceof ConstraintViolationException){
+                throw new LlaveDuplicadaException("El contratista o usuario asociado ya existe");
+            }
+            throw e;
+        }catch (PersistenceException e) {
             if(e.getCause() instanceof ConstraintViolationException){
                 throw new LlaveDuplicadaException("El contratista o usuario asociado ya existe");
             }

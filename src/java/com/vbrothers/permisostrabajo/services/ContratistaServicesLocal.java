@@ -18,7 +18,7 @@ import javax.ejb.Local;
 public interface ContratistaServicesLocal {
     void create(Contratista Contratistas)throws LlaveDuplicadaException;
 
-    void edit(Contratista Contratistas)throws LlaveDuplicadaException;
+    void edit(Contratista Contratistas)throws LlaveDuplicadaException, Exception;
 
     void remove(Contratista Contratistas);
 
@@ -30,7 +30,7 @@ public interface ContratistaServicesLocal {
     
     List<Contratista> findContratistasActivos();
  
-    void guardar(Contratista entity) throws LlaveDuplicadaException, ParametroException;
+    void guardar(Contratista entity) throws LlaveDuplicadaException, ParametroException, Exception;
 
     Contratista findByUser(String usr);
 
