@@ -47,8 +47,8 @@ public class ServiceLocator {
 
     private ServiceLocator() throws Exception{
         try {
-            InitialContext contexto = new InitialContext();
-            commonFacade = (CommonServicesLocal)contexto.lookup("global/WPSoftWebV1/CommonServices!com.vi.comun.services.CommonServicesLocal");
+            /*InitialContext contexto = new InitialContext();
+            commonFacade = (CommonServicesLocal)contexto.lookup("global/WPSoftWebV1/CommonServices!com.vi.comun.services.CommonServicesLocal");*/
             cache = Collections.synchronizedMap(new HashMap());
         } catch (Exception e) {
             System.err.println(e);
@@ -62,6 +62,10 @@ public class ServiceLocator {
 
     public static ServiceLocator getInstance(){
         return instance;
+    }
+    
+    public void setCommonFacade(CommonServicesLocal servicio){
+        commonFacade = servicio;
     }
 
 
